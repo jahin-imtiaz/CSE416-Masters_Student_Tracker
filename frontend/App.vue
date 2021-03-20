@@ -10,8 +10,8 @@
     <HelloVno msg="you are building: your project with vno" />
     <!--
       TODO:
-      - Homepage with GPD Importing Functionality
-      - Add Student page
+      - Homepage with GPD Importing Functionality (Use FIGMA styles)
+      - Add Student page (Use FIGMA styles)
       - Implement models
       - Run and test
      -->
