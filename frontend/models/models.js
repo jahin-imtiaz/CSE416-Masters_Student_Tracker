@@ -1,8 +1,9 @@
 import { Database, MongoDBConnector, Model, DataTypes, Relationships } from 'https://deno.land/x/denodb/mod.ts';
+import "https://deno.land/x/dotenv/load.ts";
 
 const connector = new MongoDBConnector({
-  uri: 'mongodb://127.0.0.1:27017',
-  database: 'test',
+  uri: Deno.env.get('MongoURI'),
+  database: 'MAST416',
 });
 
 const db = new Database(connector);
