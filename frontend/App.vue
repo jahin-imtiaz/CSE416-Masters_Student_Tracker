@@ -12,8 +12,8 @@
       TODO:
       - Homepage with GPD Importing Functionality
       - Add Student page
-
-
+      - Implement models
+      - Run and test
      -->
   </div>
 </template>
