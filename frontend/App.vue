@@ -8,6 +8,13 @@
       height="450"
     />
     <HelloVno msg="you are building: your project with vno" />
+    <!--
+      TODO:
+      - Homepage with GPD Importing Functionality
+      - Add Student page
+
+
+     -->
   </div>
 </template>
 
