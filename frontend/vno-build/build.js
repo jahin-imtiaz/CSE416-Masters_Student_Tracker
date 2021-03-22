@@ -6,6 +6,13 @@ import Vue from "https://cdn.jsdelivr.net/npm/vue@2.6.12/dist/vue.esm.browser.js
 const HelloVno = Vue.component("hello-vno", {
   template:  /* html */ `
   <div class="hello">
+    <img
+      src="https://svgshare.com/i/SNz.svg"
+      alt="image"
+      border="0"
+      width="450"
+      height="450"
+    />
     <h1>{{ msg }}</h1>
     <p>
       <br />
@@ -30,29 +37,68 @@ const HelloVno = Vue.component("hello-vno", {
   },
 });
 
+const Login = Vue.component("login", {
+  template:  /* html */ `
+  <div class="login">
+    Login {{ msg }}
+  </div>
+`,
+  name: 'login',
+  props: {
+    msg: String,
+  },
+});
+
+const Home = Vue.component("home", {
+  template:  /* html */ `
+  <div class="home">
+    Home {{ msg }}
+  </div>
+`,
+  name: 'home',
+  props: {
+    msg: String,
+  },
+});
+
 const App = new Vue({
   template:  /* html */ `
   <div id="app">
-    <img
-      src="https://svgshare.com/i/SNz.svg"
-      alt="image"
-      border="0"
-      width="450"
-      height="450"
-    />
-
-    <router-link to='/foo'>Go to foo</router-link>
-    <HelloVno msg="you are building: your project with vno" />
+    <header>
+      
+      <nav class="inner">
+        <button v-on:click="handleRoute('home')">Home</button>
+        <button v-on:click="handleRoute('login')">Login</button>
+      </nav>
+    </header>
+    <body v-if="displayedComponent === 'login'">
+      <Login />
+    </body>
+    <body v-if="displayedComponent === 'home'">
+      <Home />
+    </body>
     
   </div>
 `,
   name: 'app',
-  components: {HelloVno},
+  data() {
+    return {
+      displayedComponent: 'login',
+    }
+  },
+  methods: {
+    handleRoute: function (event) {
+      this.displayedComponent = event;
+      console.log(this.displayedComponent)
+    }
+  },
+  components: {
+    HelloVno,
+    Login,
+    Home
+  },
   mounted() {
     
-    
-    
-    console.log(VueRouter)
   },
 });
 

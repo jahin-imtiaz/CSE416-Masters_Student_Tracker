@@ -1,6 +1,6 @@
 import { Application, Router } from "https://deno.land/x/oak/mod.ts";
 
-const books = new Map<string, any>();
+const books = new Map();
 books.set("1", {
   id: "1",
   title: "The Hound of the Baskervilles",

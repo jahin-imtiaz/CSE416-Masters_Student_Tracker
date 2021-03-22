@@ -34,9 +34,6 @@ class Student extends Model {
   }
 }
 
-/**
- * Foreign Key for req_ver from Student /one-to-many relationship with Student
- */
 class DegreeRequirement extends Model {
   static table = 'degreqs'
   static fields = {
@@ -55,7 +52,7 @@ class DegreeRequirement extends Model {
     return this.hasMany(Student);
   }
 }
-Relationships.oneToOne(Degree, Owner);
+Relationships.oneToOne(DegreeRequirement, Student);
 
 class Course extends Model {
   static table = 'courses'
