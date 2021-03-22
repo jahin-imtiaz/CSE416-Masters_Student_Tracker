@@ -34,9 +34,6 @@ class Student extends Model {
   }
 }
 
-/**
- * Foreign Key for req_ver from Student /one-to-many relationship with Student
- */
 class DegreeRequirement extends Model {
   static table = 'degreqs'
   static fields = {
@@ -55,7 +52,7 @@ class DegreeRequirement extends Model {
     return this.hasMany(Student);
   }
 }
-Relationships.oneToOne(Degree, Owner);
+Relationships.oneToOne(DegreeRequirement, Student);
 
 class Course extends Model {
   static table = 'courses'
@@ -67,8 +64,9 @@ class Course extends Model {
     course_num: DataTypes.STRING,
     description: DataTypes.STRING,
     number_of_credit: DataTypes.INTEGER,
-    prerequisites: DataTypes.JSON // Create a json object that holds array of (course_names, course number) objects
-                                  // Using Json because Many-to-Many is confusing for same data models
+    prerequisites: DataTypes.JSON 
+    // Create a json object that holds array of (course_names, course number) objects
+    // Using Json because Many-to-Many is confusing for same data models
   }
 
   //Fetch all course offering objects for this course

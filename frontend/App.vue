@@ -1,37 +1,58 @@
 <template>
   <div id="app">
-    <img
-      src="https://svgshare.com/i/SNz.svg"
-      alt="image"
-      border="0"
-      width="450"
-      height="450"
-    />
-    <HelloVno msg="you are building: your project with vno" />
-    <!--
-      TODO:
-      - Homepage with GPD Importing Functionality (Use FIGMA styles)
-      - Add Student page (Use FIGMA styles)
-      - Implement models
-      - Run and test
-     -->
+    <header>
+      
+      <nav class="inner">
+        <button v-on:click="handleRoute('home')">Home</button>
+        <button v-on:click="handleRoute('login')">Login</button>
+      </nav>
+    </header>
+    <body v-if="displayedComponent === 'login'">
+      <Login />
+    </body>
+    <body v-else-if="displayedComponent === 'home'">
+      <Home />
+    </body>
+    <body v-else>
+      <HelloVno msg="you are building: your project with vno" />
+    </body>
   </div>
 </template>
 
 <script>
 import HelloVno from './components/HelloVno.vue';
+import Home from './components/Home'
+import Login from './components/Login'
 
 export default {
   name: 'app',
-  components: {HelloVno},
+  data() {
+    return {
+      displayedComponent: 'login',
+    }
+  },
+  methods: {
+    handleRoute: function (event) {
+      this.displayedComponent = event;
+      console.log(this.displayedComponent)
+    }
+  },
+  components: {
+    HelloVno,
+    Login,
+    Home
+  },
+  mounted() {
+    // console.log('hello')
+  },
 };
 
 </script>
 
 <style>
-html {
+/* html {
   background-color: #203A42;
-}
+} */
 #app {
   font-family: Avenir, Helvetica, Arial, sans-serif;
   -webkit-font-smoothing: antialiased;

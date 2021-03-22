@@ -1,5 +1,12 @@
 <template>
   <div class="hello">
+    <img
+      src="https://svgshare.com/i/SNz.svg"
+      alt="image"
+      border="0"
+      width="450"
+      height="450"
+    />
     <h1>{{ msg }}</h1>
     <p>
       <br />
