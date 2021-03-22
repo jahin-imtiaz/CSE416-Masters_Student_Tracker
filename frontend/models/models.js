@@ -67,8 +67,9 @@ class Course extends Model {
     course_num: DataTypes.STRING,
     description: DataTypes.STRING,
     number_of_credit: DataTypes.INTEGER,
-    prerequisites: DataTypes.JSON // Create a json object that holds array of (course_names, course number) objects
-                                  // Using Json because Many-to-Many is confusing for same data models
+    prerequisites: DataTypes.JSON 
+    // Create a json object that holds array of (course_names, course number) objects
+    // Using Json because Many-to-Many is confusing for same data models
   }
 
   //Fetch all course offering objects for this course

@@ -40,11 +40,20 @@ const App = new Vue({
       width="450"
       height="450"
     />
+
+    <router-link to='/foo'>Go to foo</router-link>
     <HelloVno msg="you are building: your project with vno" />
+    
   </div>
 `,
   name: 'app',
   components: {HelloVno},
+  mounted() {
+    
+    
+    
+    console.log(VueRouter)
+  },
 });
 
 App.$mount("#app")
