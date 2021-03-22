@@ -1,9 +1,18 @@
 <template>
-  <div id="nav">
-    <router-link to="/">Home</router-link> |
-    <router-link to="/about">About</router-link>
+  <div>
+     <div id="nav">
+      <router-link to="/">Home</router-link> | 
+      <router-link to="/gpd-home">GPD Home</router-link> | 
+      <router-link to="/suggest-course-plan">Suggest Course Plan</router-link> |
+      <router-link to="/add-student">Add Student</router-link> |
+      <router-link to="/add-course">Add Course</router-link> |
+      <router-link to="/view-edit-student">View/Edit (Student)</router-link> |
+      <router-link to="/view-edit-gpd">View/Edit (GPD)</router-link> |
+      <router-link to="/browse-search-student">Browse/Search Student</router-link> |
+      <router-link to="/enrollment-trend">Enrollment Trend</router-link>
+    </div>
+    <router-view/>
   </div>
-  <router-view/>
 </template>
 
 <style>
