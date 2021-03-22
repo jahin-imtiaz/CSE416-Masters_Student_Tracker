@@ -10,7 +10,7 @@
     <body v-if="displayedComponent === 'login'">
       <Login />
     </body>
-    <body v-if="displayedComponent === 'home'">
+    <body v-else-if="displayedComponent === 'home'">
       <Home />
     </body>
     <body v-else>
