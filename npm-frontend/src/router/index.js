@@ -52,7 +52,12 @@ const routes = [
     path: '/view-edit-student',
     name: 'View/Edit (Student)',
     component: () => import(/* webpackChunkName: "about" */ '../views/ViewEditStudent.vue')
-  }
+  },
+  {
+    path: '/import-files',
+    name: 'Import Files',
+    component: () => import(/* webpackChunkName: "about" */ '../views/ImportFiles.vue')
+  },
 ]
 
 const router = new VueRouter({
