@@ -16,6 +16,8 @@ const studentSchema = new Schema({
     coursePlan: {type: JSON, required: true}
 });
 
+// studentSchema.index({ sbu_id: 'text'})
+
 
 const Student = mongoose.model("Student", studentSchema);
 module.exports = Student;
