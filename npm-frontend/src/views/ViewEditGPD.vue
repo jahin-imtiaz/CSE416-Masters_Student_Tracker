@@ -1,14 +1,20 @@
 <template>
   <div class="view-edit-gpd">
+    <NavBar/>
+    <br><br>
     View/Edit (GPD)
   </div>
 </template>
 
 <script>
+import NavBar from '@/components/NavBar.vue'
 export default {
   name: 'ViewEditGPD',
   props: {
     msg: String
+  },
+  components: {
+    NavBar
   }
 }
 </script>
