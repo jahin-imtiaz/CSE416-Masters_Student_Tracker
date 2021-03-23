@@ -1,8 +1,8 @@
 <template>
   <div id="app">
     <div id="nav">
-      <router-link to="/">Home</router-link> |
-      <router-link to="/about">About</router-link>
+      <router-link to="/">Home</router-link> | 
+      <router-link to="/about">About</router-link> | 
       <router-link to="/gpd-home">GPD Home</router-link> |
       <router-link to="/suggest-course-plan">Suggest Course Plan</router-link> |
       <router-link to="/add-student">Add Student</router-link> |
