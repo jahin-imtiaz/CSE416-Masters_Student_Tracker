@@ -1,3 +1,4 @@
 .env
 npm-frontend/node_modules
+backend/node_modules
 npm-frontend/node_modules/**
