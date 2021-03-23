@@ -1,5 +1,7 @@
 <template>
     <div class="add-student">
+        <NavBar/>
+        <br><br>
         <b-container lg="10" offset="1" class="bv-example-row">
             <b-row>
                 <b-col>
@@ -146,10 +148,14 @@
 </template>
 
 <script>
+import NavBar from '@/components/NavBar.vue'
 export default {
     name: "AddStudent",
     props: {
         msg: String,
+    },
+    components: {
+        NavBar
     },
     data() {
         return {

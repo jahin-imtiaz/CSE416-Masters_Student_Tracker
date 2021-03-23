@@ -1,14 +1,20 @@
 <template>
   <div class="view-edit-student">
+    <NavBar/>
+    <br><br>
     View/Edit (Student)
   </div>
 </template>
 
 <script>
+import NavBar from '@/components/NavBar.vue'
 export default {
   name: 'ViewEditStudent',
   props: {
     msg: String
+  },
+  components: {
+    NavBar
   }
 }
 </script>

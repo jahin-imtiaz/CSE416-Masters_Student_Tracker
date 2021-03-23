@@ -1,14 +1,20 @@
 <template>
   <div class="add-course">
+    <NavBar/>
+    <br><br>
     Add Course
   </div>
 </template>
 
 <script>
+import NavBar from '@/components/NavBar.vue'
 export default {
   name: 'AddCourse',
   props: {
     msg: String
+  },
+  components: {
+    NavBar
   }
 }
 </script>
