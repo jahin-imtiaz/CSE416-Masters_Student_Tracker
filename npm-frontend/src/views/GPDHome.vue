@@ -1,6 +1,7 @@
 <template>
   <div class="gpd-home">
-
+    <NavBar/>
+    <br><br>
     <b-container fluid="sm">
       <b-row>
         <b-col cols="6">
@@ -30,10 +31,14 @@
 </template>
 
 <script>
+import NavBar from '@/components/NavBar.vue'
 export default {
   name: 'GPDHome',
   props: {
     msg: String
+  },
+  components: {
+    NavBar
   }
 }
 </script>

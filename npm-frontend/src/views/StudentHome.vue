@@ -1,15 +1,15 @@
 <template>
-  <div class="browse-search-student">
+  <div class="student-home">
     <NavBar/>
     <br><br>
-    Browse/Search Student
+    Student Home
   </div>
 </template>
 
 <script>
 import NavBar from '@/components/NavBar.vue'
 export default {
-  name: 'BrowseSearchStudent',
+  name: 'StudentHome',
   props: {
     msg: String
   },

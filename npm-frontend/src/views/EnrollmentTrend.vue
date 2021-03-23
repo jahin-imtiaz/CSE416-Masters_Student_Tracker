@@ -1,14 +1,20 @@
 <template>
   <div class="enrollment-trend">
+    <NavBar/>
+    <br><br>
     Enrollment Trend
   </div>
 </template>
 
 <script>
+import NavBar from '@/components/NavBar.vue'
 export default {
   name: 'EnrollmentTrend',
   props: {
     msg: String
+  },
+  components: {
+    NavBar
   }
 }
 </script>
