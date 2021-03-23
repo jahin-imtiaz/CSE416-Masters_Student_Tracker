@@ -21,10 +21,10 @@
 export default {
     name: 'NavBar',
     methods: {
-        homeScreen:(){
-            // Home screen will be chosen by the logged in user
+        homeScreen() {
+            // depends on type of user logged in
         }
-    },
+    }
 }
 </script>
 

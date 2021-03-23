@@ -1,30 +1,24 @@
 <template>
   <div class="gpd-home">
     <NavBar/>
-    <br><br>
-    <b-container fluid="sm">
+    <br><br><br><br>
+    <b-container class="bv-example-row">
       <b-row>
-        <b-col cols="6">
-
-          <b-button-group>
-            <b-button type="button" class="btn btn-default">Button 1</b-button>
-            <b-button type="button" class="btn btn-default">Button 2</b-button>
-            <b-button type="button" class="btn btn-default">Button 3</b-button>
-          </b-button-group>
-
-          <b-button-group>
-            <b-button type="button" class="btn btn-default">Button 4</b-button>
-            <b-button type="button" class="btn btn-default">Button 5</b-button>
-            <b-button type="button" class="btn btn-default">Button 6</b-button>
-          </b-button-group>
-
-          <b-button-group>
-            <b-button type="button" class="btn btn-default">Button 7</b-button>
-            <b-button type="button" class="btn btn-default">Button 8</b-button>
-            <b-button type="button" class="btn btn-default">Button 9</b-button>
-          </b-button-group>
-
-        </b-col>
+        <b-col><b-button class="btn-xl" to="/import-files">Upload Course Information</b-button></b-col>
+        <b-col><b-button class="btn-xl" to="/import-files">Upload Degree Requirements</b-button></b-col>
+        <b-col><b-button class="btn-xl" to="/import-files">Upload Course Offerings</b-button></b-col>
+      </b-row>
+      <br>
+        <b-row>
+        <b-col><b-button class="btn-xl">Delete All Student</b-button></b-col>
+        <b-col><b-button class="btn-xl" to="/import-files">Upload Student Data</b-button></b-col>
+        <b-col><b-button class="btn-xl" to="/add-student">Add Student</b-button></b-col>
+      </b-row>
+      <br>
+      <b-row>
+        <b-col><b-button class="btn-xl" to="/import-files">Import Grades</b-button></b-col>
+        <b-col><b-button class="btn-xl" to="/browse-search-student">Browse/Search Student</b-button></b-col>
+        <b-col><b-button class="btn-xl" to="/enrollment-trend">Enrollment Trend</b-button></b-col>
       </b-row>
     </b-container>
   </div>
@@ -44,19 +38,15 @@ export default {
 </script>
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
-<style scoped>
-h3 {
-  margin: 40px 0 0;
+<style>
+.btn-xl {
+  padding: 10px 20px;
+  font-size: 18px;
+  border-radius: 10px;
+  width: 290px !important;
+  background-color: #A30E0E;
 }
-ul {
-  list-style-type: none;
-  padding: 0;
-}
-li {
-  display: inline-block;
-  margin: 0 10px;
-}
-a {
-  color: #42b983;
+.btn-xl:hover {
+  background-color: #800000;
 }
 </style>
