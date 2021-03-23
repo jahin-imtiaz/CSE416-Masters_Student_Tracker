@@ -1,12 +1,5 @@
 <template>
   <div class="hello">
-    <img
-      src="https://svgshare.com/i/SNz.svg"
-      alt="image"
-      border="0"
-      width="450"
-      height="450"
-    />
     <h1>{{ msg }}</h1>
     <p>
       <br />
@@ -23,6 +16,9 @@
     <ul>
       <br />
     </ul>
+    <label class="text-reader">
+      <input type="file" @change="loadTextFromFile">
+  </label>
   </div>
 </template>
 
@@ -32,6 +28,34 @@ export default {
   props: {
     msg: String,
   },
+
+  methods: {
+    loadTextFromFile(ev) {
+      const file = ev.target.files[0];
+      const reader = new FileReader();
+      let courseOfferingsArr = [];
+      reader.onload = (e) => {
+        let text = e.target.result;
+        text = text.split("\n");
+        for(let i = 1; i < text.length; i++){
+          let newCourseOffering = {};
+          let currCourse = text[i].split(",");
+          newCourseOffering.department = currCourse[0];
+          newCourseOffering.semester = currCourse[3];
+          newCourseOffering.year = currCourse[4];
+          let timeSplit = currCourse[5].split(" ");
+          let times = timeSplit[1].split("-");
+          newCourseOffering.start_time = times[0];
+          newCourseOffering.end_time = times[1];
+          courseOfferingsArr.push(newCourseOffering);
+        }
+        
+        console.log(courseOfferingsArr);
+
+      }
+      reader.readAsText(file);
+    }
+  }
 };
 </script>
 
