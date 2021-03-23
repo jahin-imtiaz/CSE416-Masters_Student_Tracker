@@ -6,14 +6,17 @@ const studentSchema = new Schema({
     _id: {
         sbu_id: { type: String, required: true, unique: true, trim: true },
     },
-    first_name: { type: String, required: true, trim: true },
-    last_name: { type: String, required: true, trim: true },
+    firstName: { type: String, required: true, trim: true },
+    lastName: { type: String, required: true, trim: true },
     email: { type: String, required: true, trim: true },
-    entry_year: { type: String, required: true, trim: true },
-    entry_semester: { type: String, required: true, trim: true },
     department: { type: String, required: true, trim: true },
+    entryYear: { type: String, required: true, trim: true },
+    entrySem: { type: String, required: true, trim: true },
     reqID: { type: Schema.Types.ObjectId, ref: "DegreeRequirement" },
-    graduation: { type: String, required: true, trim: true },
+    graduationSem: { type: String, required: true, trim: true },
+    graduationYear: { type: String, required: true, trim: true },
+    graduated: { type: Boolean, trim: true },
+    password: { type: String, required: true, trim: true },
     coursePlan: Schema.Types.Mixed
 });
 

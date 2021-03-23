@@ -1,4 +1,4 @@
-import { Course, CourseOffering, DegreeRequirement, Student } from '../models/index.js'
+import { DegreeRequirement, Student } from '../models/index.js'
 import { Router } from 'express'
 
 import { create as createLogger } from '../utils/logger.js'
@@ -20,6 +20,8 @@ router.get('/', async (req, res, next) => {
 router.post('/add', async (req, res, next) => {
   try {
     const { studentData } = req.body
+    // TODO: get reqId
+    // and courseplan?
     const newStudent = new Student({
       ...studentData
     })
