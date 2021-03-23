@@ -1,8 +1,8 @@
-import './env'
-import Api from './api'
+import './env.js'
+import Api from './api/index.js'
 import express from 'express'
 import mongoose from 'mongoose'
-import { create as createLogger } from './utils/logger'
+import { create as createLogger } from './utils/logger.js'
 
 const logger = createLogger('index')
 

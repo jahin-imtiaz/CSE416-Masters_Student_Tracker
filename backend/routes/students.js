@@ -1,7 +1,7 @@
-import { Course, CourseOffering, DegreeRequirement, Student } from '../models'
+import { Course, CourseOffering, DegreeRequirement, Student } from '../models/index.js'
 import { Router } from 'express'
 
-import { create as createLogger } from '../utils/logger'
+import { create as createLogger } from '../utils/logger.js'
 
 const logger = createLogger('routes:student')
 

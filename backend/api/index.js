@@ -1,7 +1,8 @@
 import cors from 'cors'
 import compression from 'compression'
 import express from 'express'
-import { create as createLogger } from '../../utils/logger'
+import students from '../routes/students.js'
+import { create as createLogger } from '../utils/logger.js'
 
 const { NODE_ENV, BACKEND_API_PORT } = process.env
 
