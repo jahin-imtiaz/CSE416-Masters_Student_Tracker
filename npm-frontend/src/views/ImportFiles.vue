@@ -1,5 +1,6 @@
 <template>
   <div class="hello">
+    <NavBar/>
     <b-container lg="10" offset="1" class="bv-example-row">
     <b-row class="mt-3">
         <b-col>
@@ -102,10 +103,14 @@
 </template>
 
 <script>
+import NavBar from '@/components/NavBar.vue'
 export default {
     name: 'hello-vno',
     props: {
         msg: String,
+    },
+    components: {
+        NavBar
     },
     data() {
         return {
