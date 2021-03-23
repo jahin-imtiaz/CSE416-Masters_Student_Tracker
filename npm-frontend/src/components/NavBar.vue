@@ -20,6 +20,11 @@
 <script>
 export default {
     name: 'NavBar',
+    methods: {
+        homeScreen() {
+            // depends on type of user logged in
+        }
+    }
 }
 </script>
 
