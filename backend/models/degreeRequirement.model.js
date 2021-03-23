@@ -1,4 +1,4 @@
-const mongoose = require("mongoose");
+import mongoose from 'mongoose'
 
 const Schema = mongoose.Schema;
 
@@ -9,4 +9,5 @@ const degreeRequirementSchema = new Schema({
 });
 
 const DegreeRequirement = mongoose.model("DegreeRequirement", degreeRequirementSchema);
-module.exports = DegreeRequirement;
+
+export default DegreeRequirement

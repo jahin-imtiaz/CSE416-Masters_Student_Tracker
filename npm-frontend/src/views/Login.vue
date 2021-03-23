@@ -1,20 +1,14 @@
 <template>
-  <div class="browse-search-student">
-    <NavBar/>
-    <br><br>
-    Browse/Search Student
+  <div class="login">
+    Login Page
   </div>
 </template>
 
 <script>
-import NavBar from '@/components/NavBar.vue'
 export default {
-  name: 'BrowseSearchStudent',
+  name: 'Login',
   props: {
     msg: String
-  },
-  components: {
-    NavBar
   }
 }
 </script>

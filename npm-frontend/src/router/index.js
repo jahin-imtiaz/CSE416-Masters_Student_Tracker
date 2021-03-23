@@ -24,6 +24,11 @@ const routes = [
     component: () => import(/* webpackChunkName: "about" */ '../views/GPDHome.vue')
   },
   {
+    path: '/student-home',
+    name: 'Student Home',
+    component: () => import(/* webpackChunkName: "about" */ '../views/StudentHome.vue')
+  },
+  {
     path: '/add-student',
     name: 'Add Student',
     component: () => import(/* webpackChunkName: "about" */ '../views/AddStudent.vue')
@@ -58,6 +63,15 @@ const routes = [
     name: 'Import Files',
     component: () => import(/* webpackChunkName: "about" */ '../views/ImportFiles.vue')
   },
+    path: '/suggest-course-plan',
+    name: 'Suggest Course Plan',
+    component: () => import(/* webpackChunkName: "about" */ '../views/SuggestCoursePlan.vue')
+  },
+  {
+    path: '/login',
+    name: 'Login',
+    component: () => import(/* webpackChunkName: "about" */ '../views/Login.vue')
+  }
 ]
 
 const router = new VueRouter({

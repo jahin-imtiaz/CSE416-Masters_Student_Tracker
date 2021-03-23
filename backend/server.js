@@ -1,23 +1,37 @@
-const express = require("express");
-const mongoose = require("mongoose");
+import './env.js'
+import Api from './api/index.js'
+import express from 'express'
+import mongoose from 'mongoose'
+import { create as createLogger } from './utils/logger.js'
 
-require('dotenv').config();
+const logger = createLogger('index')
 
-const app = express();
-const port = process.env.PORT || 5000;
+const { MONGO_URI } = process.env
 
-app.use(express.json());
+mongoose.connect(MONGO_URI, { useNewUrlParser: true, useFindAndModify: false, useCreateIndex: true, useUnifiedTopology: true })
 
-const uri = process.env.MongoURI;
-mongoose.connect(uri, {useNewUrlParser: true, useCreateIndex: true, useUnifiedTopology: true, useFindAndModify: false});
-const connection = mongoose.connection;
-connection.once('open', () => {
-    console.log("MongoDB database connection established successfully");
-});
+// Mongo connection successful
+mongoose.connection.on('connected', () => {
+  logger.info(`Mongoose default connection open to ${MONGO_URI}`)
+})
 
+// Mongo connection throws an error
+mongoose.connection.on('error', console.error.bind(console, 'Mongoose default connection error:'))
 
-app.listen(port, () => {
-    console.log(`Server is running on port: $(port)`);
-});
+// Mongo connection is disconnected
+mongoose.connection.on('disconnected', () => {
+  logger.info('Mongoose default connection disconnected')
+})
 
+// Close the connection if the node process is terminated
+process.on('SIGINT', () => {
+  mongoose.connection.close(() => {
+    logger.warn('Mongoose default connection disconnected through app termination')
+  })
 
+  process.exit(0)
+})
+
+const app = express()
+const api = new Api(app)
+api.start()

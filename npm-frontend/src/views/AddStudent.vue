@@ -1,5 +1,7 @@
 <template>
     <div class="add-student">
+        <NavBar/>
+        <br><br>
         <b-container lg="10" offset="1" class="bv-example-row">
             <b-row>
                 <b-col>
@@ -146,31 +148,49 @@
 </template>
 
 <script>
+import NavBar from '@/components/NavBar.vue'
+import axios from 'axios'
+
+const { BACKEND_API } = process.env
+
 export default {
     name: "AddStudent",
     props: {
         msg: String,
     },
+    components: {
+        NavBar
+    },
     data() {
         return {
-            studentID: '',
-            firstName: '',
-            lastName: '',
-            email: '',
-            department: '',
-            track: '',
-            entrySem: '',
-            entryYear: '',
-            reqVersionSem: '',
-            reqVersionYear: '',
-            graduationSem: '',
-            graduationYear: '',
-            password: '',
+            form: {
+                studentData: {
+                    studentID: '',
+                    firstName: '',
+                    lastName: '',
+                    email: '',
+                    department: '',
+                    track: '',
+                    entrySem: '',
+                    entryYear: '',
+                    reqVersionSem: '',
+                    reqVersionYear: '',
+                    graduationSem: '',
+                    graduationYear: '',
+                    password: ''
+                },
+            }
         };
     },
     methods: {
         addStudent: () => {
-            //TODO
+            axios.post(`${BACKEND_API}/students/add`, this.form)
+            .then((res) => {
+                console.log("ADDED STUDENT", res.status)
+            })
+            .catch((err) => {
+                console.log("ADD STUDENT FAILED", err)
+            })
         },
     },
 };
