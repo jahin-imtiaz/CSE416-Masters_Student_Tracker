@@ -63,6 +63,7 @@ const routes = [
     name: 'Import Files',
     component: () => import(/* webpackChunkName: "about" */ '../views/ImportFiles.vue')
   },
+  {
     path: '/suggest-course-plan',
     name: 'Suggest Course Plan',
     component: () => import(/* webpackChunkName: "about" */ '../views/SuggestCoursePlan.vue')
