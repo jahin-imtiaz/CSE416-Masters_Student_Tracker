@@ -4,6 +4,7 @@
       <router-link to="/">Home</router-link> |
       <router-link to="/about">About</router-link> | 
       <router-link to="/gpd-home">GPD Home</router-link> |
+      <router-link to="/import-files">Import File</router-link> |
       <router-link to="/student-home">Student Home</router-link> |
       <router-link to="/suggest-course-plan">Suggest Course Plan</router-link> |
       <router-link to="/add-student">Add Student</router-link> |
@@ -17,40 +18,6 @@
     <router-view />
   </div>
 </template>
-
-<script>
-  import mongoose from 'mongoose'
-  
-  const { MongoURI } = process.env
-
-  mongoose.connect(MongoURI, { useNewUrlParser: true, useFindAndModify: false, useCreateIndex: true, useUnifiedTopology: true })
-
-  // Mongo connection successful
-  mongoose.connection.on('connected', () => {
-    logger.info(`Mongoose default connection open to ${MONGODB_URL}`)
-  })
-
-  // Mongo connection throws an error
-  mongoose.connection.on('error', console.error.bind(console, 'Mongoose default connection error:'))
-
-  // Mongo connection is disconnected
-  mongoose.connection.on('disconnected', () => {
-    logger.info('Mongoose default connection disconnected')
-  })
-
-  // Close the connection if the node process is terminated
-  process.on('SIGINT', () => {
-    mongoose.connection.close(() => {
-      logger.warn('Mongoose default connection disconnected through app termination')
-    })
-
-    process.exit(0)
-  })
-
-
-
-</script>
-
 
 <style lang="scss">
 #app {

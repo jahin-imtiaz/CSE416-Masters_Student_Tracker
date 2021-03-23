@@ -1,4 +1,4 @@
-import { Course, CourseOffering, DegreeRequirement, Student } from '../models/index.js'
+import { DegreeRequirement, Student } from '../models/index.js'
 import { Router } from 'express'
 
 import { create as createLogger } from '../utils/logger.js'
@@ -19,14 +19,14 @@ router.get('/', async (req, res, next) => {
 
 router.post('/add', async (req, res, next) => {
   try {
-    const { studentData } = req.params
-    const newStudent = Student.findOneAndUpdate({sbu_id: studentData.sbu_id},
-      {
-        ...studentData
-      },
-      {
-        upsert: true, new: true
-      }).exec()
+    const { studentData } = req.body
+    // TODO: get reqId
+    // and courseplan?
+    const newStudent = new Student({
+      ...studentData
+    })
+    await newStudent.save()
+    logger.info(`Added student ${JSON.stringify(newStudent)}`)
     res.send(newStudent)
   } catch (err) {
     logger.error(err)

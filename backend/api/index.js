@@ -1,7 +1,7 @@
 import cors from 'cors'
 import compression from 'compression'
 import express from 'express'
-import students from '../routes/students.js'
+import { students, courses, courseofferings, requirements } from '../routes/students.js'
 import { create as createLogger } from '../utils/logger.js'
 
 const { NODE_ENV, BACKEND_API_PORT } = process.env
@@ -16,6 +16,9 @@ export default class Api {
     app.use(express.json({ limit: '50mb' }))
     app.use(express.urlencoded({ extended: true }))
     app.use('/students', students)
+    app.use('/courses', courses)
+    app.use('/requirements', requirements)
+    app.use('/courseofferings', courseofferings)
     app.use(this.handleError)
     this.app = app
   }
