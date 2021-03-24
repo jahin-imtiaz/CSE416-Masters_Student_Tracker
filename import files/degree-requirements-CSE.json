@@ -1,0 +1,93 @@
+{
+    "dept": "CSE",
+    "req_ver_sem": "Spring",
+    "req_ver_year": 2021,
+    "min_credit": 31,
+    "gpa_req": 3.0,
+    "breadth_req": [
+        {
+            "breadth": "Theory",
+            "courses": [
+                {"department": "CSE", "course_num": 512, "course_name": "Machine Learning", "credits": 3},
+                {"department": "CSE", "course_num": 526, "course_name": "Principles Programming Languages", "credits": 3},
+                {"department": "CSE", "course_num": 540, "course_name": "Theory of Computation", "credits": 3},
+                {"department": "CSE", "course_num": 541, "course_name": "Logic in Computer Science", "credits": 3},
+                {"department": "CSE", "course_num": 547, "course_name": "Discrete Mathematics", "credits": 3},
+                {"department": "CSE", "course_num": 548, "course_name": "Analysis of Algorithms", "credits": 3},
+                {"department": "CSE", "course_num": 549, "course_name": "Computational Biology", "credits": 3}
+            ],
+            "min_course": 1
+        },
+        {
+            "breadth": "Systems",
+            "courses": [
+                {"department": "CSE", "course_num": 502, "course_name": "Computer Architecture", "credits": 3},
+                {"department": "CSE", "course_num": 504, "course_name": "Compiler Design", "credits": 3},
+                {"department": "CSE", "course_num": 506, "course_name": "Operating Systems", "credits": 3},
+                {"department": "CSE", "course_num": 508, "course_name": "Network Security", "credits": 3},
+                {"department": "CSE", "course_num": 509, "course_name": "Computer System Security", "credits": 3},
+                {"department": "CSE", "course_num": 532, "course_name": "Theory of Database Systems", "credits": 3},
+                {"department": "CSE", "course_num": 534, "course_name": "Fundamentals of Computer Networks", "credits": 3},
+                {"department": "CSE", "course_num": 535, "course_name": "Distributed Systems", "credits": 3}
+            ],
+            "min_course": 1
+        },
+        {
+            "breadth": "Information and Intelligent Systems",
+            "courses": [
+                {"department": "CSE", "course_num": 505, "course_name": "Computing with Logic", "credits": 3},
+                {"department": "CSE", "course_num": 519, "course_name": "Data Science Fundamentals", "credits": 3},
+                {"department": "CSE", "course_num": 527, "course_name": "Introduction to Computer Vision", "credits": 3},
+                {"department": "CSE", "course_num": 528, "course_name": "Computer Graphics", "credits": 3},
+                {"department": "CSE", "course_num": 537, "course_name": "Artificial Intelligence", "credits": 3},
+                {"department": "CSE", "course_num": 538, "course_name": "Natural Language Processing", "credits": 3},
+                {"department": "CSE", "course_num": 564, "course_name": "Visualization", "credits": 3}
+            ],
+            "min_course": 1
+        }
+    ],
+    "track_req": {
+        "tracks": [
+            {
+                "track": "Special Project",
+                "courses": [
+                    {"department": "CSE", "course_num": 0, "course_name": "", "credits": 3, "restricted_courses": [523,524,599]},
+                    {"department": "CSE", "course_num": 0, "course_name": "", "credits": 3, "restricted_courses": [523,524,599]},
+                    {"department": "CSE", "course_num": 0, "course_name": "", "credits": 3, "restricted_courses": [523,524,599]},
+                    {"department": "CSE", "course_num": 0, "course_name": "", "credits": 3, "restricted_courses": [523,524,599]},
+                    {"department": "CSE", "course_num": 0, "course_name": "", "credits": 3, "restricted_courses": [523,524,599]},
+                    {"department": "CSE", "course_num": 0, "course_name": "", "credits": 3, "restricted_courses": [523,524,599]},
+                    {"department": "CSE", "course_num": 0, "course_name": "", "credits": 3, "restricted_courses": [523,524,599]},
+                    {"department": "CSE", "course_num": 0, "course_name": "", "credits": 3, "restricted_courses": [523,524,599]},
+                    {"department": "CSE", "course_num": 522, "course_name": "Special Project in Computer Science", "credits": 3}
+                ]
+            },
+            {
+                "track": "Advanced Project",
+                "courses": [
+                    {"department": "CSE", "course_num": 0, "course_name": "", "credits": 3, "restricted_courses": [523,524,599]},
+                    {"department": "CSE", "course_num": 0, "course_name": "", "credits": 3, "restricted_courses": [523,524,599]},
+                    {"department": "CSE", "course_num": 0, "course_name": "", "credits": 3, "restricted_courses": [523,524,599]},
+                    {"department": "CSE", "course_num": 0, "course_name": "", "credits": 3, "restricted_courses": [523,524,599]},
+                    {"department": "CSE", "course_num": 0, "course_name": "", "credits": 3, "restricted_courses": [523,524,599]},
+                    {"department": "CSE", "course_num": 0, "course_name": "", "credits": 3, "restricted_courses": [523,524,599]},
+                    {"department": "CSE", "course_num": 0, "course_name": "", "credits": 3, "restricted_courses": [523,524,599]},
+                    {"department": "CSE", "course_num": 523, "course_name": "Advanced Project in Computer Science I", "credits": 3},
+                    {"department": "CSE", "course_num": 524, "course_name": "Advanced Project in Computer Science II", "credits": 3}
+                ]
+            },
+            {
+                "track": "Thesis",
+                "courses": [
+                    {"department": "CSE", "course_num": 0, "course_name": "", "credits": 3, "restricted_courses": [523,524,599]},
+                    {"department": "CSE", "course_num": 0, "course_name": "", "credits": 3, "restricted_courses": [523,524,599]},
+                    {"department": "CSE", "course_num": 0, "course_name": "", "credits": 3, "restricted_courses": [523,524,599]},
+                    {"department": "CSE", "course_num": 0, "course_name": "", "credits": 3, "restricted_courses": [523,524,599]},
+                    {"department": "CSE", "course_num": 0, "course_name": "", "credits": 3, "restricted_courses": [523,524,599]},
+                    {"department": "CSE", "course_num": 0, "course_name": "", "credits": 3, "restricted_courses": [523,524,599]},
+                    {"department": "CSE", "course_num": 599, "course_name": "M.S. Thesis Research", "credits": [1,12], "min_credit": 6, "max_credit": 9}
+                ]
+            }
+        ]
+    }
+}
