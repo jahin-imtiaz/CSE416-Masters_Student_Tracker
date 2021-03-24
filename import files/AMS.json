@@ -1,0 +1,108 @@
+{
+    "dept": "AMS",
+    "req_ver_sem": "Spring",
+    "req_ver_year": 2021,
+    "min_credit": 30,
+    "cum_course_gpa": 3.0,
+    "credit_gpa": {"credits": 18, "gpa": 3.0},
+    "core_req_gpa": 3.0,
+    "track_req": {
+        "tracks": [
+            {
+                "track": "Computational Applied Mathematics",
+                "courses": [
+                    {"department": "AMS", "course_num": 501, "course_name": "Differential Equations and Boundary Value Problems", "credits": 3},
+                    {"department": "AMS", "course_num": 503, "course_name": "Applications of Complex Analysis", "credits": 3},
+                    {"department": "AMS", "course_num": 510, "course_name": "Analytical Methods for Applied Mathematics and Statistics", "credits": 3},
+                    {"department": "AMS", "course_num": 526, "course_name": "Numerical Analysis I", "credits": 3},
+                    {"department": "AMS", "course_num": 527, "course_name": "Numerical Analysis II", "credits": 3},
+                    {"department": "AMS", "course_num": 528, "course_name": "Numerical Analysis III", "credits": 3},
+                    {"department": "AMS", "course_num": 595, "course_name": "Fundamentals of Computing", "credits": 1}
+                ],
+                "elective_courses": [
+                    {"department": "", "course_num": 0, "course_name": "", "credits": 3},
+                    {"department": "", "course_num": 0, "course_name": "", "credits": 3},
+                    {"department": "", "course_num": 0, "course_name": "", "credits": 3},
+                    {"department": "", "course_num": 0, "course_name": "", "credits": 3}
+                ]
+            },
+            {
+                "track": "Computational Biology",
+                "courses": [
+                    {"department": "AMS", "course_num": 507, "course_name": "Introduction to Probability", "credits": 3},
+                    {"department": "AMS", "course_num": 510, "course_name": "Analytical Methods for Applied Mathematics and Statistics", "credits": 3},
+                    {"department": "MCB", "course_num": 520, "course_name": "Graduate Biochemistry", "credits": 3},
+                    {"department": "CHE", "course_num": 541, "course_name": "Biomolecular Structure and Analysis", "credits": 3},
+                    {"department": "AMS", "course_num": 531, "course_name": "Laboratory Rotations in Computational Biology", "semester": "Fall,Spring", "credits": 0},
+                    {"department": "AMS", "course_num": 532, "course_name": "Journal Club in Computational Biology", "semester": "Fall,Spring", "credits": 0},
+                    {"department": "AMS", "course_num": 533, "course_name": "Numerical Methods and Algorithms in Computational Biology", "credits": 3},
+                    {"department": "AMS", "course_num": 535, "course_name": "Introduction to Computational Structural Biology and Drug Design", "credits": 3},
+                    {"department": "AMS", "course_num": 537, "course_name": "Biological Dynamics and Networks", "credits": 3},
+                    {"department": "AMS", "course_num": 539, "course_name": "Introduction to Physical & Quantitative Biology", "credits": 0},
+                    {"department": "CSE", "course_num": 549, "course_name": "Computational Biology", "credits": 0}
+                ],
+                "elective_courses": [
+                    {"department": "", "course_num": 0, "course_name": "", "credits": 3},
+                    {"department": "", "course_num": 0, "course_name": "", "credits": 3},
+                    {"department": "", "course_num": 0, "course_name": "", "credits": 3}
+                ]
+            },
+            {
+                "track": "Operations Research",
+                "courses": [
+                    {"department": "AMS", "course_num": 510, "course_name": "Analytical Methods for Applied Mathematics and Statistics", "credits": 3},
+                    {"department": "AMS", "course_num": 507, "course_name": "Introduction to Probability", "credits": 3},
+                    {"department": "AMS", "course_num": 540, "course_name": "Linear Programming", "credits": 3},
+                    {"department": "AMS", "course_num": 550, "course_name": "Stochastic Models", "credits": 3},
+                    {"department": "AMS", "course_num": 553, "course_name": "Simulation and Modeling", "credits": 3},
+                    {"department": "AMS", "course_num": [570,586], "course_name": "", "credits": 3},
+                    {"department": "AMS", "course_num": 595, "course_name": "Fundamentals of Computing", "credits": 1}
+                ],
+                "elective_courses": [
+                    {"department": "AMS", "course_num": [542,556], "course_name": "", "credits": 3},
+                    {"department": "AMS", "course_num": [542,556], "course_name": "", "credits": 3},
+                    {"department": "AMS", "course_num": {"range1": [542,556], "range2": [570,586]}, "course_name": "", "credits": 3},
+                    {"department": "AMS", "course_num": {"range1": [542,556], "range2": [511,523]}, "course_name": "", "credits": 3}  
+                ]
+            },
+            {
+                "track": "Statistics",
+                "courses": [
+                    {"department": "AMS", "course_num": 510, "course_name": "Analytical Methods for Applied Mathematics and Statistics", "credits": 3},
+                    {"department": "AMS", "course_num": 507, "course_name": "Introduction to Probability", "credits": 3},
+                    {"department": "AMS", "course_num": 570, "course_name": "Mathematical Statistics I", "credits": 3},
+                    {"department": "AMS", "course_num": 572, "course_name": "Exploratory Data Analysis", "credits": 3},
+                    {"department": "AMS", "course_num": 573, "course_name": "Design & Analysis of Categorical Data", "credits": 3},
+                    {"department": "AMS", "course_num": 578, "course_name": "Regression Theory", "credits": 3},
+                    {"department": "AMS", "course_num": 582, "course_name": "Design of Experiments", "credits": 3},
+                    {"department": "AMS", "course_num": 597, "course_name": "Statistical Computing", "credits": 3}
+                ],
+                "elective_courses": [
+                    {"department": "", "course_num": 0, "course_name": "", "credits": 3},
+                    {"department": "", "course_num": 0, "course_name": "", "credits": 3} 
+                ]
+            },
+            {
+                "track": "Quantitative Finance",
+                "courses": [
+                    {"department": "AMS", "course_num": 507, "course_name": "Introduction to Probability", "credits": 3},
+                    {"department": "AMS", "course_num": 510, "course_name": "Analytical Methods for Applied Mathematics and Statistics", "credits": 3},
+                    {"department": "AMS", "course_num": 511, "course_name": "Foundations of Quantitative Finance", "credits": 3},
+                    {"department": "AMS", "course_num": 512, "course_name": "Capital Markets & Portfolio Theory", "credits": 3},
+                    {"department": "AMS", "course_num": 513, "course_name": "Financial Derivatives and Stochastic Calculus", "credits": 3},
+                    {"department": "AMS", "course_num": 514, "course_name": "Computational Finance", "credits": 3},
+                    {"department": "AMS", "course_num": 516, "course_name": "Statistical Methods in Finance", "credits": 3},
+                    {"department": "AMS", "course_num": 517, "course_name": "Quantitative Risk Management", "credits": 3},
+                    {"department": "AMS", "course_num": 518, "course_name": "Advanced Stochastic Models, Risk Assessment & Portfolio Optimization", "credits": 3},
+                    {"department": "AMS", "course_num": 572, "course_name": "Exploratory Data Analysis", "credits": 3},
+                    {"department": "FIN", "course_num": 539, "course_name": "Investment Analysis", "credits": 3}
+                ],
+                "elective_courses": [
+                    {"department": "", "course_num": 0, "course_name": "", "credits": 3}
+                ]
+            }
+        ]
+    },
+    "final_req": {"fulfilled": false, "further_req": {}},
+    "time_limit": 6
+}
