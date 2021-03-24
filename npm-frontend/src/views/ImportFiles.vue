@@ -162,7 +162,14 @@ export default {
 
         },
         loadDegReFile(){
-
+            const file = this.degreeReqFile;
+            const reader = new FileReader();
+            reader.onload = (e) => {
+                let reqJson = e.target.result;
+                console.log(reqJson);
+                this.degreeReqFile = null;
+            }
+            reader.readAsText(file);
         },
         loadCourseOfferingFile(){
             const file = this.courseOfferingFile;
