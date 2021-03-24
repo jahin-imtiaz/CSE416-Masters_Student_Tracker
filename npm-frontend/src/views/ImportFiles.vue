@@ -238,6 +238,7 @@ export default {
           courseOfferingsArr.push(newCourseOffering);
         }
         console.log(courseOfferingsArr);
+        // On import, if student has course plan entries that are not offered that semester, notify them
         this.courseOfferingFile = null;
       };
       reader.readAsText(file);

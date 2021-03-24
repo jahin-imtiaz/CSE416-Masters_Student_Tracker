@@ -83,5 +83,16 @@ router.post('/add-many', async (req, res, next) => {
   }
 })
 
+router.post('/delete-all', async (req, res, next) => {
+  try {
+    const deleteAll = await Student.deleteMany({})
+    console.log(deleteAll)
+    res.send(deleteAll)
+  } catch (err) {
+    logger.error(err)
+    next(err)
+  }
+})
+
 
 export default router
