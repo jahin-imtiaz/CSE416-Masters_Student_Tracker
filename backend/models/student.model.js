@@ -13,10 +13,14 @@ const StudentSchema = new Schema({
     email: { type: String, required: true },
     password: { type: String, required: true, lowercase: false },
     // For students with 2+ majors, add below to a Degree table
-    department: { type: String, required: true },
     entryYear: { type: String, required: true },
     entrySem: { type: String, required: true },
-    reqID: { type: Schema.Types.ObjectId, ref: "DegreeRequirement" },
+    // reqID: { type: Schema.Types.ObjectId, ref: "DegreeRequirement" },
+    reqVersion: {
+        department: { type: String },
+        reqSem: { type: String },
+        reqYear: { type: String }
+    },
     graduationSem: { type: String },
     graduationYear: { type: String }
 });

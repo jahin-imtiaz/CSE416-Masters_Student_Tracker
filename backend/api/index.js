@@ -1,7 +1,7 @@
 import cors from 'cors'
 import compression from 'compression'
 import express from 'express'
-import { students, courses, courseofferings, requirements } from '../routes/students.js'
+import { students, courses, courseofferings, requirements } from '../routes/index.js'
 import { create as createLogger } from '../utils/logger.js'
 
 const { NODE_ENV, BACKEND_API_PORT } = process.env

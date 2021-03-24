@@ -14,6 +14,6 @@ const CoursePlanSchema = new Schema({
   grade: { type: String }
 });
 
-const CoursePlan = mongoose.model("Course", CoursePlanSchema);
+const CoursePlan = mongoose.model("CoursePlan", CoursePlanSchema);
 
 export default CoursePlan

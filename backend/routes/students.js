@@ -19,20 +19,7 @@ router.get('/', async (req, res, next) => {
 
 router.post('/add', async (req, res, next) => {
   try {
-    const { studentData } = req.body
-    const { reqVersionSem, reqVersionYear, department } = studentData
-
-    const reqID = await DegreeRequirement.find(
-      {
-        reqVersionSem, reqVersionYear, department
-      }).exec()
-
-    delete studentData.reqVersionSem
-    delete studentData.reqVersionYear
-
-    if (reqID !== null) {
-      studentData['reqID'] = reqID._id
-    }
+    let studentData = req.body
 
     const newStudent = new Student({
       ...studentData
@@ -40,6 +27,31 @@ router.post('/add', async (req, res, next) => {
     await newStudent.save()
     logger.info(`Added student ${JSON.stringify(newStudent)}`)
     res.send(newStudent)
+  } catch (err) {
+    logger.error(err)
+    next(err)
+  }
+})
+
+router.post('/add-many', async (req, res, next) => {
+  try {
+    let students = req.body
+
+    let newStudents = []
+
+    for (let studentData of students) {
+      console.log(studentData)
+      
+      const newStudent = new Student({
+        ...studentData
+      })
+      await newStudent.save()
+      logger.info(`Added student ${JSON.stringify(newStudent)}`)
+      
+      newStudents.push(newStudent)
+    }
+
+    res.send(newStudents)
   } catch (err) {
     logger.error(err)
     next(err)

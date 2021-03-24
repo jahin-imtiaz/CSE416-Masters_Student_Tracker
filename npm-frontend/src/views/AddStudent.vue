@@ -10,7 +10,7 @@
                       <b-col>
                         <b-form-input
                             aria-label="Small text input with custom switch"
-                            v-model="studentID"
+                            v-model="_id.sbu_id"
                         ></b-form-input>
                       </b-col>
                     </b-row>
@@ -164,21 +164,21 @@ export default {
     data() {
         return {
             form: {
-                studentData: {
-                    studentID: '',
-                    firstName: '',
-                    lastName: '',
-                    email: '',
+                '_id.sbu_id': '',
+                firstName: '',
+                lastName: '',
+                email: '',
+                track: '',
+                entrySem: '',
+                entryYear: '',
+                reqVersion: {
                     department: '',
-                    track: '',
-                    entrySem: '',
-                    entryYear: '',
-                    reqVersionSem: '',
-                    reqVersionYear: '',
-                    graduationSem: '',
-                    graduationYear: '',
-                    password: ''
+                    reqSem: '',
+                    reqYear: '',
                 },
+                graduationSem: '',
+                graduationYear: '',
+                password: ''
             }
         };
     },
