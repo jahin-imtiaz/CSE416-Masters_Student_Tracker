@@ -1,0 +1,128 @@
+{
+    "dept": "ESE",
+    "req_ver_sem": "Spring",
+    "req_ver_year": 2021,
+    "track_req": {
+        "tracks": [
+            {
+                "track": "Non-Thesis",
+                "min_credit": 30,
+                "cum_gpa": 3.0,
+                "dept_gpa": 3.0,
+                "max_credit": {"department": "ESE", "courses": [597,599,698], "credits": 6},
+                "req_course": [
+                    {"subarea": "Hardware",
+                        "courses": [
+                            {"department": "ESE", "course_num": 536, "course_name": "Switching and Routing in Parallel and Distributed Systems", "credits": 3},
+                            {"department": "ESE", "course_num": 545, "course_name": "Computer Architecture", "credits": 4},
+                            {"department": "ESE", "course_num": 566, "course_name": "Hardware-Software Co-Design of Embedded Systems", "credits": 3},
+                            {"department": "ESE", "course_num": 587, "course_name": "Hardware Architectures for Deep Learning", "credits": 3}
+                        ],
+                        "min_course": 1
+                    },
+                    {"subarea": "Networking",
+                        "courses": [
+                            {"department": "ESE", "course_num": 505, "course_name": "Wireless Network", "credits": 3},
+                            {"department": "ESE", "course_num": 506, "course_name": "Wireless Networking and Mobile Computing", "credits": 3},
+                            {"department": "ESE", "course_num": 546, "course_name": "Computer Communication Networks", "credits": 3},
+                            {"department": "ESE", "course_num": 548, "course_name": "Local & Wide Area Networks", "credits": 3}
+                        ],
+                        "min_course": 1
+                    },
+                    {"subarea": "CAD and VLSI",
+                        "courses": [
+                            {"department": "ESE", "course_num": 507, "course_name": "Advanced Digital System Design & Generation", "credits": 3},
+                            {"department": "ESE", "course_num": 530, "course_name": "Computer Aided Design", "credits": 3},
+                            {"department": "ESE", "course_num": 549, "course_name": "Advanced VLSI System Testing", "credits": 3},
+                            {"department": "ESE", "course_num": 555, "course_name": "Advanced VLSI System Design", "credits": 3},
+                            {"department": "ESE", "course_num": 556, "course_name": "VLSI Physical and Logic Design Automation", "credits": 3},
+                            {"department": "ESE", "course_num": 575, "course_name": "Advanced VLSI Signal Processing Architecture", "credits": 3}
+                        ],
+                        "min_course": 1
+                    },
+                    {"subarea": "Theory and Software",
+                        "courses": [
+                            {"department": "ESE", "course_num": 501, "course_name": "System Specification and Modeling", "credits": 3},
+                            {"department": "ESE", "course_num": 533, "course_name": "Convex Optimization and Eng. Applications", "credits": 3},
+                            {"department": "ESE", "course_num": 534, "course_name": "Cyber Physical Systems", "credits": 3},
+                            {"department": "ESE", "course_num": 543, "course_name": "Mobile Cloud Computing", "credits": 3},
+                            {"department": "ESE", "course_num": 554, "course_name": "Computational Models for Computer Engineers", "credits": 3},
+                            {"department": "ESE", "course_num": 558, "course_name": "Digital Image Processing", "credits": 3},
+                            {"department": "ESE", "course_num": 588, "course_name": "Pattern Recognition", "credits": 3},
+                            {"department": "ESE", "course_num": 589, "course_name": "Learning Systems for Engineering Applications", "credits": 3},
+                            {"department": "CSE", "course_num": 506, "course_name": "Operating Systems", "credits": 3},
+                            {"department": "CSE", "course_num": 526, "course_name": "Principles of Programming Languages", "credits": 3},
+                            {"department": "CSE", "course_num": 548, "course_name": "Analysis of Algorithms", "credits": 3}
+                        ],
+                        "min_course": 2
+                    },
+                    [
+                        {"department": "ESE", "course_num": 0, "course_name": "", "credits": 3, "restricted_courses": [597,599,697,698,699]},
+                        {"department": "ESE", "course_num": 0, "course_name": "", "credits": 3, "restricted_courses": [597,599,697,698,699]},
+                        {"department": "ESE", "course_num": 0, "course_name": "", "credits": 3, "restricted_courses": [597,599,697,698,699]},
+                        {"department": "ESE", "course_num": 597, "course_name": "MS Internship Project on Campus", "credits": 1, "min_credit": 1, "max_credit": 3}
+                    ]
+                ]
+            },
+            {
+                "track": "Thesis",
+                "min_credit": 30,
+                "cum_gpa": 3.0,
+                "dept_gpa": 3.0,
+                "max_credit": {"department": "ESE", "courses": [597,599,698], "credits": 12},
+                "req_course": [
+                    {"subarea": "Hardware",
+                        "courses": [
+                            {"department": "ESE", "course_num": 536, "course_name": "Switching and Routing in Parallel and Distributed Systems", "credits": 3},
+                            {"department": "ESE", "course_num": 545, "course_name": "Computer Architecture", "credits": 4},
+                            {"department": "ESE", "course_num": 566, "course_name": "Hardware-Software Co-Design of Embedded Systems", "credits": 3},
+                            {"department": "ESE", "course_num": 587, "course_name": "Hardware Architectures for Deep Learning", "credits": 3}
+                        ],
+                        "min_course": 1
+                    },
+                    {"subarea": "Networking",
+                        "courses": [
+                            {"department": "ESE", "course_num": 505, "course_name": "Wireless Network", "credits": 3},
+                            {"department": "ESE", "course_num": 506, "course_name": "Wireless Networking and Mobile Computing", "credits": 3},
+                            {"department": "ESE", "course_num": 546, "course_name": "Computer Communication Networks", "credits": 3},
+                            {"department": "ESE", "course_num": 548, "course_name": "Local & Wide Area Networks", "credits": 3}
+                        ],
+                        "min_course": 1
+                    },
+                    {"subarea": "CAD and VLSI",
+                        "courses": [
+                            {"department": "ESE", "course_num": 507, "course_name": "Advanced Digital System Design & Generation", "credits": 3},
+                            {"department": "ESE", "course_num": 530, "course_name": "Computer Aided Design", "credits": 3},
+                            {"department": "ESE", "course_num": 549, "course_name": "Advanced VLSI System Testing", "credits": 3},
+                            {"department": "ESE", "course_num": 555, "course_name": "Advanced VLSI System Design", "credits": 3},
+                            {"department": "ESE", "course_num": 556, "course_name": "VLSI Physical and Logic Design Automation", "credits": 3},
+                            {"department": "ESE", "course_num": 575, "course_name": "Advanced VLSI Signal Processing Architecture", "credits": 3}
+                        ],
+                        "min_course": 1
+                    },
+                    {"subarea": "Theory and Software",
+                        "courses": [
+                            {"department": "ESE", "course_num": 501, "course_name": "System Specification and Modeling", "credits": 3},
+                            {"department": "ESE", "course_num": 533, "course_name": "Convex Optimization and Eng. Applications", "credits": 3},
+                            {"department": "ESE", "course_num": 534, "course_name": "Cyber Physical Systems", "credits": 3},
+                            {"department": "ESE", "course_num": 543, "course_name": "Mobile Cloud Computing", "credits": 3},
+                            {"department": "ESE", "course_num": 554, "course_name": "Computational Models for Computer Engineers", "credits": 3},
+                            {"department": "ESE", "course_num": 558, "course_name": "Digital Image Processing", "credits": 3},
+                            {"department": "ESE", "course_num": 588, "course_name": "Pattern Recognition", "credits": 3},
+                            {"department": "ESE", "course_num": 589, "course_name": "Learning Systems for Engineering Applications", "credits": 3},
+                            {"department": "CSE", "course_num": 506, "course_name": "Operating Systems", "credits": 3},
+                            {"department": "CSE", "course_num": 526, "course_name": "Principles of Programming Languages", "credits": 3},
+                            {"department": "CSE", "course_num": 548, "course_name": "Analysis of Algorithms", "credits": 3}
+                        ],
+                        "min_course": 2
+                    },
+                    [
+                        {"department": "ESE", "course_num": 0, "course_name": "", "credits": 3, "restricted_courses": [597,599,697,698,699]},
+                        {"department": "ESE", "course_num": 597, "course_name": "MS Internship Project on Campus", "credits": 1, "min_credit": 1, "max_credit": 3},
+                        {"department": "ESE", "course_num": 599, "course_name": "M.S. Thesis Research", "credits": [1,12], "min_credit": 6, "max_credit": 12}
+                    ]
+                ]
+            }
+        ]
+    }
+}
