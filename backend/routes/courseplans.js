@@ -19,12 +19,24 @@ router.get('/', async (req, res, next) => {
 
 router.post('/add', async (req, res, next) => {
     try {
-        const { coursePlanData } = req.body
-        const newCoursePlan = new CoursePlan({
+        let coursePlanData = req.body
+
+        const newCoursePlan = await CoursePlan.findOneAndUpdate(
+        {
+            sbu_id: coursePlanData.sbu_id,
+            course_num: coursePlanData.course_num,
+            department: coursePlanData.department
+        }, {
             ...coursePlanData
+        }, {
+            upsert: true,
+            new: true
         })
-        await newCoursePlan.save()
-        logger.info(`Added course plan ${JSON.stringify(newCoursePlan)}`)
+        // const newCoursePlan = new CoursePlan({
+        //     ...coursePlanData
+        // })
+        // await newCoursePlan.save()
+        logger.info(`Upserted course plan ${JSON.stringify(newCoursePlan)}`)
         res.send(newCoursePlan)
     } catch (err) {
         logger.error(err)
@@ -39,11 +51,22 @@ router.post('/add-many', async (req, res, next) => {
       let newCoursePlans = []
   
       for (let coursePlanData of coursePlans) {
-        const newCoursePlan = new CoursePlan({
-          ...coursePlanData
+        const newCoursePlan = await CoursePlan.findOneAndUpdate(
+        {
+            sbu_id: coursePlanData.sbu_id,
+            course_num: coursePlanData.course_num,
+            department: coursePlanData.department
+        }, {
+            ...coursePlanData
+        }, {
+            upsert: true,
+            new: true
         })
-        await newCoursePlan.save()
-        logger.info(`Added course plan ${JSON.stringify(newCoursePlan)}`)
+        // const newCoursePlan = new CoursePlan({
+        //   ...coursePlanData
+        // })
+        // await newCoursePlan.save()
+        logger.info(`Upserted course plan ${JSON.stringify(newCoursePlan)}`)
         
         newCoursePlans.push(newCoursePlan)
       }

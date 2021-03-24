@@ -20,13 +20,25 @@ router.get('/', async (req, res, next) => {
 router.post('/add', async (req, res, next) => {
   try {
     let studentData = req.body
+    const studentId = studentData['_id.sbu_id']
+    delete studentData._id
 
-      console.log(studentData)
-    const newStudent = new Student({
-      ...studentData
-    })
-    await newStudent.save()
-    logger.info(`Added student ${JSON.stringify(newStudent)}`)
+    const newStudent = await Student.findOneAndUpdate(
+      {
+        '_id.sbu_id': studentId
+      }, {
+        ...studentData
+      }, {
+        upsert: true,
+        new: true
+      }
+    )
+
+    // const newStudent = new Student({
+    //   ...studentData
+    // })
+    // await newStudent.save()
+    logger.info(`Upserted student ${JSON.stringify(newStudent)}`)
     res.send(newStudent)
   } catch (err) {
     logger.error(err)
@@ -41,11 +53,25 @@ router.post('/add-many', async (req, res, next) => {
     let newStudents = []
 
     for (let studentData of students) {
-      const newStudent = new Student({
-        ...studentData
-      })
-      await newStudent.save()
-      logger.info(`Added student ${JSON.stringify(newStudent)}`)
+      console.log(studentData)
+      const studentId = studentData['_id.sbu_id']
+      delete studentData._id
+
+      const newStudent = await Student.findOneAndUpdate(
+        {
+          '_id.sbu_id': studentId
+        }, {
+          ...studentData
+        }, {
+          upsert: true,
+          new: true
+        }
+      )
+      // const newStudent = new Student({
+      //   ...studentData
+      // })
+      // await newStudent.save()
+      logger.info(`Upserted student ${JSON.stringify(newStudent)}`)
       
       newStudents.push(newStudent)
     }

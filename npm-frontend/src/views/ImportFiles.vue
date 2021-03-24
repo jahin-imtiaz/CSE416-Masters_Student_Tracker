@@ -271,7 +271,7 @@ export default {
         console.log(studentsArr);
         axios.post(`${VUE_APP_BACKEND_API}/students/add-many`, studentsArr)
           .then(() => {
-            console.log(`Added students`);
+            console.log(`UPSERTED STUDENTS`);
           })
           .catch((err) => {
             console.log(err);
@@ -304,7 +304,7 @@ export default {
         console.log(coursePlanArr);
         axios.post(`${VUE_APP_BACKEND_API}/courseplans/add-many`, coursePlanArr)
           .then(() => {
-            console.log(`Added course plans`);
+            console.log(`UPSERTED COURSE PLANS`);
           })
           .catch((err) => {
             console.log(err);
@@ -334,6 +334,13 @@ export default {
           gradesArr.push(newGrade);
         }
         console.log(gradesArr);
+        axios.post(`${VUE_APP_BACKEND_API}/courseplans/add-many`, gradesArr)
+          .then(() => {
+            console.log(`UPSERTED COURSE PLANS`);
+          })
+          .catch((err) => {
+            console.log(err);
+          });
         this.gradesFile = null;
       };
       reader.readAsText(file);

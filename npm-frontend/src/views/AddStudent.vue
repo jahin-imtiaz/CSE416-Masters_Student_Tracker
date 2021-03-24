@@ -187,10 +187,10 @@ export default {
       axios
         .post(`${VUE_APP_BACKEND_API}/students/add`, this.form)
         .then((res) => {
-          console.log("ADDED STUDENT", res.status);
+          console.log("UPSERTED STUDENT", res.status);
         })
         .catch((err) => {
-          console.log("ADD STUDENT FAILED", err);
+          console.log("UPSERT STUDENT FAILED", err);
         });
     },
   },
