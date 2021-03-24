@@ -228,8 +228,27 @@ export default {
       const file = this.degreeReqFile
       const reader = new FileReader()
       reader.onload = (e) => {
-        let reqJson = e.target.result
+        let reqJson = JSON.parse(e.target.result)
         console.log(reqJson)
+
+        let reqData = {}
+        reqData.department = reqJson.dept
+        reqData.reqSem = reqJson.req_ver_sem
+        reqData.reqYear = reqJson.req_ver_year
+        reqData.requirements = reqJson
+
+        console.log(reqData)
+        axios
+          .post(`${VUE_APP_BACKEND_API}/requirements/add`, reqData)
+          .then(() => {
+            console.log(
+              `Added Requirement Version for ${reqJson.dept} for ${reqJson.req_ver_sem}${reqJson.req_ver_year}`
+            )
+          })
+          .catch((err) => {
+            console.log(err)
+          })
+
         this.degreeReqFile = null
       }
       reader.readAsText(file)

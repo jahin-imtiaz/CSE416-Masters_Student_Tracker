@@ -19,13 +19,13 @@ router.get('/', async (req, res, next) => {
 
 router.post('/add', async (req, res, next) => {
   try {
-    const { reqData } = req.body
+    const reqData = req.body
     const newReq = await DegreeRequirement.findOneAndUpdate(
+      {},
       {
-        
-      }, {
         ...reqData
-      }, {
+      },
+      {
         upsert: true,
         new: true
       }
