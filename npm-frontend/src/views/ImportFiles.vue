@@ -208,6 +208,22 @@ export default {
       reader.onload = (e) => {
         let reqJson = e.target.result;
         console.log(reqJson);
+
+        let formattedData = {}
+        formattedData.department = reqJson.dept;
+        formattedData.reqSem = reqJson.req_ver_sem;
+        formattedData.reqYear= reqJson.req_ver_year;
+        formattedData.requirements = reqJson;
+
+
+        axios.post(`${VUE_APP_BACKEND_API}/requirements/add`, formattedData)
+          .then(() => {
+            console.log(`Added Requirement Version for ${reqJson.dept} for ${reqJson.req_ver_sem}${reqJson.req_ver_year}`);
+          })
+          .catch((err) => {
+            console.log(err);
+          });
+
         this.degreeReqFile = null;
       };
       reader.readAsText(file);
