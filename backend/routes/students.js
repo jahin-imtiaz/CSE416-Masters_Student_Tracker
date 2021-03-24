@@ -3,7 +3,7 @@ import { Router } from 'express'
 
 import { create as createLogger } from '../utils/logger.js'
 
-const logger = createLogger('routes:student')
+const logger = createLogger('routes:students')
 
 let router = Router()
 
