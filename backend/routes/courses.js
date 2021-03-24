@@ -20,11 +20,25 @@ router.get('/', async (req, res, next) => {
 router.post('/add', async (req, res, next) => {
   try {
     const { courseData } = req.body
-    const newCourse = new Course({
-      ...courseData
-    })
-    await newCourse.save()
-    logger.info(`Added course ${JSON.stringify(newCourse)}`)
+    const newCourse = await Course.findOneAndUpdate(
+      {
+        department: courseData.department,
+        course_name: courseData.course_name,
+        course_num: courseData.course_num
+      },
+      {
+        ...courseData
+      },
+      {
+        upsert: true,
+        new: true
+      }
+    ).exec()
+    // const newCourse = new Course({
+    //   ...courseData
+    // })
+    // await newCourse.save()
+    logger.info(`Upserted course ${JSON.stringify(newCourse)}`)
     res.send(newCourse)
   } catch (err) {
     logger.error(err)
