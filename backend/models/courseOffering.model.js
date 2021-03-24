@@ -1,10 +1,12 @@
 import mongoose from 'mongoose'
 
 const Schema = mongoose.Schema;
+Schema.Types.String.set('trim', true)
+Schema.Types.String.set('lowercase', true)
 
 const courseOfferingSchema = new Schema({
-    department: {type: String, required: true, unique: true, trim: true},
-    semester: {type: String, required: true, trim: true},
+    department: {type: String, required: true, unique: true},
+    semester: {type: String, required: true},
     year: {type: Date, required: true},
     start_time: {type: Date, required: true},
     end_time: {type: Date, required: true},

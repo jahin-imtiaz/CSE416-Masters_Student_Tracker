@@ -1,13 +1,16 @@
 import mongoose from 'mongoose'
 
 const Schema = mongoose.Schema;
+Schema.Types.String.set('trim', true)
+Schema.Types.String.set('lowercase', true)
 
-const degreeRequirementSchema = new Schema({
+const DegreeRequirementSchema = new Schema({
     requirements: {type: Array, "default": [], required: true},
-    description: {type: Date, required: true},
-    version: {type: String, required: true, trim: true}
+    reqVersionSem: {type: String, unique: true, lowercase: true, trim: true},
+    reqVersionYear: {type: String, unique: true, lowercase: true, trim: true},
+    description: {type: String, trim: true}
 });
 
-const DegreeRequirement = mongoose.model("DegreeRequirement", degreeRequirementSchema);
+const DegreeRequirement = mongoose.model("DegreeRequirement", DegreeRequirementSchema);
 
 export default DegreeRequirement

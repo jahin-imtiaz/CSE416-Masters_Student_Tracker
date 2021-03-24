@@ -20,8 +20,10 @@ router.get('/', async (req, res, next) => {
 router.post('/add', async (req, res, next) => {
   try {
     const { studentData } = req.body
-    // TODO: get reqId
-    // and courseplan?
+    const { reqVersionSem, reqVersionYear } = studentData
+
+    const reqID = await DegreeRequirement.find({})
+
     const newStudent = new Student({
       ...studentData
     })
