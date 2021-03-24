@@ -159,7 +159,7 @@ export default {
     },
     methods: {
         loadCourseFile(){
-
+            
         },
         loadDegReFile(){
             const file = this.degreeReqFile;
