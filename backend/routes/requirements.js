@@ -20,10 +20,20 @@ router.get('/', async (req, res, next) => {
 router.post('/add', async (req, res, next) => {
   try {
     const { reqData } = req.body
-    const newReq = new DegreeRequirement({
-      ...reqData
-    })
-    await newReq.save()
+    const newReq = await DegreeRequirement.findOneAndUpdate(
+      {
+        
+      }, {
+        ...reqData
+      }, {
+        upsert: true,
+        new: true
+      }
+    ).exec()
+    // const newReq = new DegreeRequirement({
+    //   ...reqData
+    // })
+    // await newReq.save()
     logger.info(`Added req ${JSON.stringify(newReq)}`)
     res.send(newReq)
   } catch (err) {

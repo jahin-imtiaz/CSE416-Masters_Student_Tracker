@@ -1,7 +1,8 @@
 <template>
   <div class="view-edit-gpd">
-    <NavBar/>
-    <br><br>
+    <NavBar />
+    <br />
+    <br />
     View/Edit (GPD)
   </div>
 </template>

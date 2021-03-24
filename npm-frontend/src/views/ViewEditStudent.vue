@@ -1,7 +1,8 @@
 <template>
   <div class="view-edit-student">
-    <NavBar/>
-    <br><br>
+    <NavBar />
+    <br />
+    <br />
     View/Edit (Student)
   </div>
 </template>

@@ -1,7 +1,8 @@
 <template>
   <div class="enrollment-trend">
-    <NavBar/>
-    <br><br>
+    <NavBar />
+    <br />
+    <br />
     Enrollment Trend
   </div>
 </template>
