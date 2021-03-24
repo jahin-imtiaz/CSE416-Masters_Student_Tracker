@@ -1,2 +1,0 @@
-4. Installation Manual
-An installation manual, in a file named installation-manual.*, containing instructions for installing, configuring, and starting the server side of the system. This includes instructions for downloading necessary libraries, and installing, configuring, and starting the database and web server, if appropriate. Step-by-step textual instructions are fine; click-by-click instructions with illustrative screenshots are unnecessary. The manual does not need to describe how to use the system; that should be self-evident from the user-friendly GUI.
