@@ -20,11 +20,11 @@ router.get('/', async (req, res, next) => {
 router.post('/add', async (req, res, next) => {
   try {
     const { studentData } = req.body
-    const { reqVersionSem, reqVersionYear } = studentData
+    const { reqVersionSem, reqVersionYear, department } = studentData
 
     const reqID = await DegreeRequirement.find(
       {
-        reqVersionSem, reqVersionYear
+        reqVersionSem, reqVersionYear, department
       }).exec()
 
     delete studentData.reqVersionSem

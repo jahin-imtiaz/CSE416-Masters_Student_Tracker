@@ -5,11 +5,13 @@ Schema.Types.String.set('trim', true)
 Schema.Types.String.set('lowercase', true)
 
 const DegreeRequirementSchema = new Schema({
-    requirements: { type: Array, "default": [], required: true },
-    reqVersionSem: { type: String, unique: true },
-    reqVersionYear: { type: String, unique: true },
-    description: { type: String, lowercase: false }
+    department: { type: String, required: true },
+    reqVersionSem: { type: String, required: true },
+    reqVersionYear: { type: String, required: true },
+    requirements: Schema.Types.Mixed
 });
+
+DegreeRequirementSchema.index({ department: 1, reqVersionSem: 1, reqVersionYear: 1 })
 
 const DegreeRequirement = mongoose.model("DegreeRequirement", DegreeRequirementSchema);
 

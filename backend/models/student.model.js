@@ -11,14 +11,14 @@ const StudentSchema = new Schema({
     firstName: { type: String, required: true },
     lastName: { type: String, required: true },
     email: { type: String, required: true },
+    password: { type: String, required: true, lowercase: false },
+    // For students with 2+ majors, add below to a Degree table
     department: { type: String, required: true },
     entryYear: { type: String, required: true },
     entrySem: { type: String, required: true },
-    password: { type: String, required: true, lowercase: false },
     reqID: { type: Schema.Types.ObjectId, ref: "DegreeRequirement" },
     graduationSem: { type: String },
-    graduationYear: { type: String },
-    coursePlan: Schema.Types.Mixed
+    graduationYear: { type: String }
 });
 
 // StudentSchema.index({ sbu_id: 'text'})
