@@ -2,7 +2,7 @@ import mongoose from 'mongoose'
 
 const Schema = mongoose.Schema;
 Schema.Types.String.set('trim', true)
-Schema.Types.String.set('lowercase', true)
+//Schema.Types.String.set('lowercase', true)
 
 const CourseSchema = new Schema({
     course_name: { type: String, required: true },

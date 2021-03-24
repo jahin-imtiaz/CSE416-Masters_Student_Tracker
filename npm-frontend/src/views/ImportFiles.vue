@@ -280,9 +280,16 @@ export default {
         }
         console.log(courseOfferingsArr)
         // On import, if student has course plan entries that are not offered that semester, notify them
-        this.courseOfferingFile = null
-      }
-      reader.readAsText(file)
+        axios.post(`${VUE_APP_BACKEND_API}/courseofferings/add-many`, courseOfferingsArr)
+          .then(() => {
+            console.log(`UPSERTED STUDENTS`);
+          })
+          .catch((err) => {
+            console.log(err);
+          });
+        this.courseOfferingFile = null;
+      };
+      reader.readAsText(file);
     },
     loadStudentFile() {
       const file = this.studentFile
