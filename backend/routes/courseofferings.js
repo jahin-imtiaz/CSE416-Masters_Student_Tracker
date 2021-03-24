@@ -1,7 +1,8 @@
-import { CourseOffering, Course} from '../models/index.js'
+import { CourseOffering, Course, CoursePlan } from '../models/index.js'
 import { Router } from 'express'
 
 import { create as createLogger } from '../utils/logger.js'
+import mongoose from 'mongoose'
 
 const logger = createLogger('routes:offerings')
 
@@ -35,33 +36,66 @@ router.post('/add', async (req, res, next) => {
 router.post('/add-many', async (req, res, next) => {
   try {
     let courseOfferings = req.body
+    // remove existing course offerings for semester(s) covered
 
+    let semesters = courseOfferings.map((o) => o.semester)
+    let years = courseOfferings.map((o) => o.year)
+
+    let existingOfferings = await CourseOffering.deleteMany({
+      semester: { $in: semesters },
+      year: { $in: years }
+    })
+    logger.info(`Removed existing offerings ${existingOfferings}`)
+
+    // add new course offerings
     let newCourseOfferings = []
+    let allInvalidCoursePlans = []
 
     for (let courseOffering of courseOfferings) {
-      console.log(courseOffering)
-      
-      const course = {department: courseOffering.department, course_name: courseOffering.department, course_num: courseOffering.course_num}
-      console.log(course);
-      let retCourse = await Course.findOne({department: 'AMS'}).exec();
-      console.log(retCourse)
-      
-
-      // const newCourseOffer = await CourseOffering.findOneAndUpdate(
-      //   course, 
-      //   {
-      //     ...courseOffering
-      //   }, {
-      //     upsert: true,
-      //     new: true
-      //   }
-      // )
-      // logger.info(`Upserted course offerings ${JSON.stringify(newCourseOffer)}`)
-      
-      // newCourseOfferings.push(newCourseOffer)
+      const course = {
+        department: courseOffering.department,
+        course_name: courseOffering.department,
+        course_num: courseOffering.course_num
+      }
+      let retCourse = await Course.findOne(course).exec()
+      const newCourseOffer = await CourseOffering.findOneAndUpdate(
+        {
+          courseID: retCourse,
+          section: courseOffering.section,
+          semester: courseOffering.semester,
+          year: courseOffering.year
+        },
+        {
+          ...courseOffering,
+          courseID: retCourse
+        },
+        {
+          upsert: true,
+          new: true
+        }
+      )
+      logger.info(`Upserted course offerings ${JSON.stringify(newCourseOffer)}`)
+      newCourseOfferings.push(newCourseOffer)
+      // get all student courseplans taking invalid courses in courseOfferings file
+      // Invalid CoursePlans match dept, course_name, course_num, semester, and year
+      const invalidCoursePlans = await CoursePlan.updateMany(
+        {
+          department: courseOffering.department,
+          course_num: courseOffering.course_num,
+          semester: courseOffering.semester,
+          year: courseOffering.year
+        },
+        {
+          invalid: true
+        },
+        {
+          new: true
+        }
+      ).exec()
+      allInvalidCoursePlans.concat(invalidCoursePlans)
     }
 
-    res.send(newCourseOfferings)
+    res.send({ newCourseOfferings, allInvalidCoursePlans })
   } catch (err) {
     logger.error(err)
     next(err)
