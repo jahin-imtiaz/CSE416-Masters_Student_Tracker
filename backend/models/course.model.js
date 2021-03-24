@@ -5,11 +5,13 @@ Schema.Types.String.set('trim', true)
 Schema.Types.String.set('lowercase', true)
 
 const courseSchema = new Schema({
-    course_name: {type: String, required: true, unique: true},
-    course_num: {type: String, required: true},
+    course_name: {type: String, required: true, trim: true},
+    course_num: {type: String, required: true, trim: true},
+    semester:{type: String, required: true, trim: true},
+    year: {type: String, required: true, trim: true},
+    description: String,
     number_of_credit: {type: Number, required: true},
-    prerequisites: {type: [{course_name: String, course_num: Number}], required: true},
-    description: {type: String}
+    prerequisites:  Schema.Types.Mixed
 });
 
 const Course = mongoose.model("Course", courseSchema);
