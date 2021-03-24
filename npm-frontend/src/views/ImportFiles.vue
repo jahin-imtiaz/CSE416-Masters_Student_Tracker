@@ -78,28 +78,34 @@
         </b-col>
       </b-row>
 
-      <b-row class="mt-3">
-        <b-col>
-          <b-form-file
-            v-model="courseOfferingFile"
-            placeholder="Choose a Course Offerings file or drop it here..."
-            drop-placeholder="Drop file here..."
-          ></b-form-file>
-        </b-col>
-        <b-col>
-          <b-row>
-            <b-col>
-              Selected file:
-              {{ courseOfferingFile ? courseOfferingFile.name : '' }}
-            </b-col>
-            <b-col>
-              <b-button variant="secondary" @click="loadCourseOfferingFile">
-                add
-              </b-button>
-            </b-col>
-          </b-row>
-        </b-col>
-      </b-row>
+      <b-container lg="10" offset="1" class="bv-example-row">
+        <b-row class="mt-3">
+          <b-col>
+            <b-form-file
+              v-model="courseOfferingFile"
+              placeholder="Choose a Course Offerings file or drop it here..."
+              drop-placeholder="Drop file here..."
+            ></b-form-file>
+          </b-col>
+          <b-col>
+            <b-row>
+              <b-col>
+                Selected file:
+                {{ courseOfferingFile ? courseOfferingFile.name : '' }}
+              </b-col>
+              <b-col>
+                <b-button variant="secondary" @click="loadCourseOfferingFile">
+                  add
+                </b-button>
+              </b-col>
+            </b-row>
+          </b-col>
+        </b-row>
+        <b-row v-if="invalidPlans && invalidPlans.length > 0">
+          These course plans are Invalid:
+          <b-table striped hover :items="invalidPlans"></b-table>
+        </b-row>
+      </b-container>
 
       <b-row class="mt-3">
         <b-col>
@@ -195,7 +201,8 @@ export default {
       gradesFile: null,
       semester: null,
       year: null,
-      department: null
+      department: null,
+      invalidPlans: null
     }
   },
   methods: {
@@ -216,7 +223,7 @@ export default {
     loadCourseFile() {
       const file = this.courseFile
       const reader = new FileReader()
-      reader.onload = (e) => {
+      reader.onload = e => {
         let courseFileText = e.target.result
         console.log(typeof courseFileText, courseFileText)
         console.log(this.courseFileToJson(courseFileText))
@@ -227,7 +234,7 @@ export default {
     loadDegReFile() {
       const file = this.degreeReqFile
       const reader = new FileReader()
-      reader.onload = (e) => {
+      reader.onload = e => {
         let reqJson = JSON.parse(e.target.result)
         console.log(reqJson)
 
@@ -245,7 +252,7 @@ export default {
               `Added Requirement Version for ${reqJson.dept} for ${reqJson.req_ver_sem}${reqJson.req_ver_year}`
             )
           })
-          .catch((err) => {
+          .catch(err => {
             console.log(err)
           })
 
@@ -257,7 +264,7 @@ export default {
       const file = this.courseOfferingFile
       const reader = new FileReader()
       let courseOfferingsArr = []
-      reader.onload = (e) => {
+      reader.onload = e => {
         let text = e.target.result
         text = text.split('\n')
         console.log(text)
@@ -280,22 +287,27 @@ export default {
         }
         console.log(courseOfferingsArr)
         // On import, if student has course plan entries that are not offered that semester, notify them
-        axios.post(`${VUE_APP_BACKEND_API}/courseofferings/add-many`, courseOfferingsArr)
-          .then(() => {
-            console.log(`UPSERTED STUDENTS`);
+        axios
+          .post(
+            `${VUE_APP_BACKEND_API}/courseofferings/add-many`,
+            courseOfferingsArr
+          )
+          .then(response => {
+            this.invalidPlans = response.data.allInvalidCoursePlans
+            console.log(`UPSERTED STUDENTS`)
           })
-          .catch((err) => {
-            console.log(err);
-          });
-        this.courseOfferingFile = null;
-      };
-      reader.readAsText(file);
+          .catch(err => {
+            console.log(err)
+          })
+        this.courseOfferingFile = null
+      }
+      reader.readAsText(file)
     },
     loadStudentFile() {
       const file = this.studentFile
       const reader = new FileReader()
       let studentsArr = []
-      reader.onload = (e) => {
+      reader.onload = e => {
         let text = e.target.result
         text = text.split('\n')
         for (let i = 1; i < text.length; i++) {
@@ -323,7 +335,7 @@ export default {
           .then(() => {
             console.log(`UPSERTED STUDENTS`)
           })
-          .catch((err) => {
+          .catch(err => {
             console.log(err)
           })
 
@@ -335,7 +347,7 @@ export default {
       const file = this.coursePlanFile
       const reader = new FileReader()
       let coursePlanArr = []
-      reader.onload = (e) => {
+      reader.onload = e => {
         let text = e.target.result
         text = text.split('\n')
         for (let i = 1; i < text.length; i++) {
@@ -357,7 +369,7 @@ export default {
           .then(() => {
             console.log(`UPSERTED COURSE PLANS`)
           })
-          .catch((err) => {
+          .catch(err => {
             console.log(err)
           })
         this.coursePlanFile = null
@@ -368,7 +380,7 @@ export default {
       const file = this.gradesFile
       const reader = new FileReader()
       let gradesArr = []
-      reader.onload = (e) => {
+      reader.onload = e => {
         let text = e.target.result
         text = text.split('\n')
         for (let i = 1; i < text.length; i++) {
@@ -390,7 +402,7 @@ export default {
           .then(() => {
             console.log(`UPSERTED COURSE PLANS`)
           })
-          .catch((err) => {
+          .catch(err => {
             console.log(err)
           })
         this.gradesFile = null
