@@ -1,0 +1,134 @@
+{
+    "dept": "BMI",
+    "req_ver_sem": "Spring",
+    "req_ver_year": 2021,
+    "gpa_req": 3.0,
+    "course_req": {
+        "courses": [
+            {"department": "BMI", "course_num": 501, "course_name": "Introduction to Biomedical Informatics", "credits": 3},
+            {"department": "BMI", "course_num": 502, "course_name": "Life Sciences for Biomedical Informatics", "credits": 3},
+            {"department": "BMI", "course_num": 503, "course_name": "Computer Science for Biomedical Informatics", "credits": 3},
+            {"department": "BMI", "course_num": 540, "course_name": "Statistical Methods in Biomedical Informatics", "credits": 3},
+            {"department": "BMI", "course_num": 592, "course_name": "Biomedical Informatics Masters Pre-Candidates Seminar", "semester": "Fall,Spring", "credits": 1},
+        ],
+        "track_req": {
+            "tracks": [
+                {
+                    "track": "Imaging Informatics with thesis",
+                    "courses": [
+                        {"department": "BMI", "course_num": 513, "course_name": "Imaging Informatics", "credits": 3},
+                        {"department": "BMI", "course_num": 514, "course_name": "Imaging Informatics Analysis", "credits": 3},
+                        {"department": "BMI", "course_num": 520, "course_name": "Data Analytics and Software Stacks", "credits": 3},
+                        {"department": "BMI", "course_num": 530, "course_name": "Software Development in Biomedical Informatics", "credits": 3},
+                        {"department": "BMI", "course_num": 599, "course_name": "M.S. Research and Thesis in Biomedical Informatics", "min_credit": 1, "max_credit": 12}
+                    ],
+                    "applicable_electives": [
+                        {"department": "BMI", "course_num": 517, "course_name": "Current Research in Signaling Pathways, Biochemistry, and Tissue Morphology of Disease", "credits": 3},
+                        {"department": "BMI", "course_num": 590, "course_name": "Independent Study in Biomedical Informatics", "credits": [1,3]},
+                        {"department": "BMI", "course_num": 591, "course_name": "Independent Study in Biomedical Informatics", "credits": [1,3]},
+                        {"department": "BMI", "course_num": 595, "course_name": "Special Topics in Biomedical Informatics", "credits": [0,3]},
+                        {"department": "BMI", "course_num": 596, "course_name": "Special Problems in Biomedical Informatics", "credits": [1,6]}
+                    ],
+                    "min_credit": 21
+                },
+                {
+                    "track": "Clinical Informatics with thesis",
+                    "courses": [
+                        {"department": "BMI", "course_num": 512, "course_name": "Clinical Informatics", "credits": 3},
+                        {"department": "BMI", "course_num": 550, "course_name": "Clinical Informatics Practice Patterns", "credits": 3},
+                        {"department": "BMI", "course_num": 551, "course_name": "Case Studies in Clinical Informatics", "credits": 3},
+                        {"department": "BMI", "course_num": 599, "course_name": "M.S. Research and Thesis in Biomedical Informatics", "min_credit": 1, "max_credit": 12}
+                    ],
+                    "applicable_electives": [
+                        {"department": "BMI", "course_num": 517, "course_name": "Current Research in Signaling Pathways, Biochemistry, and Tissue Morphology of Disease", "credits": 3},
+                        {"department": "BMI", "course_num": 520, "course_name": "Data Analytics and Software Stacks", "credits": 3},
+                        {"department": "BMI", "course_num": 530, "course_name": "Software Development in Biomedical Informatics", "credits": 3},
+                        {"department": "BMI", "course_num": 552, "course_name": "Quality Improvement Methods for Clinical Informatics", "credits": 3},
+                        {"department": "BMI", "course_num": 590, "course_name": "Independent Study in Biomedical Informatics", "credits": [1,3]},
+                        {"department": "BMI", "course_num": 591, "course_name": "Independent Study in Biomedical Informatics", "credits": [1,3]},
+                        {"department": "BMI", "course_num": 595, "course_name": "Special Topics in Biomedical Informatics", "credits": [0,3]},
+                        {"department": "BMI", "course_num": 596, "course_name": "Special Problems in Biomedical Informatics", "credits": [1,6]}
+                    ],
+                    "min_credit": 21
+                },
+                {
+                    "track": "Translational Bioinformatics with thesis",
+                    "courses": [
+                        {"department": "BMI", "course_num": 511, "course_name": "Translational Bioinformatics", "credits": 3},
+                        {"department": "BMI", "course_num": 520, "course_name": "Data Analytics and Software Stacks", "credits": 3},
+                        {"department": "BMI", "course_num": 530, "course_name": "Software Development in Biomedical Informatics", "credits": 3},
+                        {"department": "BMI", "course_num": 599, "course_name": "M.S. Research and Thesis in Biomedical Informatics", "min_credit": 1, "max_credit": 12}
+                    ],
+                    "applicable_electives": [
+                        {"department": "BMI", "course_num": 517, "course_name": "Current Research in Signaling Pathways, Biochemistry, and Tissue Morphology of Disease", "credits": 3},
+                        {"department": "BMI", "course_num": 560, "course_name": "Personalized Medicine", "credits": 3},
+                        {"department": "BMI", "course_num": 590, "course_name": "Independent Study in Biomedical Informatics", "credits": [1,3]},
+                        {"department": "BMI", "course_num": 591, "course_name": "Independent Study in Biomedical Informatics", "credits": [1,3]},
+                        {"department": "BMI", "course_num": 595, "course_name": "Special Topics in Biomedical Informatics", "credits": [0,3]},
+                        {"department": "BMI", "course_num": 596, "course_name": "Special Problems in Biomedical Informatics", "credits": [1,6]}
+                    ],
+                    "min_credit": 21
+                },
+                {
+                    "track": "Imaging Informatics with project",
+                    "courses": [
+                        {"department": "BMI", "course_num": 513, "course_name": "Imaging Informatics", "credits": 3},
+                        {"department": "BMI", "course_num": 514, "course_name": "Imaging Informatics Analysis", "credits": 3},
+                        {"department": "BMI", "course_num": 520, "course_name": "Data Analytics and Software Stacks", "credits": 3},
+                        {"department": "BMI", "course_num": 530, "course_name": "Software Development in Biomedical Informatics", "credits": 3},
+                        {"department": "BMI", "course_num": 598, "course_name": "M.S. Capstone Project in Biomedical Informatics", "min_credit": 1, "max_credit": 6}
+                    ],
+                    "applicable_electives": [
+                        {"department": "BMI", "course_num": 517, "course_name": "Current Research in Signaling Pathways, Biochemistry, and Tissue Morphology of Disease", "credits": 3},
+                        {"department": "BMI", "course_num": 590, "course_name": "Independent Study in Biomedical Informatics", "credits": [1,3]},
+                        {"department": "BMI", "course_num": 591, "course_name": "Independent Study in Biomedical Informatics", "credits": [1,3]},
+                        {"department": "BMI", "course_num": 595, "course_name": "Special Topics in Biomedical Informatics", "credits": [0,3]},
+                        {"department": "BMI", "course_num": 596, "course_name": "Special Problems in Biomedical Informatics", "credits": [1,6]}
+                    ],
+                    "min_credit": 30
+                },
+                {
+                    "track": "Clinical Informatics with project",
+                    "courses": [
+                        {"department": "BMI", "course_num": 512, "course_name": "Clinical Informatics", "credits": 3},
+                        {"department": "BMI", "course_num": 550, "course_name": "Clinical Informatics Practice Patterns", "credits": 3},
+                        {"department": "BMI", "course_num": 551, "course_name": "Case Studies in Clinical Informatics", "credits": 3},
+                        {"department": "BMI", "course_num": 598, "course_name": "M.S. Capstone Project in Biomedical Informatics", "min_credit": 1, "max_credit": 6}
+                    ],
+                    "applicable_electives": [
+                        {"department": "BMI", "course_num": 517, "course_name": "Current Research in Signaling Pathways, Biochemistry, and Tissue Morphology of Disease", "credits": 3},
+                        {"department": "BMI", "course_num": 520, "course_name": "Data Analytics and Software Stacks", "credits": 3},
+                        {"department": "BMI", "course_num": 530, "course_name": "Software Development in Biomedical Informatics", "credits": 3},
+                        {"department": "BMI", "course_num": 552, "course_name": "Quality Improvement Methods for Clinical Informatics", "credits": 3},
+                        {"department": "BMI", "course_num": 590, "course_name": "Independent Study in Biomedical Informatics", "credits": [1,3]},
+                        {"department": "BMI", "course_num": 591, "course_name": "Independent Study in Biomedical Informatics", "credits": [1,3]},
+                        {"department": "BMI", "course_num": 595, "course_name": "Special Topics in Biomedical Informatics", "credits": [0,3]},
+                        {"department": "BMI", "course_num": 596, "course_name": "Special Problems in Biomedical Informatics", "credits": [1,6]}
+                    ],
+                    "min_credit": 30
+                },
+                {
+                    "track": "Translational Bioinformatics with project",
+                    "courses": [
+                        {"department": "BMI", "course_num": 511, "course_name": "Translational Bioinformatics", "credits": 3},
+                        {"department": "BMI", "course_num": 520, "course_name": "Data Analytics and Software Stacks", "credits": 3},
+                        {"department": "BMI", "course_num": 530, "course_name": "Software Development in Biomedical Informatics", "credits": 3},
+                        {"department": "BMI", "course_num": 598, "course_name": "M.S. Capstone Project in Biomedical Informatics", "min_credit": 1, "max_credit": 6}
+                    ],
+                    "applicable_electives": [
+                        {"department": "BMI", "course_num": 517, "course_name": "Current Research in Signaling Pathways, Biochemistry, and Tissue Morphology of Disease", "credits": 3},
+                        {"department": "BMI", "course_num": 560, "course_name": "Personalized Medicine", "credits": 3},
+                        {"department": "BMI", "course_num": 590, "course_name": "Independent Study in Biomedical Informatics", "credits": [1,3]},
+                        {"department": "BMI", "course_num": 591, "course_name": "Independent Study in Biomedical Informatics", "credits": [1,3]},
+                        {"department": "BMI", "course_num": 595, "course_name": "Special Topics in Biomedical Informatics", "credits": [0,3]},
+                        {"department": "BMI", "course_num": 596, "course_name": "Special Problems in Biomedical Informatics", "credits": [1,6]}
+                    ],
+                    "min_credit": 30
+                }
+            ]
+            
+        }
+    },
+    "min_credit": {"department": "BMI", "bmi_credit": {"credits": 15, "restricted_courses": [590,591,592,595,596,690,691,695,696]}, "credits": 18},
+    "time_limit": 6
+}
