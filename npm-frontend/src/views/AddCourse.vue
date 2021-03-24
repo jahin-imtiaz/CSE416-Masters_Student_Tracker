@@ -1,7 +1,8 @@
 <template>
   <div class="add-course">
-    <NavBar/>
-    <br><br>
+    <NavBar />
+    <br />
+    <br />
     Add Course
   </div>
 </template>

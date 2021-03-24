@@ -32,8 +32,7 @@ router.post('/add', async (req, res, next) => {
         upsert: true,
         new: true
       }
-    )
-
+    ).exec()
     // const newStudent = new Student({
     //   ...studentData
     // })

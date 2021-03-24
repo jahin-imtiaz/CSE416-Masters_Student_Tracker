@@ -1,7 +1,8 @@
 <template>
   <div class="suggest-course-plan">
-    <NavBar/>
-    <br><br>
+    <NavBar />
+    <br />
+    <br />
     Student Home
   </div>
 </template>

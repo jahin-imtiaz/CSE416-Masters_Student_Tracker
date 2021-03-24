@@ -1,7 +1,8 @@
 <template>
   <div class="browse-search-student">
-    <NavBar/>
-    <br><br>
+    <NavBar />
+    <br />
+    <br />
     Browse/Search Student
   </div>
 </template>

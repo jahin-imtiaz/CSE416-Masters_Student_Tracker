@@ -1,7 +1,8 @@
 <template>
   <div class="add-student">
     <NavBar />
-    <br /><br />
+    <br />
+    <br />
     <b-container lg="10" offset="1" class="bv-example-row">
       <b-row>
         <b-col>
@@ -31,8 +32,9 @@
               <b-form-input
                 aria-label="Small text input with custom switch"
                 v-model="form.reqVersion.department"
-              ></b-form-input> </b-col
-          ></b-row>
+              ></b-form-input>
+            </b-col>
+          </b-row>
 
           <b-row>
             <b-col lg="4">Entry Semester :</b-col>
@@ -77,7 +79,7 @@
 
         <b-col>
           <b-row>
-            <b-col lg="4">Email : </b-col>
+            <b-col lg="4">Email :</b-col>
             <b-col>
               <b-form-input
                 aria-label="Small text input with custom switch"
@@ -87,7 +89,7 @@
           </b-row>
 
           <b-row>
-            <b-col lg="4"> Last Name :</b-col>
+            <b-col lg="4">Last Name :</b-col>
             <b-col>
               <b-form-input
                 aria-label="Small text input with custom switch"
@@ -127,7 +129,7 @@
           </b-row>
 
           <b-row>
-            <b-col lg="4"> Graduation Year :</b-col>
+            <b-col lg="4">Graduation Year :</b-col>
             <b-col>
               <b-form-input
                 aria-label="Small text input with custom switch"
@@ -137,8 +139,8 @@
           </b-row>
           <b-row>
             <b-col></b-col>
-            <b-col lg="2" class="pb-2" @click="addStudent"
-              ><b-button> Add </b-button>
+            <b-col lg="2" class="pb-2" @click="addStudent">
+              <b-button>Add</b-button>
             </b-col>
           </b-row>
         </b-col>
@@ -148,53 +150,53 @@
 </template>
 
 <script>
-import NavBar from "@/components/NavBar.vue";
-import axios from "axios";
+import NavBar from '@/components/NavBar.vue'
+import axios from 'axios'
 
-const { VUE_APP_BACKEND_API } = process.env;
+const { VUE_APP_BACKEND_API } = process.env
 
 export default {
-  name: "AddStudent",
+  name: 'AddStudent',
   props: {
-    msg: String,
+    msg: String
   },
   components: {
-    NavBar,
+    NavBar
   },
   data() {
     return {
       form: {
-        _id: {sbu_id: ""},
-        firstName: "",
-        lastName: "",
-        email: "",
-        track: "",
-        entrySem: "",
-        entryYear: "",
+        _id: { sbu_id: '' },
+        firstName: '',
+        lastName: '',
+        email: '',
+        track: '',
+        entrySem: '',
+        entryYear: '',
         reqVersion: {
-          department: "",
-          reqSem: "",
-          reqYear: "",
+          department: '',
+          reqSem: '',
+          reqYear: ''
         },
-        graduationSem: "",
-        graduationYear: "",
-        password: "",
+        graduationSem: '',
+        graduationYear: '',
+        password: ''
       }
-    };
+    }
   },
   methods: {
     addStudent() {
       axios
         .post(`${VUE_APP_BACKEND_API}/students/add`, this.form)
         .then((res) => {
-          console.log("UPSERTED STUDENT", res.status);
+          console.log('UPSERTED STUDENT', res.status)
         })
         .catch((err) => {
-          console.log("UPSERT STUDENT FAILED", err);
-        });
-    },
-  },
-};
+          console.log('UPSERT STUDENT FAILED', err)
+        })
+    }
+  }
+}
 </script>
 
 <style scoped></style>
