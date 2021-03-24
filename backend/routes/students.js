@@ -21,6 +21,7 @@ router.post('/add', async (req, res, next) => {
   try {
     let studentData = req.body
 
+      console.log(studentData)
     const newStudent = new Student({
       ...studentData
     })
@@ -40,8 +41,6 @@ router.post('/add-many', async (req, res, next) => {
     let newStudents = []
 
     for (let studentData of students) {
-      console.log(studentData)
-      
       const newStudent = new Student({
         ...studentData
       })
