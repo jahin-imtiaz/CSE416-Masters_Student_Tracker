@@ -1,8 +1,13 @@
 <template>
-  <div class="student-home">
+  <div class="gpd-home">
     <NavBar/>
-    <br><br>
-    Student Home
+    <br><br><br><br>
+    <b-container class="bv-example-row">
+      <b-row>
+        <b-col><b-button class="btn-xl" to="/view-edit-student">View/Edit Student Information</b-button></b-col>
+        <b-col><b-button class="btn-xl" to="/suggest-course-plan">Suggest Course Plan</b-button></b-col>
+      </b-row>
+    </b-container>
   </div>
 </template>
 
@@ -18,21 +23,3 @@ export default {
   }
 }
 </script>
-
-<!-- Add "scoped" attribute to limit CSS to this component only -->
-<style scoped>
-h3 {
-  margin: 40px 0 0;
-}
-ul {
-  list-style-type: none;
-  padding: 0;
-}
-li {
-  display: inline-block;
-  margin: 0 10px;
-}
-a {
-  color: #42b983;
-}
-</style>

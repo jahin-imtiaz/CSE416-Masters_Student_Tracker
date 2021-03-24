@@ -20,8 +20,20 @@ router.get('/', async (req, res, next) => {
 router.post('/add', async (req, res, next) => {
   try {
     const { studentData } = req.body
-    // TODO: get reqId
-    // and courseplan?
+    const { reqVersionSem, reqVersionYear } = studentData
+
+    const reqID = await DegreeRequirement.find(
+      {
+        reqVersionSem, reqVersionYear
+      }).exec()
+
+    delete studentData.reqVersionSem
+    delete studentData.reqVersionYear
+
+    if (reqID !== null) {
+      studentData['reqID'] = reqID._id
+    }
+
     const newStudent = new Student({
       ...studentData
     })
