@@ -22,7 +22,17 @@ router.post('/add', async (req, res, next) => {
     const { studentData } = req.body
     const { reqVersionSem, reqVersionYear } = studentData
 
-    const reqID = await DegreeRequirement.find({})
+    const reqID = await DegreeRequirement.find(
+      {
+        reqVersionSem, reqVersionYear
+      }).exec()
+
+    delete studentData.reqVersionSem
+    delete studentData.reqVersionYear
+
+    if (reqID !== null) {
+      studentData['reqID'] = reqID._id
+    }
 
     const newStudent = new Student({
       ...studentData

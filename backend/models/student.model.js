@@ -6,19 +6,18 @@ Schema.Types.String.set('lowercase', true)
 
 const StudentSchema = new Schema({
     _id: {
-        sbu_id: { type: String, required: true, unique: true, trim: true, lowercase: true },
+        sbu_id: { type: String, required: true, unique: true },
     },
-    firstName: { type: String, required: true, trim: true },
-    lastName: { type: String, required: true, trim: true },
-    email: { type: String, required: true, trim: true },
-    department: { type: String, required: true, trim: true },
-    entryYear: { type: String, required: true, trim: true },
-    entrySem: { type: String, required: true, trim: true },
+    firstName: { type: String, required: true },
+    lastName: { type: String, required: true },
+    email: { type: String, required: true },
+    department: { type: String, required: true },
+    entryYear: { type: String, required: true },
+    entrySem: { type: String, required: true },
+    password: { type: String, required: true, lowercase: false },
     reqID: { type: Schema.Types.ObjectId, ref: "DegreeRequirement" },
-    graduationSem: { type: String, trim: true },
-    graduationYear: { type: String, trim: true },
-    graduated: { type: Boolean, trim: true },
-    password: { type: String, required: true, trim: true },
+    graduationSem: { type: String },
+    graduationYear: { type: String },
     coursePlan: Schema.Types.Mixed
 });
 
