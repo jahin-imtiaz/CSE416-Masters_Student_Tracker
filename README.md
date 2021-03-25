@@ -72,8 +72,8 @@ A list of each team member's contributions to hw5 and hw6, including main activi
 
 - Taner: video, writing markdown files, implementing models and routes, installation manual
 - Jahin: import files, import functionality frontend, implementing data models
-- William: frontend components, styling, requirements JSON, setting up and writing homework documents, test report, data model and queries
-- Nur: implementing data models
+- William: frontend components, styling, requirements JSON, setting up and writing homework documents, test report
+- Nur: implementing data models, data model and queries
 
 ## 7. Code and Data
 
