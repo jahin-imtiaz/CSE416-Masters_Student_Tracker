@@ -35,22 +35,22 @@ Our Course model has department, course_name, number of credits attributes as we
 **Student Schema**
 ```js
 const StudentSchema = new Schema({
-_id: {
-	sbu_id: { type: String, required: true, unique: true }
-},
-firstName: { type: String, required: true },
-lastName: { type: String, required: true },
-email: { type: String, required: true },
-password: { type: String, required: true, lowercase: false },
-entryYear: { type: String, required: true },
-entrySem: { type: String, required: true },
-reqVersion: {
-	department: { type: String },
-	reqSem: { type: String },
-	reqYear: { type: String }
-},
-graduationSem: { type: String },
-graduationYear: { type: String }
+    _id: {
+        sbu_id: { type: String, required: true, unique: true }
+    },
+    firstName: { type: String, required: true },
+    lastName: { type: String, required: true },
+    email: { type: String, required: true },
+    password: { type: String, required: true, lowercase: false },
+    entryYear: { type: String, required: true },
+    entrySem: { type: String, required: true },
+    reqVersion: {
+        department: { type: String },
+        reqSem: { type: String },
+        reqYear: { type: String }
+    },
+    graduationSem: { type: String },
+    graduationYear: { type: String }
 })
 ```
 Our Student model has attributes such as firstName, lastName, email, password. We decided to have the reqVersion as an object since it contains information such as department, reqSem, reqYear.
@@ -58,13 +58,13 @@ Our Student model has attributes such as firstName, lastName, email, password. W
 **CourseOffering Schema**
 ```js
 const CourseOfferingSchema = new Schema({
-courseID: { type: Schema.Types.ObjectId, ref: 'Course', required: true },
-section: { type: String },
-semester: { type: String, required: true },
-year: { type: String, required: true },
-days: { type: String, required: true },
-start_time: { type: String, required: true },
-end_time: { type: String, required: true }
+    courseID: { type: Schema.Types.ObjectId, ref: 'Course', required: true },
+    section: { type: String },
+    semester: { type: String, required: true },
+    year: { type: String, required: true },
+    days: { type: String, required: true },
+    start_time: { type: String, required: true },
+    end_time: { type: String, required: true }
 })
 ```
 Our CourseOffering model represents information about a course during a given year and semester. Thus, it has attributes such as courseID which references a Course document, the semester, year, start_time and end_time.
@@ -72,14 +72,14 @@ Our CourseOffering model represents information about a course during a given ye
 **CoursePlan Schema**
 ```js
 const CoursePlanSchema = new Schema({
-sbu_id: { type: String, required: true },
-department: { type: String, required: true },
-course_num: { type: String, required: true },
-section: { type: String, trim: true },
-semester: { type: String, required: true },
-year: { type: String, required: true },
-grade: { type: String },
-invalid: { type: Boolean, default: false }
+    sbu_id: { type: String, required: true },
+    department: { type: String, required: true },
+    course_num: { type: String, required: true },
+    section: { type: String, trim: true },
+    semester: { type: String, required: true },
+    year: { type: String, required: true },
+    grade: { type: String },
+    invalid: { type: Boolean, default: false }
 })
 ```
 Our CoursePlan model represents information about a Course Plan such as the sbu_id of the student that this plan is attached to, the department, year, grade, as well as an invalid field to indicate whether the Course Plan is valid or not.
@@ -87,10 +87,10 @@ Our CoursePlan model represents information about a Course Plan such as the sbu_
 **DegreeRequirement Schema** 
 ```js
 const DegreeRequirementSchema = new Schema({
-department: { type: String, required: true },
-reqSem: { type: String, required: true },
-reqYear: { type: Number, required: true },
-requirements: Schema.Types.Mixed
+    department: { type: String, required: true },
+    reqSem: { type: String, required: true },
+    reqYear: { type: Number, required: true },
+    requirements: Schema.Types.Mixed
 })
 DegreeRequirementSchema.index({ department: 1, reqVersionSem: 1, reqVersionYear: 1 })
 ```
@@ -99,6 +99,19 @@ Our DegreeRequirement model represents the information about a DegreeRequirement
 ### 1.2 Queries
 
 Briefly describe how filtering (in the search for students) is or will be implemented. Will it be done by creating a database query that embodies all of the specified filter conditions? By a combination of a database query and application code? If a query language is used, which one?
+
+```js
+router.get('/', async (req, res, next) => {
+	try {
+		const students = await Student.find({}, {}).exec()
+		res.send(students)
+	} catch (err) {
+		logger.error(err)
+		next(err)
+	}
+})
+```
+For now, we are using application code to run a MongoDB query that returns all student documents in the Student collection by performing a GET request to this endpoint in our API. We plan on having other endpoints where we can pass in search parameters such as name, department in order to filter out students.
 
 ## 2. Code Conventions
 
