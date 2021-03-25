@@ -16,6 +16,86 @@ For information stored in files, this section should specify the schema or forma
 
 This information should be provided for all persistent entities in the design, even if you have not yet implemented persistence for some of those entities.
 
+## Schemas
+ **Course Schema**
+```js
+const CourseSchema = new Schema({
+	department: { type: String, required: true },
+	course_name: { type: String, required: true },
+	course_num: { type: String, required: true },
+	credits: { type: String, required: true },
+	description: { type: String },
+	prerequisites: Schema.Types.Mixed
+})
+
+CourseSchema.index({ department: 1, course_name: 1, course_num: 1 })
+```
+Our Course model has department, course_name, number of credits attributes as well as a prerequisites attribute that is a of type Mixed which indicates a schema-less type that will be appropriate to represent our prerequisites objects. We also have an index on our department, course_name, and course_num fields.
+
+**Student Schema**
+```js
+const StudentSchema = new Schema({
+_id: {
+	sbu_id: { type: String, required: true, unique: true }
+},
+firstName: { type: String, required: true },
+lastName: { type: String, required: true },
+email: { type: String, required: true },
+password: { type: String, required: true, lowercase: false },
+entryYear: { type: String, required: true },
+entrySem: { type: String, required: true },
+reqVersion: {
+	department: { type: String },
+	reqSem: { type: String },
+	reqYear: { type: String }
+},
+graduationSem: { type: String },
+graduationYear: { type: String }
+})
+```
+Our Student model has attributes such as firstName, lastName, email, password. We decided to have the reqVersion as an object since it contains information such as department, reqSem, reqYear.
+
+**CourseOffering Schema**
+```js
+const CourseOfferingSchema = new Schema({
+courseID: { type: Schema.Types.ObjectId, ref: 'Course', required: true },
+section: { type: String },
+semester: { type: String, required: true },
+year: { type: String, required: true },
+days: { type: String, required: true },
+start_time: { type: String, required: true },
+end_time: { type: String, required: true }
+})
+```
+Our CourseOffering model represents information about a course during a given year and semester. Thus, it has attributes such as courseID which references a Course document, the semester, year, start_time and end_time.
+
+**CoursePlan Schema**
+```js
+const CoursePlanSchema = new Schema({
+sbu_id: { type: String, required: true },
+department: { type: String, required: true },
+course_num: { type: String, required: true },
+section: { type: String, trim: true },
+semester: { type: String, required: true },
+year: { type: String, required: true },
+grade: { type: String },
+invalid: { type: Boolean, default: false }
+})
+```
+Our CoursePlan model represents information about a Course Plan such as the sbu_id of the student that this plan is attached to, the department, year, grade, as well as an invalid field to indicate whether the Course Plan is valid or not.
+
+**DegreeRequirement Schema** 
+```js
+const DegreeRequirementSchema = new Schema({
+department: { type: String, required: true },
+reqSem: { type: String, required: true },
+reqYear: { type: Number, required: true },
+requirements: Schema.Types.Mixed
+})
+DegreeRequirementSchema.index({ department: 1, reqVersionSem: 1, reqVersionYear: 1 })
+```
+Our DegreeRequirement model represents the information about a DegreeRequirement which includes department, the semester and year related to this requirement as well as a requirements field which is a Mixed type since will have different types of Requirements. We decided to index based on department, the requirement version semester and year.
+
 ### 1.2 Queries
 
 Briefly describe how filtering (in the search for students) is or will be implemented. Will it be done by creating a database query that embodies all of the specified filter conditions? By a combination of a database query and application code? If a query language is used, which one?
