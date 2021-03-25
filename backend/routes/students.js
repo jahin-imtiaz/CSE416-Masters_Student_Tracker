@@ -20,15 +20,17 @@ router.get('/', async (req, res, next) => {
 router.post('/add', async (req, res, next) => {
   try {
     let studentData = req.body
-    const studentId = studentData['_id.sbu_id']
+    const studentId = studentData._id.sbu_id
     delete studentData._id
 
     const newStudent = await Student.findOneAndUpdate(
       {
         '_id.sbu_id': studentId
-      }, {
+      },
+      {
         ...studentData
-      }, {
+      },
+      {
         upsert: true,
         new: true
       }
@@ -59,9 +61,11 @@ router.post('/add-many', async (req, res, next) => {
       const newStudent = await Student.findOneAndUpdate(
         {
           '_id.sbu_id': studentId
-        }, {
+        },
+        {
           ...studentData
-        }, {
+        },
+        {
           upsert: true,
           new: true
         }
@@ -71,7 +75,7 @@ router.post('/add-many', async (req, res, next) => {
       // })
       // await newStudent.save()
       logger.info(`Upserted student ${JSON.stringify(newStudent)}`)
-      
+
       newStudents.push(newStudent)
     }
 
@@ -92,6 +96,5 @@ router.post('/delete-all', async (req, res, next) => {
     next(err)
   }
 })
-
 
 export default router

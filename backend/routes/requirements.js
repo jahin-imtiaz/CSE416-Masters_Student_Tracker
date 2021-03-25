@@ -21,7 +21,11 @@ router.post('/add', async (req, res, next) => {
   try {
     const reqData = req.body
     const newReq = await DegreeRequirement.findOneAndUpdate(
-      {},
+      {
+        department: reqData.department,
+        reqSem: reqData.reqSem,
+        reqYear: reqData.reqYear
+      },
       {
         ...reqData
       },

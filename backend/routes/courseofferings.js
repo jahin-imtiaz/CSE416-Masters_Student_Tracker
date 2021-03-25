@@ -45,7 +45,9 @@ router.post('/add-many', async (req, res, next) => {
       semester: { $in: semesters },
       year: { $in: years }
     })
-    logger.info(`Removed existing offerings ${existingOfferings}`)
+    logger.info(
+      `Removed existing offerings ${JSON.stringify(existingOfferings)}`
+    )
 
     // add new course offerings
     let newCourseOfferings = []
