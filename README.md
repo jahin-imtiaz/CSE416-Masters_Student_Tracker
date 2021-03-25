@@ -70,9 +70,9 @@ Note: The instructor will create a test suite for use during the demo. It will n
 
 A list of each team member's contributions to hw5 and hw6, including main activities and work products. Additional guidance appears in the teamwork policy on the course web page.
 
-- Taner: video, writing markdown files, implementing models and routes
+- Taner: video, writing markdown files, implementing models and routes, installation manual
 - Jahin: import files, import functionality frontend, implementing data models
-- William: frontend components, styling, requirements JSON, setting up and writing homework documents
+- William: frontend components, styling, requirements JSON, setting up and writing homework documents, test report, data model and queries
 - Nur: implementing data models
 
 ## 7. Code and Data
