@@ -15,7 +15,10 @@
 3. Click on respective add button
 4. Degree requirements for that degree version are stored as documents in MongoDB
 5. If there is an existing copy of the degree version in the database, then it is overwritten by the newly imported degree requirement document
-6. Outcome: Successful import of degree requirements
+
+**Outcome**: Successful import of degree requirements
+
+<br/>
 
 **Test case**: GPD imports course offerings
 
@@ -36,6 +39,8 @@
 
 **Outcome**: Successful import of course offerings
 
+<br/>
+
 **Test case**: GPD deletes all student data
 
 **Brief description**: GPD deletes all student records in the system
@@ -48,6 +53,8 @@
 2. All student records are removed from MongoDB
 
 **Outcome**: Successful deletion of student data
+
+<br/>
 
 **Test case**: GPD imports student data 
 
@@ -72,6 +79,8 @@
 
 **Outcome**: Successful import of student data
 
+<br/>
+
 **Test case**: GPD imports student grades
 
 **Brief description**: GPD uploads csv file containing student grades
@@ -90,6 +99,8 @@
 4. Student course plan documents are updated according to the data in the newly imported student grades file
 
 **Outcome**: Successful import of student grades
+
+<br/>
 
 **Test case**: GPD adds a student to the system
 
