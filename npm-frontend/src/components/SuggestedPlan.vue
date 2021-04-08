@@ -16,7 +16,7 @@
         </b-tr>
       </template>
     </b-table>
-    <b-button @click="selectPlan" :style="myStyle">
+    <b-button @click="selectButtonClicked" :style="myStyle">
       Select
     </b-button>
   </div>
@@ -27,7 +27,8 @@ export default {
   name: 'SuggestPlan',
   props: {
     plan: Array,
-    index: Number
+    index: Number,
+    selectedPlan: Function
   },
   data() {
     return {
@@ -41,12 +42,14 @@ export default {
     }
   },
   methods: {
-    selectPlan() {}
+    selectButtonClicked() {
+      // select the plan and update database
+      this.selectedPlan()
+    }
   },
   mounted: function() {
     let newItemObject = []
     for (var eachSem of this.plan) {
-      console.log(eachSem)
       let courses = eachSem.courses
       let str1 = ''
       for (var course of courses) {

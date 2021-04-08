@@ -239,7 +239,11 @@
         class="mt-3"
       >
         <b-col v-for="(plan, index2) in column" :key="index2" class="mt-3">
-          <SuggestedPlan :plan="plan" :index="index1 * 2 + index2" />
+          <SuggestedPlan
+            :plan="plan"
+            :index="index1 * 2 + index2"
+            :selectedPlan="selectedPlan"
+          />
         </b-col>
       </b-row>
       <b-row
@@ -248,7 +252,11 @@
         class="mt-3"
       >
         <b-col v-for="(plan, index2) in column" :key="index2" class="mt-3">
-          <SuggestedPlan :plan="plan" :index="index1 * 2 + index2" />
+          <SuggestedPlan
+            :plan="plan"
+            :index="index1 * 2 + index2"
+            :selectedPlan="selectedPlan"
+          />
         </b-col>
       </b-row>
     </b-container>
@@ -381,8 +389,25 @@ export default {
       removeTag(tag)
     },
 
-    smartSuggest() {},
-    applyFilter() {}
+    smartSuggest() {
+      //
+    },
+    applyFilter() {
+      //
+    },
+    selectedPlan() {
+      console.log('Selected Plan clicked')
+      // clear all inputs and datas
+      this.maxCourse = ''
+      this.selectedStrength = null
+      this.valuePreferedCourses = []
+      this.preferedCourseDict = {}
+      this.valueAvoidCourses = []
+      this.fromTime = '00:00:00'
+      this.toTime = '23:59:00'
+      this.smartSuggestPlans = []
+      this.applyFilterPlans = []
+    }
   },
 
   computed: {

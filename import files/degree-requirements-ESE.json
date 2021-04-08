@@ -55,13 +55,13 @@
                             {"department": "CSE", "course_num": 548, "course_name": "Analysis of Algorithms", "credits": 3}
                         ],
                         "min_course": 2
-                    },
-                    [
-                        {"department": "ESE", "course_num": 0, "course_name": "", "credits": 3, "restricted_courses": [597,599,697,698,699]},
-                        {"department": "ESE", "course_num": 0, "course_name": "", "credits": 3, "restricted_courses": [597,599,697,698,699]},
-                        {"department": "ESE", "course_num": 0, "course_name": "", "credits": 3, "restricted_courses": [597,599,697,698,699]},
-                        {"department": "ESE", "course_num": 597, "course_name": "MS Internship Project on Campus", "credits": 1, "min_credit": 1, "max_credit": 3}
-                    ]
+                    }
+                ],
+                "core_course": [
+                    {"department": "ESE", "course_num": 0, "course_name": "", "credits": 3, "restricted_courses": [597,599,697,698,699]},
+                    {"department": "ESE", "course_num": 0, "course_name": "", "credits": 3, "restricted_courses": [597,599,697,698,699]},
+                    {"department": "ESE", "course_num": 0, "course_name": "", "credits": 3, "restricted_courses": [597,599,697,698,699]},
+                    {"department": "ESE", "course_num": 597, "course_name": "MS Internship Project on Campus", "credits": 1, "min_credit": 1, "max_credit": 3}
                 ]
             },
             {
@@ -115,12 +115,12 @@
                             {"department": "CSE", "course_num": 548, "course_name": "Analysis of Algorithms", "credits": 3}
                         ],
                         "min_course": 2
-                    },
-                    [
-                        {"department": "ESE", "course_num": 0, "course_name": "", "credits": 3, "restricted_courses": [597,599,697,698,699]},
-                        {"department": "ESE", "course_num": 597, "course_name": "MS Internship Project on Campus", "credits": 1, "min_credit": 1, "max_credit": 3},
-                        {"department": "ESE", "course_num": 599, "course_name": "M.S. Thesis Research", "credits": [1,12], "min_credit": 6, "max_credit": 12}
-                    ]
+                    }
+                ],
+                "core_course": [
+                    {"department": "ESE", "course_num": 0, "course_name": "", "credits": 3, "restricted_courses": [597,599,697,698,699]},
+                    {"department": "ESE", "course_num": 597, "course_name": "MS Internship Project on Campus", "credits": 1, "min_credit": 1, "max_credit": 3},
+                    {"department": "ESE", "course_num": 599, "course_name": "M.S. Thesis Research", "credits": [1,12], "min_credit": 6, "max_credit": 12}
                 ]
             }
         ]

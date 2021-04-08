@@ -6,8 +6,7 @@
     "course_req": {
         "courses": [
             {"department": "BMI", "course_num": 501, "course_name": "Introduction to Biomedical Informatics", "credits": 3},
-            {"department": "BMI", "course_num": 502, "course_name": "Life Sciences for Biomedical Informatics", "credits": 3},
-            {"department": "BMI", "course_num": 503, "course_name": "Computer Science for Biomedical Informatics", "credits": 3},
+            {"department": "BMI", "course_num": [502, 503], "course_name": ["Life Sciences for Biomedical Informatics", "Computer Science for Biomedical Informatics"], "credits": 3},
             {"department": "BMI", "course_num": 540, "course_name": "Statistical Methods in Biomedical Informatics", "credits": 3},
             {"department": "BMI", "course_num": 592, "course_name": "Biomedical Informatics Masters Pre-Candidates Seminar", "semester": "Fall,Spring", "credits": 1}
         ],
