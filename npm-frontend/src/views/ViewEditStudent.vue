@@ -14,13 +14,8 @@
             label="Student ID"
             label-for="studentID"
           >
-            <b-form-input
-              id="studentID"
-              placeholder="1120101010"
-              value="1120101010"
-              v-model="studentID"
-              readonly="true"
-            />
+            <b-form-input id="studentID" :placeholder="studentID"
+            :value="studentID" v-model="studentID" readonly: True />
           </b-form-group>
           <b-form-group
             id="nameID"
@@ -108,7 +103,7 @@
         </b-col>
       </b-row>
       <b-row>
-        <b-col cols="2" align-self="end">
+        <b-col cols="2">
           Course Plan
           <b-button-group vertical>
             <div>
@@ -130,28 +125,33 @@
         </b-col>
         <b-col>
           <b-row>
-            <b-col cols="6">Course Name</b-col>
+            <!-- <b-col cols="6">Course Name</b-col>
             <b-col cols="2">Credits</b-col>
             <b-col cols="2">Grade</b-col>
-            <b-col cols="2">Status</b-col>
+            <b-col cols="2">Status</b-col> -->
+
+            <b-table hover :items="coursePlans" />
           </b-row>
         </b-col>
       </b-row>
+      <br />
+      <br />
       <b-row>
-        <b-col cols="2" align-self="end">Course Requirements</b-col>
+        <b-col cols="2">Course Requirements</b-col>
         <b-col>
           <b-row>
-            <b-col cols="8">Requirements</b-col>
-            <b-col cols="4">Status</b-col>
+            <!-- <b-col cols="8">Requirements</b-col>
+            <b-col cols="4">Status</b-col> -->
+            <b-table hover :items="requirements" />
           </b-row>
         </b-col>
       </b-row>
       <b-row>
-        <b-col cols="2" align-self="end">Comment</b-col>
+        <b-col cols="2">Comment</b-col>
         <b-col>Description</b-col>
       </b-row>
       <b-row>
-        <b-button-group vertical>
+        <b-button-group>
           <div class="mt-2">
             <b-button block :style="myStyle" size="sm" @click="saveChanges">
               Save Changes
@@ -167,7 +167,42 @@
 import NavBar from '@/components/NavBar.vue'
 export default {
   name: 'ViewEditStudent',
+  data() {
+    return {
+      studentID: this.$route.params.studentID,
+      name: '',
+      email: '',
+      department: '',
+      track: '',
+      graduated: '',
+      entryYear: '',
+      entrySem: '',
+      reqVer: '',
+      gradDate: '',
+      coursePlans: [
+        { course_name: 'CSE 101', credits: 3, grade: 'A', status: 'idk' }
+      ],
+      requirements: [{ requirements: 'requirements', status: 'status' }],
+      comment: 'description',
+      myStyle: {
+        backgroundColor: '#800000',
+        color: 'white',
+        textAlign: 'center'
+      }
+    }
+  },
+  methods: {
+    suggestCoursePlan() {},
+    addCourse() {},
+    saveChanges() {}
+  },
   props: {},
+  watch: {
+    $route(to, from) {
+      // react to route changes...
+      console.log(to, from)
+    }
+  },
   components: {
     NavBar
   }

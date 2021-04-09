@@ -88,9 +88,10 @@
                           @click="removeTagWrapperCourse(removeTag, tag)"
                           variant="link"
                           size="sm"
-                          :aria-controls="
-                            `my-custom-tags-tag_${tag.replace(/\s/g, '_')}_`
-                          "
+                          :aria-controls="`my-custom-tags-tag_${tag.replace(
+                            /\s/g,
+                            '_'
+                          )}_`"
                         >
                           remove
                         </b-button>
@@ -161,9 +162,10 @@
                           @click="removeTagWrapperAvoid(removeTag, tag)"
                           variant="link"
                           size="sm"
-                          :aria-controls="
-                            `my-custom-tags-tag_${tag.replace(/\s/g, '_')}_`
-                          "
+                          :aria-controls="`my-custom-tags-tag_${tag.replace(
+                            /\s/g,
+                            '_'
+                          )}_`"
                         >
                           remove
                         </b-button>
