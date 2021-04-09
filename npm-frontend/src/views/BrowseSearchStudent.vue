@@ -69,7 +69,13 @@
       </b-row>
     <br />
     <div>
-      <b-table striped hover :items="Students"></b-table>
+      <b-table striped hover :items="Students" :fields="fields">
+        <template #cell(view_edit)>
+          <b-button class="btn" to="/view-edit-student">
+            View/Edit
+          </b-button>
+        </template>
+      </b-table>
     </div>
     </b-container>
   </div>
@@ -85,7 +91,38 @@ export default {
   name: 'BrowseSearchStudent',
   data() {
     return {
-      Students: []
+      Students: [],
+      fields: [
+          {
+            key: 'student_ID',
+            sortable: true,
+          },
+          {
+            key: 'name',
+            sortable: true,
+          },          
+          {
+            key: 'graduation_semester',
+            sortable: true,
+          },
+          {
+            key: 'number_of_semesters',
+            sortable: true,
+          },          
+          {
+            key: 'course_plan_status',
+            sortable: false,
+          },
+          {
+            key: 'number_of_degree_requirements',
+            sortable: false,
+          },          
+          {
+            key: 'view_edit',
+            label: '        ',
+            sortable: false,
+          }
+      ]
     }
   },
   methods: {
@@ -94,7 +131,16 @@ export default {
         .get(`${VUE_APP_BACKEND_API}/students`)
         .then((res) => {
           console.log('RETRIEVE STUDENTS', res.data)
-          this.Students = res.data
+          res.data.forEach(item => {
+            this.Students.push({
+              student_ID: item._id.sbu_id,
+              name: item.firstName + " " + item.lastName,
+              graduation_semester: item.graduationSem,
+              number_of_semesters: 0,
+              course_plan_status: "Incomplete",
+              number_of_degree_requirements: "5 satisfied, 3 pending, 2 unsatisfied"
+            })
+          })
         })
         .catch((err) => {
           console.log('RETRIEVE STUDENTS FAILED', err)
@@ -137,8 +183,12 @@ a {
   border-radius: 10px;
   background-color: #a30e0e;
   float: right;
+  color: white;
 }
 .btn:hover {
   background-color: #800000;
+}
+.tdbg {
+  background-color: #a30e0e !important;
 }
 </style>
