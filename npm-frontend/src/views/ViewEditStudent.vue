@@ -150,7 +150,7 @@
         <b-col cols="2">Comment</b-col>
         <b-col>Description</b-col>
       </b-row>
-      <b-row>
+      <b-col class="text-right">
         <b-button-group>
           <div class="mt-2">
             <b-button block :style="myStyle" size="sm" @click="saveChanges">
@@ -158,7 +158,7 @@
             </b-button>
           </div>
         </b-button-group>
-      </b-row>
+      </b-col>
     </b-container>
   </div>
 </template>
