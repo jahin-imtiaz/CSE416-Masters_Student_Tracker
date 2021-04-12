@@ -11,15 +11,19 @@
       |
       <router-link to="/import-files">Import File</router-link>
       |
-      <router-link to="/suggest-course-plan">Suggest Course Plan</router-link>
+      <router-link to="/suggest-course-plan/1121010101">
+        Suggest Course Plan
+      </router-link>
       |
       <router-link to="/add-student">Add Student</router-link>
       |
       <router-link to="/add-course">Add Course</router-link>
       |
-      <router-link to="/view-edit-student">View/Edit (Student)</router-link>
+      <router-link to="/view-edit-student/1121010101">
+        View/Edit (Student)
+      </router-link>
       |
-      <router-link to="/view-edit-gpd">View/Edit (GPD)</router-link>
+      <router-link to="/view-edit-gpd/1121010101">View/Edit (GPD)</router-link>
       |
       <router-link to="/browse-search-student">
         Browse/Search Student

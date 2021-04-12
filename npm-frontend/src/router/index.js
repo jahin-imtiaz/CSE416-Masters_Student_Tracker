@@ -56,13 +56,13 @@ const routes = [
       import(/* webpackChunkName: "about" */ '../views/EnrollmentTrend.vue')
   },
   {
-    path: '/view-edit-gpd',
+    path: '/view-edit-gpd/:studentID',
     name: 'View/Edit (GPD)',
     component: () =>
       import(/* webpackChunkName: "about" */ '../views/ViewEditGPD.vue')
   },
   {
-    path: '/view-edit-student',
+    path: '/view-edit-student/:studentID',
     name: 'View/Edit (Student)',
     component: () =>
       import(/* webpackChunkName: "about" */ '../views/ViewEditStudent.vue')
@@ -74,7 +74,7 @@ const routes = [
       import(/* webpackChunkName: "about" */ '../views/ImportFiles.vue')
   },
   {
-    path: '/suggest-course-plan',
+    path: '/suggest-course-plan/:studentID',
     name: 'Suggest Course Plan',
     component: () =>
       import(/* webpackChunkName: "about" */ '../views/SuggestCoursePlan.vue')
