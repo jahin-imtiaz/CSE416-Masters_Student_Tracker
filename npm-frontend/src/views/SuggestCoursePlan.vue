@@ -267,6 +267,9 @@
 import NavBar from '@/components/NavBar.vue'
 import SuggestedPlan from '@/components/SuggestedPlan.vue'
 import Vue from 'vue'
+import axios from 'axios'
+const { VUE_APP_BACKEND_API } = process.env
+
 export default {
   name: 'SuggestCoursePlan',
   components: {
@@ -275,7 +278,8 @@ export default {
   },
   data() {
     return {
-      studentID: this.$route.params.studentID,
+      //studentID: this.$route.params.studentID,
+      studentID: '987654321',
       maxCourse: '',
       selectedStrength: null,
       valuePreferedCourses: [],
@@ -388,15 +392,199 @@ export default {
     removeTagWrapperAvoid(removeTag, tag) {
       removeTag(tag)
     },
-
-    smartSuggest() {
+    getStudent() {
+      return axios
+        .get(`${VUE_APP_BACKEND_API}/students/getOneByID`, {
+          params: {
+            id: this.studentID
+          }
+        })
+        .then(response => response.data)
+        .catch(err => {
+          console.log(err)
+        })
+    },
+    getCourseByDepartment(dept_name) {
+      return axios
+        .get(`${VUE_APP_BACKEND_API}/courses/getCourseByDepartment`, {
+          params: {
+            department: dept_name
+          }
+        })
+        .then(response => response.data)
+        .catch(err => {
+          console.log(err)
+        })
+    },
+    getStudentCoursePlan() {
+      return axios
+        .get(`${VUE_APP_BACKEND_API}/coursePlans/getCorsePlanBySbuID`, {
+          params: {
+            id: this.studentID
+          }
+        })
+        .then(response => response.data)
+        .catch(err => {
+          console.log(err)
+        })
+    },
+    getCourseByNameNumber(courseName, courseNum) {
+      return axios
+        .get(`${VUE_APP_BACKEND_API}/courses/getCourseByNameNumber`, {
+          params: {
+            name: courseName,
+            number: courseNum
+          }
+        })
+        .then(response => response.data)
+        .catch(err => {
+          console.log(err)
+        })
+    },
+    async smartSuggest() {
       //
     },
-    applyFilter() {
-      //
+    async applyFilter() {
+      // use student id to get student info.
+      let student = await this.getStudent()
+      // get all courses from the students department. ->  using students Department, get all courses in that dept.
+      let coursesInDepartment = await this.getCourseByDepartment(
+        student.reqVersion.department
+      )
+
+      // get all courses that have been taken by the student. -> use student ID to get all course Plan related to this student.
+      let studentCoursePlans = await this.getStudentCoursePlan()
+
+      // remove all courses that exist in the course plan already.
+      let modifiedCoursePlan = studentCoursePlans.map(
+        coursePlan => coursePlan.department + ' ' + coursePlan.course_num
+      )
+      let eligibleCoursesInDepartment = coursesInDepartment.filter(
+        course =>
+          modifiedCoursePlan.indexOf(
+            course.course_name + ' ' + course.course_num
+          ) === -1
+      )
+
+      // for each preferred course, add all of its prerequisite courses in the main list with high preference. (Remember to do it recursively)
+      // at the end of this BFS, we will end of with a complete list of eligibleCoursesInDepartment list.
+      let preferenceDict = this.preferedCourseDict // This will hold all the preferred courses at the end of this BFS search
+      let eligibleCourseNames = eligibleCoursesInDepartment.map(
+        // This will hold all the eligible course names at the end of this BFS search
+        course => course.course_name + ' ' + course.course_num
+      )
+
+      var q = []
+      for (let prefCourse of this.valuePreferedCourses) {
+        let newCourse = null
+        if (eligibleCourseNames.indexOf(prefCourse) === -1) {
+          // if course not exist in the dept list, do a axios request to get actual course object from the database
+          let name = prefCourse.split(' ')[0]
+          let number = prefCourse.split(' ')[1]
+          newCourse = await this.getCourseByNameNumber(name, number)
+          eligibleCourseNames.push(prefCourse) // add this in our main list of eligible courses.
+          eligibleCoursesInDepartment.push(newCourse)
+        } else {
+          newCourse =
+            eligibleCoursesInDepartment[eligibleCourseNames.indexOf(prefCourse)]
+        }
+
+        q.push(newCourse)
+      }
+
+      let allPrefCourseNames = []
+      while (q.length != 0) {
+        var prefCourse = q.shift() // visit this node
+        var tmpCourseName = prefCourse.course_name + ' ' + prefCourse.course_num
+        allPrefCourseNames.push(tmpCourseName) // adding to the visited nodes list
+        preferenceDict[tmpCourseName] = !(
+          tmpCourseName in this.preferedCourseDict
+        )
+          ? 'High-Prereq'
+          : this.preferedCourseDict[tmpCourseName]
+
+        for (let prereqCourse of prefCourse.prerequisites) {
+          if (allPrefCourseNames.indexOf(prereqCourse) === -1) {
+            // if not visited, visit this.
+            let newCourse = null
+            if (eligibleCourseNames.indexOf(prereqCourse) === -1) {
+              // if course not exist in the dept list, do a axios request to get actual course object from the database
+              let name = prereqCourse.split(' ')[0]
+              let number = prereqCourse.split(' ')[1]
+              newCourse = await this.getCourseByNameNumber(name, number)
+              eligibleCourseNames.push(prereqCourse) // add this in our main list of eligible courses.
+              eligibleCoursesInDepartment.push(newCourse)
+            } else {
+              newCourse =
+                eligibleCoursesInDepartment[
+                  eligibleCourseNames.indexOf(prereqCourse)
+                ]
+            }
+            q.push(newCourse) // add this node to visit
+          }
+        }
+      }
+      // create a directed graph of courses and their prerequisites. (we have all courses that we need. we can now make the graph). a -> b = course b has prerequisite of course a
+      let graph = new Map()
+      for (let courseName of eligibleCourseNames) {
+        // initialize the nodes with empty arrays
+        graph.set(courseName, { incomingEdgeCount: 0, neighbors: [] })
+      }
+      for (let course of eligibleCoursesInDepartment) {
+        let nodeBname = course.course_name + ' ' + course.course_num
+        for (let prereq of course.prerequisites) {
+          let nodeAname = prereq // taking course nodeAname will fulfill prerequisite of nodeBname.
+          graph.get(nodeAname).neighbors.push(nodeBname) // adding edge a -> b
+          graph.get(nodeBname).incomingEdgeCount += 1 // increment IncomingEdgeCount for node b
+        }
+      }
+      // for each course that are asked to avoid, remove them plus remove courses that have this course as prerequisite. (remember to do it recursively so all following courses are removed)
+      let avoidCourseNames = this.valueAvoidCourses
+      q = []
+      for (let avoidCourse of avoidCourseNames) {
+        q.push(avoidCourse)
+      }
+      while (q.length != 0) {
+        let avoidCourse = q.shift() // get the current course in the queue
+        for (let neighborCourse of graph.get(avoidCourse)) {
+          // put all courses that depend on thsis course in the queue to be removed later.
+          q.push(neighborCourse)
+        }
+        graph.delete(avoidCourse) // remove this course from the graph
+      }
+
+      // BEGIN TOPOLOGICAL SORT -> toposort should return a list of plans, each plan will contain a list of Semester objects.
+      let allPlans = this.topoSort(
+        graph,
+        preferenceDict,
+        eligibleCoursesInDepartment
+      )
+      console.log(allPlans)
+      //this.applyFilterPlans = allPlans
+    },
+    // topoSort should return a list of plans, each plan will contain a list of Semester objects.
+    // remember that always taking the high prefered course is not good, since we might end up taking all prereq courses and not take the actual course.
+    // while choosing courses for each semester, remember to remove courses that doesnt meet time constraint. It can not be done ahead of sort, bcz semester info is unknown beforehand
+    topoSort(graph, preferenceDict, eligibleCoursesInDepartment) {
+      // maxCoursePerSemester, PreferredStartTime, preferredEndTime
+      console.log(graph)
+      console.log(preferenceDict)
+      console.log(eligibleCoursesInDepartment)
+
+      let semesterCreated = false
+      while (semesterCreated) {
+        // collect All courses that have incomindEdgeCount === 0 && not already taken
+        // sort these courses based on their preference strength
+        // pick N classes if they are offered and have no time conflict and fulfills a degree requirement // Break out and add current semseter, if degree requirement is full.
+        // if no classes was picked, set semesterCreated to be false
+        // add these classes as a semester in the plan
+        // for all these added class -> remove them from the graph, decreaseIncomingEdge counts of their neighbors
+      }
+
+      // if degree requirement is not complete, return no plan.
+      // else return the plan
     },
     selectedPlan() {
-      console.log('Selected Plan clicked')
       // clear all inputs and datas
       this.maxCourse = ''
       this.selectedStrength = null

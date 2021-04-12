@@ -46,4 +46,30 @@ router.post('/add', async (req, res, next) => {
   }
 })
 
+router.get('/getCourseByDepartment', async (req, res, next) => {
+  try {
+    let department = req.query.department
+    const courses = await Course.find({ department: department }, {}).exec()
+    res.send(courses)
+  } catch (err) {
+    logger.error(err)
+    next(err)
+  }
+})
+
+router.get('/getCourseByNameNumber', async (req, res, next) => {
+  try {
+    let name = req.query.name
+    let number = req.query.number
+    const course = await Course.findOne(
+      { course_name: name, course_num: number },
+      {}
+    ).exec()
+    res.send(course)
+  } catch (err) {
+    logger.error(err)
+    next(err)
+  }
+})
+
 export default router

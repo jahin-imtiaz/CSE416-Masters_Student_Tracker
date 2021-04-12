@@ -10,7 +10,7 @@ const CourseSchema = new Schema({
   course_num: { type: String, required: true },
   credits: { type: String, required: true },
   description: { type: String },
-  prerequisites: Schema.Types.Mixed
+  prerequisites: [String]
 })
 
 CourseSchema.index({ department: 1, course_name: 1, course_num: 1 })
