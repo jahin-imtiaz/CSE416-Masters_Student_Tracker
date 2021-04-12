@@ -97,4 +97,19 @@ router.post('/delete-all', async (req, res, next) => {
   }
 })
 
+router.get('/getOneByID', async (req, res, next) => {
+  try {
+    let studentId = req.query.id
+
+    const student = await Student.findOne(
+      { '_id.sbu_id': studentId },
+      {}
+    ).exec()
+    res.send(student)
+  } catch (err) {
+    logger.error(err)
+    next(err)
+  }
+})
+
 export default router

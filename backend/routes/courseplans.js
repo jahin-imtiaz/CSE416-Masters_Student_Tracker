@@ -8,74 +8,91 @@ const logger = createLogger('routes:courseplans')
 let router = Router()
 
 router.get('/', async (req, res, next) => {
-    try {
-        const courses = await CoursePlan.find({}, {}).exec()
-        res.send(courses)
-    } catch (err) {
-        logger.error(err)
-        next(err)
-    }
+  try {
+    const courses = await CoursePlan.find({}, {}).exec()
+    res.send(courses)
+  } catch (err) {
+    logger.error(err)
+    next(err)
+  }
 })
 
 router.post('/add', async (req, res, next) => {
-    try {
-        let coursePlanData = req.body
+  try {
+    let coursePlanData = req.body
 
-        const newCoursePlan = await CoursePlan.findOneAndUpdate(
-        {
-            sbu_id: coursePlanData.sbu_id,
-            course_num: coursePlanData.course_num,
-            department: coursePlanData.department
-        }, {
-            ...coursePlanData
-        }, {
-            upsert: true,
-            new: true
-        })
-        // const newCoursePlan = new CoursePlan({
-        //     ...coursePlanData
-        // })
-        // await newCoursePlan.save()
-        logger.info(`Upserted course plan ${JSON.stringify(newCoursePlan)}`)
-        res.send(newCoursePlan)
-    } catch (err) {
-        logger.error(err)
-        next(err)
-    }
+    const newCoursePlan = await CoursePlan.findOneAndUpdate(
+      {
+        sbu_id: coursePlanData.sbu_id,
+        course_num: coursePlanData.course_num,
+        department: coursePlanData.department
+      },
+      {
+        ...coursePlanData
+      },
+      {
+        upsert: true,
+        new: true
+      }
+    )
+    // const newCoursePlan = new CoursePlan({
+    //     ...coursePlanData
+    // })
+    // await newCoursePlan.save()
+    logger.info(`Upserted course plan ${JSON.stringify(newCoursePlan)}`)
+    res.send(newCoursePlan)
+  } catch (err) {
+    logger.error(err)
+    next(err)
+  }
 })
 
 router.post('/add-many', async (req, res, next) => {
-    try {
-      let coursePlans = req.body
-  
-      let newCoursePlans = []
-  
-      for (let coursePlanData of coursePlans) {
-        const newCoursePlan = await CoursePlan.findOneAndUpdate(
+  try {
+    let coursePlans = req.body
+
+    let newCoursePlans = []
+
+    for (let coursePlanData of coursePlans) {
+      const newCoursePlan = await CoursePlan.findOneAndUpdate(
         {
-            sbu_id: coursePlanData.sbu_id,
-            course_num: coursePlanData.course_num,
-            department: coursePlanData.department
-        }, {
-            ...coursePlanData
-        }, {
-            upsert: true,
-            new: true
-        })
-        // const newCoursePlan = new CoursePlan({
-        //   ...coursePlanData
-        // })
-        // await newCoursePlan.save()
-        logger.info(`Upserted course plan ${JSON.stringify(newCoursePlan)}`)
-        
-        newCoursePlans.push(newCoursePlan)
-      }
-  
-      res.send(newCoursePlans)
-    } catch (err) {
-      logger.error(err)
-      next(err)
+          sbu_id: coursePlanData.sbu_id,
+          course_num: coursePlanData.course_num,
+          department: coursePlanData.department
+        },
+        {
+          ...coursePlanData
+        },
+        {
+          upsert: true,
+          new: true
+        }
+      )
+      // const newCoursePlan = new CoursePlan({
+      //   ...coursePlanData
+      // })
+      // await newCoursePlan.save()
+      logger.info(`Upserted course plan ${JSON.stringify(newCoursePlan)}`)
+
+      newCoursePlans.push(newCoursePlan)
     }
+
+    res.send(newCoursePlans)
+  } catch (err) {
+    logger.error(err)
+    next(err)
+  }
+})
+
+router.get('/getCorsePlanBySbuID', async (req, res, next) => {
+  try {
+    let sbuID = req.query.id
+    const coursePlan = await CoursePlan.find({ sbu_id: sbuID }, {}).exec()
+    res.send(coursePlan)
+  } catch (err) {
+    logger.error(err)
+    next(err)
+  }
 })
 
 export default router
