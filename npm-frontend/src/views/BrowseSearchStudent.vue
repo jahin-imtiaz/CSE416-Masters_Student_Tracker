@@ -152,7 +152,6 @@
 <script>
 import NavBar from '@/components/NavBar.vue'
 import axios from 'axios'
-
 const { VUE_APP_BACKEND_API } = process.env
 
 export default {
@@ -229,7 +228,7 @@ export default {
               name: item.firstName + " " + item.lastName,
               graduation_semester: item.graduationSem + " " + item.graduationYear,
               number_of_semesters: this.getSemesters(item.entrySem, item.entryYear, item.graduationYear),
-              course_plan_status: "Incomplete",
+              course_plan_status: this.getStudentCoursePlan(item._id.sbu_id),
               number_of_degree_requirements: "5 satisfied, 3 pending, 2 unsatisfied"
             })
           })
@@ -239,18 +238,39 @@ export default {
           console.log('RETRIEVE STUDENTS FAILED', err)
         })
     },
-      onFiltered(filteredItems) {
-        this.totalRows = filteredItems.length
-        this.currentPage = 1
-      },
-      getSemesters(entrySem, entryYear, graduationYear) {
-        if (graduationYear < '2021') {
-          return 'Graduated'
-        }
-        else {
-          return 2*(2021 - entryYear) + (entrySem == 'Fall' ? 0 : 1)
-        }
+    onFiltered(filteredItems) {
+      this.totalRows = filteredItems.length
+      this.currentPage = 1
+    },
+    getSemesters(entrySem, entryYear, graduationYear) {
+      if (graduationYear < '2021') {
+        return 'Graduated'
       }
+      else {
+        return 2*(2021 - entryYear) + (entrySem == 'Fall' ? 0 : 1)
+      }
+    },
+    getStudentCoursePlan(studentID) {
+      axios
+        .get(`${VUE_APP_BACKEND_API}/courseplans`)
+        .then((res) => {
+          this.getDeptTrack()
+          res.data.forEach(item => {
+            if (item._id.sbu_id == studentID) {
+              console.log("HELLO")
+            }
+          })
+        })
+        .catch((err) => {
+          console.log('RETRIEVE COURSE PLAN FAILED', err)
+        })
+    },
+    getDeptTrack() {
+        console.log("HELLO")
+    }
+    // verifyAMSStats() {
+
+    // },
   },
   mounted() {
     this.getStudent()

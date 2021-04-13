@@ -103,7 +103,7 @@
             <b-col>
               <b-form-input
                 aria-label="Small text input with custom switch"
-                v-model="form.track"
+                v-model="form.reqVersion.track"
               ></b-form-input>
             </b-col>
           </b-row>
@@ -175,6 +175,7 @@ export default {
         entryYear: '',
         reqVersion: {
           department: '',
+          track: '',
           reqSem: '',
           reqYear: ''
         },

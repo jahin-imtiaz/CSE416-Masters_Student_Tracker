@@ -318,7 +318,7 @@ export default {
           newStudent.lastName = currStudent[2]
           newStudent.email = currStudent[3]
           newStudent.reqVersion.department = currStudent[4]
-          newStudent.track = currStudent[5]
+          newStudent.reqVersion.track = currStudent[5]
           newStudent.entrySem = currStudent[6]
           newStudent.entryYear = currStudent[7]
           newStudent.reqVersion.reqSem = currStudent[8]

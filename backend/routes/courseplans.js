@@ -95,4 +95,14 @@ router.get('/getCorsePlanBySbuID', async (req, res, next) => {
   }
 })
 
+router.get('/:id', async (req, res, next) => {
+  try {
+    console.log('id: ' + req.params.id)
+    res.send(coursePlan)
+  } catch (err) {
+    logger.error(err)
+    next(err)
+  }
+})
+
 export default router
