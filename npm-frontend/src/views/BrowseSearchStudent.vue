@@ -120,66 +120,6 @@
         ></b-pagination>
       </b-col>
     </b-row>
-      <!-- <b-row>
-        <b-col>
-          <b-form-group
-            label="Sort By:"
-            label-cols-lg="2"
-            label-class="font-weight-bold pt-0"
-            class="mb-0"
-            v-slot="{ ariaDescribedby }"
-          >
-            <b-form-radio-group
-              :options="['Name', 'Graduation Semester', 'Number of Semesters']"
-              :aria-describedby="ariaDescribedby"
-              stacked
-              class="radioLeft"
-            ></b-form-radio-group>
-          </b-form-group>
-        </b-col>
-        <b-col>
-          <b-form-group
-            label="Filters:"
-            label-cols-lg="2"
-            label-class="font-weight-bold pt-0"
-            class="mb-0"
-          >
-            <b-form-group
-              label="Name"
-              label-for="nested-name"
-              label-cols-sm="5"
-              label-align-sm="left"
-            >
-              <b-form-input id="nested-name" class="m-0"></b-form-input>
-            </b-form-group>
-            <b-form-group
-              label="Graduation Semester"
-              label-for="nested-semester"
-              label-cols-sm="5"
-              label-align-sm="left"
-            >
-              <b-form-select id="nested-semester" class="m-0" v-model="selected" :options="options"></b-form-select>
-            </b-form-group>
-                        <b-form-group
-              label="Course Plan Validity"
-              label-for="nested-validity"
-              label-cols-sm="5"
-              label-align-sm="left"
-            >
-              <b-form-select id="nested-validity" class="m-0" v-model="selected" :options="options"></b-form-select>
-            </b-form-group>
-            <b-form-group
-              label="Course Plan Status"
-              label-for="nested-status"
-              label-cols-sm="5"
-              label-align-sm="left"
-            >
-              <b-form-select id="nested-status" class="m-0" v-model="selected" :options="options"></b-form-select>
-            </b-form-group>
-            <b-button class="btn">Apply</b-button>
-          </b-form-group>
-        </b-col>
-      </b-row> -->
     <br />
     <div>
       <b-table striped hover
@@ -197,12 +137,12 @@
         small
         @filtered="onFiltered"
       >
-        <template #cell(view_edit)>
-          <b-button class="btn" to="/view-edit-student">
+        <template #cell(view_edit)="row">
+          <b-button class="btn" @click="$router.push('/view-edit-gpd/' + row.item.student_ID)">
             View/Edit
           </b-button>
         </template>
-
+        
       </b-table>
     </div>
     </b-container>
@@ -287,8 +227,8 @@ export default {
             this.Students.push({
               student_ID: item._id.sbu_id,
               name: item.firstName + " " + item.lastName,
-              graduation_semester: item.graduationSem,
-              number_of_semesters: 0,
+              graduation_semester: item.graduationSem + " " + item.graduationYear,
+              number_of_semesters: this.getSemesters(item.entrySem, item.entryYear, item.graduationYear),
               course_plan_status: "Incomplete",
               number_of_degree_requirements: "5 satisfied, 3 pending, 2 unsatisfied"
             })
@@ -300,9 +240,16 @@ export default {
         })
     },
       onFiltered(filteredItems) {
-        // Trigger pagination to update the number of buttons/pages due to filtering
         this.totalRows = filteredItems.length
         this.currentPage = 1
+      },
+      getSemesters(entrySem, entryYear, graduationYear) {
+        if (graduationYear < '2021') {
+          return 'Graduated'
+        }
+        else {
+          return 2*(2021 - entryYear) + (entrySem == 'Fall' ? 0 : 1)
+        }
       }
   },
   mounted() {
