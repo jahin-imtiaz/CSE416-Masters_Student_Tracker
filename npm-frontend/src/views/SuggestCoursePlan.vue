@@ -8,18 +8,45 @@
       <b-row>
         <b-col cols="10">
           <b-row>
-            <b-col>
+            <b-col cols="6">
               <b-form-group
                 id="maxCourseID"
-                label-cols-sm="3"
-                content-cols-sm="2"
+                label-cols-sm="6"
+                content-cols-sm="6"
                 label="Maximum course per semester"
                 label-for="maxCourse"
               >
                 <b-form-input id="maxCourse" v-model="maxCourse"></b-form-input>
               </b-form-group>
             </b-col>
+            <b-col cols="3">
+              <b-form-group
+                id="semesterID"
+                label-cols-sm="4"
+                content-cols-sm="8"
+                label="Semester"
+              >
+                <b-form-select
+                  v-model="currentSem"
+                  :options="optionsSemester"
+                ></b-form-select>
+              </b-form-group>
+            </b-col>
+            <b-col cols="3">
+              <b-form-group
+                id="yearID"
+                label-cols-sm="4"
+                content-cols-sm="8"
+                label="Year"
+              >
+                <b-form-select
+                  v-model="currentYear"
+                  :options="optionsYear"
+                ></b-form-select>
+              </b-form-group>
+            </b-col>
           </b-row>
+
           <b-row>
             <b-col>
               <b-form-group
@@ -88,9 +115,10 @@
                           @click="removeTagWrapperCourse(removeTag, tag)"
                           variant="link"
                           size="sm"
-                          :aria-controls="
-                            `my-custom-tags-tag_${tag.replace(/\s/g, '_')}_`
-                          "
+                          :aria-controls="`my-custom-tags-tag_${tag.replace(
+                            /\s/g,
+                            '_'
+                          )}_`"
                         >
                           remove
                         </b-button>
@@ -161,9 +189,10 @@
                           @click="removeTagWrapperAvoid(removeTag, tag)"
                           variant="link"
                           size="sm"
-                          :aria-controls="
-                            `my-custom-tags-tag_${tag.replace(/\s/g, '_')}_`
-                          "
+                          :aria-controls="`my-custom-tags-tag_${tag.replace(
+                            /\s/g,
+                            '_'
+                          )}_`"
                         >
                           remove
                         </b-button>
@@ -264,6 +293,7 @@
 </template>
 
 <script>
+//import _ from 'lodash'
 import NavBar from '@/components/NavBar.vue'
 import SuggestedPlan from '@/components/SuggestedPlan.vue'
 import Vue from 'vue'
@@ -280,6 +310,29 @@ export default {
     return {
       //studentID: this.$route.params.studentID,
       studentID: '987654321',
+      currentSem: 'Spring',
+      currentYear: 2021,
+      optionsSemester: [
+        { value: null, text: 'Please select current semester' },
+        { value: 'Fall', text: 'Fall' },
+        { value: 'Winter', text: 'Winter' },
+        { value: 'Spring', text: 'Spring' },
+        { value: 'SummerI', text: 'SummerI' },
+        { value: 'SummerII', text: 'SummerII' }
+      ],
+      optionsYear: [
+        { value: null, text: 'Please select current Year' },
+        { value: 2018, text: '2018' },
+        { value: 2019, text: '2019' },
+        { value: 2020, text: '2020' },
+        { value: 2021, text: '2021' },
+        { value: 2022, text: '2022' },
+        { value: 2023, text: '2023' },
+        { value: 2024, text: '2024' },
+        { value: 2025, text: '2025' },
+        { value: 2026, text: '2026' },
+        { value: 2027, text: '2027' }
+      ],
       maxCourse: '',
       selectedStrength: null,
       valuePreferedCourses: [],
@@ -399,8 +452,8 @@ export default {
             id: this.studentID
           }
         })
-        .then(response => response.data)
-        .catch(err => {
+        .then((response) => response.data)
+        .catch((err) => {
           console.log(err)
         })
     },
@@ -411,8 +464,8 @@ export default {
             department: dept_name
           }
         })
-        .then(response => response.data)
-        .catch(err => {
+        .then((response) => response.data)
+        .catch((err) => {
           console.log(err)
         })
     },
@@ -423,8 +476,8 @@ export default {
             id: this.studentID
           }
         })
-        .then(response => response.data)
-        .catch(err => {
+        .then((response) => response.data)
+        .catch((err) => {
           console.log(err)
         })
     },
@@ -436,14 +489,118 @@ export default {
             number: courseNum
           }
         })
-        .then(response => response.data)
-        .catch(err => {
+        .then((response) => response.data)
+        .catch((err) => {
           console.log(err)
         })
     },
     async smartSuggest() {
-      //
+      // TODO
     },
+    calculatedSemesterAndYear(currentSem, currentYear, semesterCount) {
+      let semesterNames = ['Fall', 'Winter', 'Spring', 'SummerI', 'SummerII']
+      let retObj = {}
+      retObj['year'] = currentYear + semesterCount / semesterNames.length
+      retObj['sem'] =
+        semesterNames[
+          semesterNames.indexOf(currentSem) +
+            (semesterCount % semesterNames.length)
+        ]
+      return retObj
+    },
+    async getAllCourseOfferingForCourse(courseName, semester, year) {
+      return axios
+        .get(`${VUE_APP_BACKEND_API}/courseofferings/findAllOfferingOfCourse`, {
+          params: {
+            name: courseName,
+            semester: semester,
+            year: year
+          }
+        })
+        .then((response) => response.data)
+        .catch((err) => {
+          console.log(err)
+        })
+    },
+    async isClassOfferedAndTimeConstraintMeet(courseName, semester, year) {
+      // TODO
+      let offeredCourseList = await this.getAllCourseOfferingForCourse(
+        courseName,
+        semester,
+        year
+      )
+      if (offeredCourseList.length === 0) return false
+
+      let fromTimeHour = parseInt(this.fromTime.split(':')[0])
+      let fromTimeMinute =
+        parseInt(this.fromTime.split(':')[1]) + fromTimeHour * 60
+
+      let toTimeHour = parseInt(this.toTime.split(':')[0])
+      let toTimeMinute = parseInt(this.toTime.split(':')[1]) + toTimeHour * 60
+
+      for (let courseOffer of offeredCourseList) {
+        let courseStartHour = parseInt(courseOffer.start_time.split(':')[0])
+        let courseStartMinute = parseInt(
+          courseOffer.start_time.split(':')[1].slice(0, 2)
+        )
+        let courseStartAmPm = courseOffer.start_time.split(':')[1].slice(2)
+        if (courseStartAmPm === 'AM') {
+          if (courseStartHour === 12) courseStartHour = 0
+        } else {
+          courseStartHour += 12
+        }
+        courseStartMinute = courseStartMinute + courseStartHour * 60
+
+        let courseEndHour = parseInt(courseOffer.end_time.split(':')[0])
+        let courseEndMinute = parseInt(
+          courseOffer.end_time.split(':')[1].slice(0, 2)
+        )
+        let courseEndAmPm = courseOffer.end_time.split(':')[1].slice(2)
+        if (courseEndAmPm === 'AM') {
+          if (courseEndHour === 12) courseEndHour = 0
+        } else {
+          courseEndHour += 12
+        }
+        courseEndMinute = courseEndMinute + courseEndHour * 60
+
+        if (
+          fromTimeMinute <= courseStartMinute &&
+          courseEndMinute <= toTimeMinute
+        ) {
+          return true
+        } else return false
+      }
+
+      return false
+    },
+    // fullfillsDegreeRequirement(degReqState, courseName) {
+    //   // TODO
+    //   return true
+    // },
+    // updateDegreeRequirementState(degReqState, courseName) {
+    //   // TODO
+    // },
+    // isDegreeRequirementComplete(degReqState) {
+    //   // TODO
+    //   return true
+    // },
+    sortCourseBasedOnPreference(courseList, preferenceDict) {
+      // let clonedList = _.cloneDeep(courseList);
+      let choices = ['High-prereq', 'High', 'Medium', 'Low']
+      let sortedList = []
+      for (let choice of choices) {
+        for (let courseName of courseList) {
+          if (preferenceDict[courseName] === choice) sortedList.push(courseName)
+        }
+      }
+      return sortedList
+    },
+    // clobeeGraph() {
+    //   // TODO
+    // },
+    // cloneEligibleCourseInDepartmentMap(){
+    //   // TODO
+    // },
     async applyFilter() {
       // use student id to get student info.
       let student = await this.getStudent()
@@ -457,10 +614,10 @@ export default {
 
       // remove all courses that exist in the course plan already.
       let modifiedCoursePlan = studentCoursePlans.map(
-        coursePlan => coursePlan.department + ' ' + coursePlan.course_num
+        (coursePlan) => coursePlan.department + ' ' + coursePlan.course_num
       )
       let eligibleCoursesInDepartment = coursesInDepartment.filter(
-        course =>
+        (course) =>
           modifiedCoursePlan.indexOf(
             course.course_name + ' ' + course.course_num
           ) === -1
@@ -471,7 +628,7 @@ export default {
       let preferenceDict = this.preferedCourseDict // This will hold all the preferred courses at the end of this BFS search
       let eligibleCourseNames = eligibleCoursesInDepartment.map(
         // This will hold all the eligible course names at the end of this BFS search
-        course => course.course_name + ' ' + course.course_num
+        (course) => course.course_name + ' ' + course.course_num
       )
 
       var q = []
@@ -554,10 +711,19 @@ export default {
       }
 
       // BEGIN TOPOLOGICAL SORT -> toposort should return a list of plans, each plan will contain a list of Semester objects.
+      let eligibleCoursesInDepartmentMap = {}
+      eligibleCoursesInDepartment.map((course) => {
+        let name = course.course_name + ' ' + course.course_num
+        let object = {}
+        object['course'] = course
+        object['isSelected'] = false
+        eligibleCoursesInDepartmentMap[name] = object
+      })
+      console.log(eligibleCoursesInDepartmentMap)
       let allPlans = this.topoSort(
         graph,
         preferenceDict,
-        eligibleCoursesInDepartment
+        eligibleCoursesInDepartmentMap
       )
       console.log(allPlans)
       //this.applyFilterPlans = allPlans
@@ -565,25 +731,129 @@ export default {
     // topoSort should return a list of plans, each plan will contain a list of Semester objects.
     // remember that always taking the high prefered course is not good, since we might end up taking all prereq courses and not take the actual course.
     // while choosing courses for each semester, remember to remove courses that doesnt meet time constraint. It can not be done ahead of sort, bcz semester info is unknown beforehand
-    topoSort(graph, preferenceDict, eligibleCoursesInDepartment) {
+    topoSort(graph, preferenceDict, eligibleCoursesInDepartmentMap) {
       // maxCoursePerSemester, PreferredStartTime, preferredEndTime
-      console.log(graph)
-      console.log(preferenceDict)
-      console.log(eligibleCoursesInDepartment)
 
+      let degreeReqState = {}
       let semesterCreated = false
+      let plan = []
+      let semesterCount = 0
+
       while (semesterCreated) {
+        let ret = this.calculatedSemesterAndYear(
+          this.currentSem,
+          this.currentYear,
+          semesterCount
+        )
+        let semester = ret.sem
+        let year = ret.year
+
+        if (this.isDegreeRequirementComplete(degreeReqState)) break
         // collect All courses that have incomindEdgeCount === 0 && not already taken
+        let list = []
+        for (let [courseName, node] of graph) {
+          if (
+            node.incomingEdgeCount === 0 &&
+            eligibleCoursesInDepartmentMap[courseName].isSelected === false
+          ) {
+            list.push(courseName)
+          }
+        }
+        if (list.length === 0) break
         // sort these courses based on their preference strength
+        let sortedList = this.sortCourseBasedOnPreference(list, preferenceDict)
         // pick N classes if they are offered and have no time conflict and fulfills a degree requirement // Break out and add current semseter, if degree requirement is full.
-        // if no classes was picked, set semesterCreated to be false
-        // add these classes as a semester in the plan
-        // for all these added class -> remove them from the graph, decreaseIncomingEdge counts of their neighbors
+        let i = 0
+        let idx = 0
+        let currentSememster = []
+        let credits = []
+        while (i < this.maxCourse && idx < this.sortedList.length) {
+          if (
+            this.isClassOfferedAndTimeConstraintMeet(
+              sortedList[idx],
+              semester,
+              year
+            ) &&
+            this.passTimeConstraint(sortedList[idx]) &&
+            this.fullfillsDegreeRequirement(degreeReqState, sortedList[idx])
+          ) {
+            // take this class
+            currentSememster.push(sortedList[idx])
+            credits.push(
+              eligibleCoursesInDepartmentMap[sortedList[idx]].course.credits
+            )
+            // update degre req state
+            degreeReqState = this.updateDegreeRequirementState(
+              degreeReqState,
+              sortedList[idx]
+            )
+            // break if degree req is complete
+            if (this.isDegreeRequirementComplete(degreeReqState)) break
+            // update graph isSelected
+            eligibleCoursesInDepartmentMap[sortedList[idx]].isSelected = true
+            // update incomingEdgeCount of neighbors
+            for (let neighbor of graph[sortedList[idx]].neighbors) {
+              graph[neighbor].incomingEdgeCount -= 1
+            }
+
+            i += 1
+          }
+          idx += 1
+        }
+
+        // if no classes was picked, set semesterCreated to be false. Otherwise, add these classes as a semester in the plan
+        if (currentSememster.length == 0) {
+          semesterCreated = false
+        } else {
+          let semesterObj = {}
+          semesterObj['semester'] = semester + ' ' + year
+          semesterObj['courses'] = currentSememster
+          semesterObj['credits'] = credits
+
+          plan.push(semesterObj)
+        }
+        semesterCount += 1
       }
 
       // if degree requirement is not complete, return no plan.
       // else return the plan
+      let plans = []
+      if (this.isDegreeRequirementComplete(degreeReqState) === false) {
+        return plans
+      } else {
+        plans.push(plan)
+        return plans
+      }
     },
+    // dfs(graph, preferenceDict, eligibleCoursesInDepartmentMap, maxCourse, currentDegreeRequirementState) {
+    //   if(this.degreeRequirementComplete(currentDegreeRequirementState)) return;
+
+    //   // maxCoursePerSemester, PreferredStartTime, preferredEndTime
+
+    //   // find courses from graph that have incomingEdgeCount = 0 and not yet selected
+    //   let list = []
+    //   for (let [courseName, node] of graph) {
+    //     if(node.incomingEdgeCount === 0 && eligibleCoursesInDepartmentMap[courseName].isSelected === false){
+    //       list.push(courseName)
+    //     }
+    //   }
+
+    //   if(list.length === 0) return;
+
+    //   // for a combination of these courses, select them as semester, call dfs and add semester to all created plans
+    //   let sortedList = this.sortCourseBasedOnPreference(list, preferenceDict)
+    //   if(sortedList.length > maxCourse){
+    //     // create subset of lists;
+    //   }
+    //   else{
+    //     for(let courseName of sortedList){
+    //       //mark it as visited
+    //       //update degreeRequirementstate
+
+    //     }
+    //   }
+
+    // },
     selectedPlan() {
       // clear all inputs and datas
       this.maxCourse = ''
