@@ -2,6 +2,18 @@
 
 A web system to keep track of the masters student at Stony Brook University, where graduate M.S. students will be able to keep track of their degree requirements and course plan. Graduate program directors will be able to look up student data and modify them accordingly.
 
+## HW7
+
+## 1. Concurrency
+
+### 1.1 Synchronization for database accesses
+
+
+
+### 1.2 Synchronization for any server-side in-memory data structures shared by sessions of concurrent users
+
+---
+
 ## HW6
 
 ## 1. Persistence
