@@ -148,7 +148,15 @@
       </b-row>
       <b-row>
         <b-col cols="2">Comment</b-col>
-        <b-col>Description</b-col>
+        <b-col>
+          <b-form-textarea
+            id="textarea"
+            v-model="text"
+            placeholder="Enter something..."
+            rows="3"
+            max-rows="6"
+          ></b-form-textarea>
+        </b-col>
       </b-row>
       <b-col class="text-right">
         <b-button-group>
