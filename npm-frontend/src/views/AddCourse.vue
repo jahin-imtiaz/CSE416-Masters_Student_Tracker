@@ -116,8 +116,8 @@ export default {
         color: 'white',
         textAlign: 'center'
       },
-      semesters: ["Spring 2018", "Fall 2018", "Spring 2019", "Fall 2019"],
-      years: ["2018", "2019"],
+      semesters: ["Spring", "Fall"],
+      years: ["2018", "2019", "2020", "2021"],
       courses: [],
       selected: [],
       fields: ["course", "description"],
@@ -128,7 +128,7 @@ export default {
         year: '',
         semester: ''
       },
-      filters: [{text: 'All Fields'}, 'Name', 'Course Number', 'Professor'],
+      filters: [{text: 'All Fields'}, 'Department', 'Course Number'],
       tableItems: this.courses
     }
   },
@@ -140,13 +140,19 @@ export default {
       event.preventDefault();
       let vm = this;
       axios
-      .get(`${VUE_APP_BACKEND_API}/courses`)
+      .get(`${VUE_APP_BACKEND_API}/courseofferings/findAllOfferingOfCourse/`, {
+          params: {
+            name: this.form.search,
+            semester: this.form.semester,
+            year: this.form.year
+          }
+        })
       .then(response => {
         console.log(response.data)
         for(let i = 0; i < response.data.length; i++){
           let newCourse = {}
-          newCourse.course = response.data[i]["course_name"]+ " " + response.data[i]["course_num"]
-          newCourse.description = response.data[i]["description"]
+          newCourse.course = response.data[i]["courseID"]["course_name"]+ " " + response.data[i]["courseID"]["course_num"]
+          newCourse.description = response.data[i]["courseID"]["description"]
 
           vm.courses.push(newCourse)
         }
@@ -160,16 +166,18 @@ export default {
       for(let i = 0; i < this.selected.length; i++){
         let department = (this.selected[i].course.split(" "))[0];
         let courseNum = (this.selected[i].course.split(" "))[1];
+        console.log(department)
+        console.log(courseNum)
         let newCoursePlan = {
-          "sbu_id": sbu_id,
-          "course_num": course_num,
-          "department": department
+          "sbu_id": "1000",
+          "course_num": courseNum,
+          "department": department,
         }
         coursesToAdd.push(newCoursePlan);
       }
 
       axios
-      .post('https:sample-endpoint.com/user', {coursesToAdd})
+      .post(`${VUE_APP_BACKEND_API}/courseplans/add-many`, {coursesToAdd})
       .then(function (response) {
         console.log(response);
       })
