@@ -11,11 +11,15 @@ Vue.use(Vuex)
 
 const store = new Vuex.Store({
   state: {
+    studentID: '0000000000',
     req: {}
   },
   mutations: {
     setReq(state, req) {
       state.req = req
+    },
+    setStudentID(state, id) {
+      state.studentID = id
     }
   }
 })
