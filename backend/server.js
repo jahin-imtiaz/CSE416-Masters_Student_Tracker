@@ -4,6 +4,7 @@ import express from 'express'
 import mongoose from 'mongoose'
 import { create as createLogger } from './utils/logger.js'
 
+
 const logger = createLogger('index')
 
 const { MONGO_URI } = process.env

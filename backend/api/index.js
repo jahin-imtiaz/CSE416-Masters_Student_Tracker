@@ -9,7 +9,7 @@ const { NODE_ENV, BACKEND_API_PORT } = process.env
 const logger = createLogger('api')
 
 export default class Api {
-  constructor (app) {
+  constructor(app) {
     // app.set('trust proxy', 1)
     app.use(cors())
     app.use(compression())
