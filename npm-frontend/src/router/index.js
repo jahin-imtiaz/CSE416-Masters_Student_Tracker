@@ -56,7 +56,7 @@ const routes = [
       import(/* webpackChunkName: "about" */ '../views/EnrollmentTrend.vue')
   },
   {
-    path: '/view-edit-gpd',
+    path: '/view-edit-gpd/:studentID',
     name: 'View/Edit (GPD)',
     component: () =>
       import(/* webpackChunkName: "about" */ '../views/ViewEditGPD.vue')

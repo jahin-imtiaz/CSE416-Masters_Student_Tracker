@@ -2,7 +2,8 @@
   <div class="add-course">
     <NavBar />
     <br />
-    <br />Add Course
+    <br />
+    Add Course
     <br />
     <br />
     <b-form @submit="onSubmit">
@@ -16,7 +17,11 @@
               label="Search: "
               label-for="search"
             >
-              <b-form-input id="search" v-model="form.search" placeholder="Search..." />
+              <b-form-input
+                id="search"
+                v-model="form.search"
+                placeholder="Search..."
+              />
             </b-form-group>
           </b-col>
           <b-col>
@@ -27,7 +32,11 @@
               label-cols-sm="4"
               content-cols-sm="8"
             >
-              <b-form-select id="filter" v-model="form.filter" :options="filters"></b-form-select>
+              <b-form-select
+                id="filter"
+                v-model="form.filter"
+                :options="filters"
+              ></b-form-select>
             </b-form-group>
           </b-col>
           <b-col>
@@ -43,7 +52,11 @@
               label="Select Semester:"
               label-for="input-3"
             >
-              <b-form-select id="input-3" v-model="form.semester" :options="semesters"></b-form-select>
+              <b-form-select
+                id="input-3"
+                v-model="form.semester"
+                :options="semesters"
+              ></b-form-select>
             </b-form-group>
           </b-col>
           <b-col>
@@ -54,7 +67,11 @@
               label="Select Year:"
               label-for="input-3"
             >
-              <b-form-select id="input-3" v-model="form.year" :options="years"></b-form-select>
+              <b-form-select
+                id="input-3"
+                v-model="form.year"
+                :options="years"
+              ></b-form-select>
             </b-form-group>
           </b-col>
         </b-row>
@@ -88,9 +105,11 @@
     </div>
     <div>
       <b>Selected Courses:</b>
-      {{selected}}
+      {{ selected }}
       <div>
-        <b-button :style="myStyle" size="sm" @click="addCourses">Add Courses</b-button>
+        <b-button :style="myStyle" size="sm" @click="addCourses">
+          Add Courses
+        </b-button>
       </div>
     </div>
   </div>
@@ -98,7 +117,7 @@
 
 <script>
 import NavBar from '@/components/NavBar.vue'
-import axios from 'axios';
+import axios from 'axios'
 const { VUE_APP_BACKEND_API } = process.env
 
 export default {
@@ -116,11 +135,11 @@ export default {
         color: 'white',
         textAlign: 'center'
       },
-      semesters: ["Spring", "Fall"],
-      years: ["2018", "2019", "2020", "2021"],
+      semesters: ['Spring', 'Fall'],
+      years: ['2018', '2019', '2020', '2021'],
       courses: [],
       selected: [],
-      fields: ["course", "description"],
+      fields: ['course', 'description'],
       selectMode: 'multi',
       form: {
         search: '',
@@ -128,65 +147,70 @@ export default {
         year: '',
         semester: ''
       },
-      filters: [{text: 'All Fields'}, 'Department', 'Course Number'],
+      filters: [{ text: 'All Fields' }, 'Department', 'Course Number'],
       tableItems: this.courses
     }
   },
   methods: {
-    onRowSelected(items){
-      this.selected = items;
+    onRowSelected(items) {
+      this.selected = items
     },
     onSubmit(event) {
-      event.preventDefault();
-      let vm = this;
+      event.preventDefault()
+      let vm = this
       axios
-      .get(`${VUE_APP_BACKEND_API}/courseofferings/findAllOfferingOfCourse/`, {
-          params: {
-            name: this.form.search,
-            semester: this.form.semester,
-            year: this.form.year
+        .get(
+          `${VUE_APP_BACKEND_API}/courseofferings/findAllOfferingOfCourse/`,
+          {
+            params: {
+              name: this.form.search,
+              semester: this.form.semester,
+              year: this.form.year
+            }
+          }
+        )
+        .then((response) => {
+          console.log(response.data)
+          for (let i = 0; i < response.data.length; i++) {
+            let newCourse = {}
+            newCourse.course =
+              response.data[i]['courseID']['course_name'] +
+              ' ' +
+              response.data[i]['courseID']['course_num']
+            newCourse.description = response.data[i]['courseID']['description']
+
+            vm.courses.push(newCourse)
           }
         })
-      .then(response => {
-        console.log(response.data)
-        for(let i = 0; i < response.data.length; i++){
-          let newCourse = {}
-          newCourse.course = response.data[i]["courseID"]["course_name"]+ " " + response.data[i]["courseID"]["course_num"]
-          newCourse.description = response.data[i]["courseID"]["description"]
-
-          vm.courses.push(newCourse)
-        }
-      })
-      .catch(error => {
-        console.log(error)
-      })
+        .catch((error) => {
+          console.log(error)
+        })
     },
-    addCourses(){
+    addCourses() {
       let coursesToAdd = []
-      for(let i = 0; i < this.selected.length; i++){
-        let department = (this.selected[i].course.split(" "))[0];
-        let courseNum = (this.selected[i].course.split(" "))[1];
+      for (let i = 0; i < this.selected.length; i++) {
+        let department = this.selected[i].course.split(' ')[0]
+        let courseNum = this.selected[i].course.split(' ')[1]
         console.log(department)
         console.log(courseNum)
         let newCoursePlan = {
-          "sbu_id": "1000",
-          "course_num": courseNum,
-          "department": department,
+          sbu_id: this.$store.state.studentID,
+          course_num: courseNum,
+          department: department
         }
-        coursesToAdd.push(newCoursePlan);
+        coursesToAdd.push(newCoursePlan)
       }
 
       axios
-      .post(`${VUE_APP_BACKEND_API}/courseplans/add-many`, {coursesToAdd})
-      .then(function (response) {
-        console.log(response);
-      })
-      .catch(error => {
-        console.log(error);
-      })
-
+        .post(`${VUE_APP_BACKEND_API}/courseplans/add-many`, { coursesToAdd })
+        .then(function (response) {
+          console.log(response)
+        })
+        .catch((error) => {
+          console.log(error)
+        })
     }
-  },
+  }
 }
 </script>
 

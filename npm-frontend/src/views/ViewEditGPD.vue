@@ -151,7 +151,7 @@
         <b-col>
           <b-form-textarea
             id="textarea"
-            v-model="text"
+            v-model="comment"
             placeholder="Enter something..."
             rows="3"
             max-rows="6"
@@ -209,10 +209,15 @@ export default {
     $route(to, from) {
       // react to route changes...
       console.log(to, from)
+      this.$store.commit('setStudentID', this.$route.params.studentID)
     }
   },
   components: {
     NavBar
+  },
+  mounted: function () {
+    // save studentID from route.params to vuex state
+    this.$store.commit('setStudentID', this.$route.params.studentID)
   }
 }
 </script>
