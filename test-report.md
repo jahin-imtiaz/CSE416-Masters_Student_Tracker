@@ -126,8 +126,41 @@
 
 **Flow of Events**: 
 1. Click on Add Student button on GPD home screen
-Enter valid information about the student
-2. Click on add button
-3. Student information is entered as a document in MongoDB
+2. Enter valid information about the student
+3. Click on add button
+4. Student information is entered as a document in MongoDB
 
 **Outcome**: Successfully add student to the database
+
+<br/>
+
+**Test case**: GPD sorts table
+
+**Brief description**: GPD sorts table either through the dropdown menu or the table header
+
+**Precondition**: GPD is logged in
+
+**Flow of Events**: 
+1. Click on Browse/Search Student button on GPD home screen
+2. Sort by
+    1. Clicking on 'Sort' dropdown and choosing an option with either ascending or descending order
+    2. Clicking on a table section header and clicking once to sort in ascending order and clicking again to sort in descending order
+3. Student table is sorted by ID, name, graduation semester, or number of semesters
+
+**Outcome**: Successfully sorted table based on specified criteria
+
+<br/>
+
+**Test case**: GPD filters table
+
+**Brief description**: GPD filters table by checking a criteria and/or inputing a filter
+
+**Precondition**: GPD is logged in
+
+**Flow of Events**: 
+1. Click on Browse/Search Student button on GPD home screen
+2. Click on the ratio button(s) to specify the filters or leave it all unchecked to filter on all data
+3. Type in a filter to get specific rows from the table
+4. Student table is filtered by name, graduation semester, course plan validity, and/or course plan completeness
+
+**Outcome**: Successfully filtered table based on specified filter(s)
