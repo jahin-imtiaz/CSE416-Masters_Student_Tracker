@@ -228,8 +228,8 @@ export default {
               name: item.firstName + " " + item.lastName,
               graduation_semester: item.graduationSem + " " + item.graduationYear,
               number_of_semesters: this.getSemesters(item.entrySem, item.entryYear, item.graduationYear),
-              course_plan_status: this.getStudentCoursePlan(item._id.sbu_id),
-              number_of_degree_requirements: "5 satisfied, 3 pending, 2 unsatisfied"
+              course_plan_status: this.getCoursePlanStatus(this.getStudentCoursePlan(item._id.sbu_id), item.reqVersion.department, item.reqVersion.track),
+              number_of_degree_requirements: this.getDegreeRequirements(this.getStudentCoursePlan(item._id.sbu_id), item.reqVersion.department, item.reqVersion.track)
             })
           })
           this.totalRows = this.Students.length
@@ -251,26 +251,141 @@ export default {
       }
     },
     getStudentCoursePlan(studentID) {
-      axios
-        .get(`${VUE_APP_BACKEND_API}/courseplans`)
-        .then((res) => {
-          this.getDeptTrack()
-          res.data.forEach(item => {
-            if (item._id.sbu_id == studentID) {
-              console.log("HELLO")
-            }
-          })
-        })
-        .catch((err) => {
-          console.log('RETRIEVE COURSE PLAN FAILED', err)
-        })
+      const courses = []
+      const promise = axios.get(`${VUE_APP_BACKEND_API}/courseplans`)
+      promise.then((response) => {
+        response.data.forEach(item => {
+          if (item.sbu_id == studentID) { 
+            courses.push(item.course_num)
+          }
+        })      
+      })
+      return courses
     },
-    getDeptTrack() {
-        console.log("HELLO")
+    getCoursePlanStatus(classes, department, track) {
+      if (department == 'AMS') {
+        return this.verifyAMS(classes, track)
+      }
+      else if (department == 'BMI') {
+        return this.verifyBMI(classes, track)
+      }
+      else if (department == 'CSE') {
+        return this.verifyCSE(classes, track)
+      }
+      else if (department == 'ESE') {
+        return this.verifyESE(classes, track)
+      }
+    },
+    verifyAMS(classes, track) {
+      switch(track.toLowerCase()) {
+      case 'computational applied mathematics':
+          return "Approved"
+      case 'computational biology':
+          return "Incomplete"
+      case 'operations research':
+          return "Approved"
+      case 'statistics':
+          return "Approved"
+      case 'quantitative finance':
+          return "Approved"
+      }
+    },
+    verifyBMI(classes, track) {
+      switch(track.toLowerCase()) {
+      case 'imaging informatics with thesis':
+          return "Approved"
+      case 'clinical informatics with thesis':
+          return "Incomplete"
+      case 'translational bioinformatics with thesis':
+          return "Approved"
+      case 'imaging informatics with project':
+          return "Approved"
+      case 'clinical informatics with project':
+          return "Approved"
+      case 'translational bioinformatics with project':
+          return "Approved"
+      }
+    },
+    verifyCSE(classes, track) {
+      switch(track.toLowerCase()) {
+      case 'special project':
+          return "Incomplete"
+      case 'advanced project':
+          return "Incomplete"
+      case 'thesis':
+          return "Approved"
+      }
+    },
+    verifyESE(classes, track) {
+      switch(track.toLowerCase()) {
+      case 'non-thesis':
+          return "Incomplete"
+      case 'thesis':
+          return "Incomplete"
+      }
+    },
+    getDegreeRequirements(classes, department, track) {
+      if (department == 'AMS') {
+        return this.degreeAMS(classes, track)
+      }
+      else if (department == 'BMI') {
+        return this.degreeBMI(classes, track)
+      }
+      else if (department == 'CSE') {
+        return this.degreeCSE(classes, track)
+      }
+      else if (department == 'ESE') {
+        return this.degreeESE(classes, track)
+      }
+    },
+    degreeAMS(classes, track) {
+      switch(track.toLowerCase()) {
+        case 'computational applied mathematics':
+            return "5 satisfied, 8 pending, 0 unsatisfied"
+        case 'computational biology':
+            return "5 satisfied, 8 pending, 0 unsatisfied"
+        case 'operations research':
+            return "5 satisfied, 8 pending, 0 unsatisfied"
+        case 'statistics':
+            return "5 satisfied, 8 pending, 0 unsatisfied"
+        case 'quantitative finance':
+            return "5 satisfied, 8 pending, 0 unsatisfied"
+        }
+    },
+    degreeBMI(classes, track) {
+      switch(track.toLowerCase()) {
+        case 'imaging informatics with thesis':
+            return "9 satisfied, 3 pending, 1 unsatisfied"
+        case 'clinical informatics with thesis':
+            return "9 satisfied, 3 pending, 1 unsatisfied"
+        case 'translational bioinformatics with thesis':
+            return "9 satisfied, 3 pending, 1 unsatisfied"
+        case 'imaging informatics with project':
+            return "9 satisfied, 3 pending, 1 unsatisfied"
+        case 'clinical informatics with project':
+            return "9 satisfied, 3 pending, 1 unsatisfied"
+        case 'translational bioinformatics with project':
+            return "9 satisfied, 3 pending, 1 unsatisfied"
+        }
+    },
+    degreeCSE(classes, track) {
+      switch(track.toLowerCase()) {
+      case 'special project':
+          return "0 satisfied, 6 pending, 6 unsatisfied"
+      case 'advanced project':
+          return "0 satisfied, 6 pending, 6 unsatisfied"
+      case 'thesis':
+          return "0 satisfied, 6 pending, 6 unsatisfied"
+      }
+    },
+    degreeESE(classes, track) {
+      switch(track.toLowerCase()) {
+      case 'non-thesis':
+          return "11 satisfied, 0 pending, 0 unsatisfied"
+      case 'thesis':
+          return "11 satisfied, 0 pending, 0 unsatisfied"
+      }
     }
-    // verifyAMSStats() {
-
-    // },
   },
   mounted() {
     this.getStudent()
