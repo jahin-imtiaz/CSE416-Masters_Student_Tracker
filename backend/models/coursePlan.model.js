@@ -12,7 +12,8 @@ const CoursePlanSchema = new Schema({
   semester: { type: String, required: true },
   year: { type: String, required: true },
   grade: { type: String },
-  invalid: { type: Boolean, default: false }
+  invalid: { type: Boolean, default: false },
+  isSuggested: {type: Boolean, default: false}
 })
 
 const CoursePlan = mongoose.model('CoursePlan', CoursePlanSchema)
