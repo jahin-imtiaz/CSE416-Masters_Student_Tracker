@@ -134,7 +134,7 @@
 
 <br/>
 
-**Test case**: GPD filters table
+**Test case**: GPD sorts table
 
 **Brief description**: GPD sorts table either through the dropdown menu or the table header
 
