@@ -18,6 +18,7 @@ const StudentSchema = new Schema({
   // reqID: { type: Schema.Types.ObjectId, ref: "DegreeRequirement" },
   reqVersion: {
     department: { type: String },
+    track: { type: String },
     reqSem: { type: String },
     reqYear: { type: String }
   },

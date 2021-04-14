@@ -11,7 +11,7 @@
       |
       <router-link to="/import-files">Import File</router-link>
       |
-      <router-link to="/suggest-course-plan/1121010101">
+      <router-link :to="'/suggest-course-plan/' + this.$store.state.studentID">
         Suggest Course Plan
       </router-link>
       |
@@ -19,11 +19,11 @@
       |
       <router-link to="/add-course">Add Course</router-link>
       |
-      <router-link to="/view-edit-student/1121010101">
+      <router-link :to="'/view-edit-student/' + this.$store.state.studentID">
         View/Edit (Student)
       </router-link>
       |
-      <router-link to="/view-edit-gpd/1121010101">View/Edit (GPD)</router-link>
+      <router-link to="/view-edit-gpd">View/Edit (GPD)</router-link>
       |
       <router-link to="/browse-search-student">
         Browse/Search Student

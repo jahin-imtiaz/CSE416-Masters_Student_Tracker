@@ -46,4 +46,21 @@ router.post('/add', async (req, res, next) => {
   }
 })
 
+router.get('/getreq', async (req, res, next) => {
+  try {
+    const reqData = req.body
+    const newReq = await DegreeRequirement.findOne({
+      department: reqData.department,
+      reqSem: reqData.reqSem,
+      reqYear: reqData.reqYear
+    }).exec()
+
+    logger.info(`Got req ${JSON.stringify(newReq)}`)
+    res.send(newReq)
+  } catch (err) {
+    logger.error(err)
+    next(err)
+  }
+})
+
 export default router

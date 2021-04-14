@@ -14,8 +14,13 @@
             label="Student ID"
             label-for="studentID"
           >
-            <b-form-input id="studentID" :placeholder="studentID"
-            :value="studentID" v-model="studentID" readonly: True />
+            <b-form-input
+              id="studentID"
+              :placeholder="studentID"
+              :value="studentID"
+              v-model="studentID"
+              :readOnly="true"
+            />
           </b-form-group>
           <b-form-group
             id="nameID"

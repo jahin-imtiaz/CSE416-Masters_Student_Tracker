@@ -104,4 +104,30 @@ router.post('/add-many', async (req, res, next) => {
   }
 })
 
+router.get('/findAllOfferingOfCourse', async (req, res, next) => {
+  try {
+    let name = req.query.name.split(' ')[0]
+    let num = req.query.name.split(' ')[1]
+
+    let semester = req.query.semester
+    let year = req.query.year
+    let offeredCoursesInSemYear = await CourseOffering.find(
+      { semester: semester, year: year },
+      {}
+    )
+      .populate('courseID')
+      .exec()
+    let courses = offeredCoursesInSemYear.filter(
+      (courseOffering) =>
+        courseOffering.courseID.course_name === name &&
+        courseOffering.courseID.course_num === num
+    )
+
+    res.send(courses)
+  } catch (err) {
+    logger.error(err)
+    next(err)
+  }
+})
+
 export default router
