@@ -30,15 +30,11 @@ SEE [IMPLEMENTATION STATUS](implementation-status-SADGE_GOOMBAS.md)
 
 SEE [INSTALLATION MANUAL](installation-manual.md)
 
-
 ## 4. Test Report
 
 SEE [TEST REPORT](test-report.md)
 
-
 ## 5. Contributions
-
-A list of each team member's contributions to hw5 and hw6, including main activities and work products. Additional guidance appears in the teamwork policy on the course web page.
 
 - Taner: View/Edit Student Info functionalties + UI
 - Jahin: Suggest Course Plan functionalties + UI
@@ -51,13 +47,9 @@ SEE "import files" FOLDER FOR DATA FILES
 
 ## 7. Requirements
 
-Current version of the requirements document.
-
 Version: 2021-04-08
 
 ## 8. Design
-
-Current version of the design documents.
 
 Version: 2021-03-09
 
