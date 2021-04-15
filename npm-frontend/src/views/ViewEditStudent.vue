@@ -112,19 +112,23 @@
           Course Plan
           <b-button-group vertical>
             <div>
-              <b-button
-                block
-                :style="myStyle"
-                size="sm"
-                @click="suggestCoursePlan"
-              >
-                Suggest Course Plan
-              </b-button>
+              <router-link :to="'/suggest-course-plan/' + this.studentID">
+                <b-button
+                  block
+                  :style="myStyle"
+                  size="sm"
+                  @click="suggestCoursePlan"
+                >
+                  Suggest Course Plan
+                </b-button>
+              </router-link>
             </div>
             <div class="mt-2">
-              <b-button block :style="myStyle" size="sm" @click="addCourse">
-                Add Course
-              </b-button>
+              <router-link :to="'/add-course'">
+                <b-button block :style="myStyle" size="sm" @click="addCourse">
+                  Add Course
+                </b-button>
+              </router-link>
             </div>
           </b-button-group>
         </b-col>
@@ -153,7 +157,7 @@
       </b-row>
       <b-row>
         <b-col cols="2">Comment</b-col>
-        <b-col>Description</b-col>
+        <b-col>{{ this.comment }}</b-col>
       </b-row>
       <b-col class="text-right">
         <b-button-group>
@@ -170,6 +174,9 @@
 
 <script>
 import NavBar from '@/components/NavBar.vue'
+import axios from 'axios'
+const { VUE_APP_BACKEND_API } = process.env
+
 export default {
   name: 'ViewEditStudent',
   data() {
@@ -185,10 +192,30 @@ export default {
       reqVer: '',
       gradDate: '',
       coursePlans: [
-        { course_name: 'CSE 101', credits: 3, grade: 'A', status: 'idk' }
+        { course_name: 'CSE 512', credits: 3, grade: 'A', status: 'satisfied' },
+        { course_name: 'CSE 504', credits: 3, grade: 'A', status: 'satisfied' }
       ],
-      requirements: [{ requirements: 'requirements', status: 'status' }],
-      comment: 'description',
+      requirements: [
+        { requirements: 'Breadth - Theory', status: 'satisfied' },
+        { requirements: 'Breadth - Systems', status: 'satisfied' },
+        {
+          requirements: 'Breadth - Information and Intelligent Systems',
+          status: 'unsatisfied'
+        },
+        {
+          requirements: 'Track - Special Project',
+          status: 'pending'
+        },
+        {
+          requirements: 'GPA - 3.0',
+          status: 'satisfied'
+        },
+        {
+          requirements: 'Credits - 31.0',
+          status: 'unsatisfied'
+        }
+      ],
+      comment: 'Student is on track Special Project',
       myStyle: {
         backgroundColor: '#800000',
         color: 'white',
@@ -199,7 +226,33 @@ export default {
   methods: {
     suggestCoursePlan() {},
     addCourse() {},
-    saveChanges() {}
+    saveChanges() {},
+    getStudent() {
+      axios
+        .get(`${VUE_APP_BACKEND_API}/students/getOneByID`, {
+          params: {
+            id: this.studentID
+          }
+        })
+        .then((res) => {
+          console.log('RETRIEVE STUDENT', res.data)
+          this.name = res.data.firstName + ' ' + res.data.lastName
+          this.email = res.data.email
+          this.department = res.data.department || 'CSE'
+          this.track = res.data.track || 'Special Project'
+          this.graduated = res.data.graduated
+          this.entryYear = res.data.entryYear
+          this.entrySem = res.data.entrySem
+          this.reqVer = res.data.reqVer.join(' ')
+          this.gradDate = res.data.graduationSem + ' ' + res.data.graduationYear
+        })
+        .catch((err) => {
+          console.log('RETRIEVE STUDENT FAILED', err)
+        })
+    }
+  },
+  mounted() {
+    this.getStudent()
   },
   props: {},
   watch: {

@@ -11,7 +11,7 @@ Vue.use(Vuex)
 
 const store = new Vuex.Store({
   state: {
-    studentID: '0000000000',
+    studentID: '111111111',
     req: {}
   },
   mutations: {
