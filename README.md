@@ -8,7 +8,11 @@ A web system to keep track of the masters student at Stony Brook University, whe
 
 ### 1.1 Synchronization for database accesses
 
+MongoDB utilizes a locking mechanism, multi-granularity locking, to prevent multiple clients from modifying the same piece of data simultaneously. Multi-granularity locking allows operations to lock at the global, database, or collection level. MongoDB also uses reader-writer locks that allows concurrent readers shared access to a resource. MongoDB is writer-greedy in that it gives priority to write, so when we get a write request is performed, all the read requests are blocked until the write is completed.
 
+For example, if a student and GPD concurrently edit the student's course plan, MongoDB employs its multi-granularity locking mechanism so that it prevents writes while another write operation is being performed elsewhere in the database. After one of them finishes, the lock is released and the other will perform its write.
+
+Another example is if the GPD imports various kinds of data while a student is performing a suggest course plan. MongoDB uses its writer-greedy readers-writers lock so that when the GPD updates data in the database, then the student will see the data updates from the suggest course plan since writes will be done before any reads. 
 
 ### 1.2 Synchronization for any server-side in-memory data structures shared by sessions of concurrent users
 
