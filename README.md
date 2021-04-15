@@ -16,6 +16,10 @@ Another example is if the GPD imports various kinds of data while a student is p
 
 ### 1.2 Synchronization for any server-side in-memory data structures shared by sessions of concurrent users
 
+Any server-side in-memory data structures fetched from the MongoDB database or manipulated on the server are secured through coding patterns using the Mongoose (our ORM) models and schemas we display in the Persistence section of this readme. When finding or updating a data structure with data from MongoDB, we may use `Model.findOne()` and `Model.findOneAndUpdate()`, respectively. Both of these operations are atomic and may only operate within the limitations set within our schemas. These operations return an ES6 Promise object, in which synchronization is handled through the `async/await` javascript syntax when processing on the data needs to be done.
+
+In our server, you will see that instead of processing the data structures after fetching, we make use of projections while finding/updating so that it may be tightly coupled with the processing itself, making the entire operation atomic. The final result is then set to a `const` variable which we may return through our API. While concurrent find/update operations are taking place, MongoDB's locking mechanism is used when accessing the database, this has been more thoroughly described in section #1.1.
+
 ---
 
 ## HW6
