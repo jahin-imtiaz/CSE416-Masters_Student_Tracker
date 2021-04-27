@@ -70,7 +70,7 @@
               Selected file: {{ degreeReqFile ? degreeReqFile.name : '' }}
             </b-col>
             <b-col>
-              <b-button variant="secondary" @click="loadDegReFile">
+              <b-button variant="secondary" @click="loadDegReqFile">
                 add
               </b-button>
             </b-col>
@@ -193,6 +193,7 @@ export default {
   },
   data() {
     return {
+      // File state fields are used as a lock
       courseFile: null,
       degreeReqFile: null,
       courseOfferingFile: null,
@@ -222,8 +223,9 @@ export default {
     },
     loadCourseFile() {
       const file = this.courseFile
+      if (file !== null) return
       const reader = new FileReader()
-      reader.onload = e => {
+      reader.onload = (e) => {
         let courseFileText = e.target.result
         console.log(typeof courseFileText, courseFileText)
         console.log(this.courseFileToJson(courseFileText))
@@ -231,10 +233,11 @@ export default {
       }
       reader.readAsText(file)
     },
-    loadDegReFile() {
+    loadDegReqFile() {
       const file = this.degreeReqFile
+      if (file !== null) return
       const reader = new FileReader()
-      reader.onload = e => {
+      reader.onload = (e) => {
         let reqJson = JSON.parse(e.target.result)
         console.log(reqJson)
 
@@ -252,7 +255,7 @@ export default {
               `Added Requirement Version for ${reqJson.dept} for ${reqJson.req_ver_sem}${reqJson.req_ver_year}`
             )
           })
-          .catch(err => {
+          .catch((err) => {
             console.log(err)
           })
 
@@ -262,14 +265,16 @@ export default {
     },
     loadCourseOfferingFile() {
       const file = this.courseOfferingFile
+      if (file !== null) return
       const reader = new FileReader()
       let courseOfferingsArr = []
-      reader.onload = e => {
+      reader.onload = (e) => {
         let text = e.target.result
         text = text.split('\n')
         console.log(text)
         for (let i = 1; i < text.length; i++) {
           let newCourseOffering = {}
+          // split csv text by commas (disregarding commas in quotes)
           let currCourse = text[i].split(/,(?=(?:(?:[^"]*"){2})*[^"]*$)/g) // .split("/[^\"],[^\"]/")
           newCourseOffering.department = currCourse[0]
           newCourseOffering.course_num = currCourse[1]
@@ -292,11 +297,13 @@ export default {
             `${VUE_APP_BACKEND_API}/courseofferings/add-many`,
             courseOfferingsArr
           )
-          .then(response => {
+          .then((response) => {
+            // get all invalid CoursePlan objects so that the student may be notified and updated
             this.invalidPlans = response.data.allInvalidCoursePlans
+            // TODO: notify student
             console.log(`UPSERTED OFFERINGS`)
           })
-          .catch(err => {
+          .catch((err) => {
             console.log(err)
           })
         this.courseOfferingFile = null
@@ -305,9 +312,10 @@ export default {
     },
     loadStudentFile() {
       const file = this.studentFile
+      if (file !== null) return
       const reader = new FileReader()
       let studentsArr = []
-      reader.onload = e => {
+      reader.onload = (e) => {
         let text = e.target.result
         text = text.split('\n')
         for (let i = 1; i < text.length; i++) {
@@ -335,7 +343,7 @@ export default {
           .then(() => {
             console.log(`UPSERTED STUDENTS`)
           })
-          .catch(err => {
+          .catch((err) => {
             console.log(err)
           })
 
@@ -345,9 +353,10 @@ export default {
     },
     loadCoursePlanFile() {
       const file = this.coursePlanFile
+      if (file !== null) return
       const reader = new FileReader()
       let coursePlanArr = []
-      reader.onload = e => {
+      reader.onload = (e) => {
         let text = e.target.result
         text = text.split('\n')
         for (let i = 1; i < text.length; i++) {
@@ -369,18 +378,20 @@ export default {
           .then(() => {
             console.log(`UPSERTED COURSE PLANS`)
           })
-          .catch(err => {
+          .catch((err) => {
             console.log(err)
           })
         this.coursePlanFile = null
       }
       reader.readAsText(file)
     },
+    // loadGradesFile seperated to use this.gradesFile instead of this.coursePlanFile as a lock
     loadGradesFile() {
       const file = this.gradesFile
+      if (file !== null) return
       const reader = new FileReader()
       let gradesArr = []
-      reader.onload = e => {
+      reader.onload = (e) => {
         let text = e.target.result
         text = text.split('\n')
         for (let i = 1; i < text.length; i++) {
@@ -402,7 +413,7 @@ export default {
           .then(() => {
             console.log(`UPSERTED GRADES`)
           })
-          .catch(err => {
+          .catch((err) => {
             console.log(err)
           })
         this.gradesFile = null
