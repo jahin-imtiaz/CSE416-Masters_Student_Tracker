@@ -193,7 +193,6 @@ export default {
   },
   data() {
     return {
-      // File state fields are used as a lock
       courseFile: null,
       degreeReqFile: null,
       courseOfferingFile: null,
@@ -223,7 +222,7 @@ export default {
     },
     loadCourseFile() {
       const file = this.courseFile
-      if (file !== null) return
+      if (file == null) return
       const reader = new FileReader()
       reader.onload = (e) => {
         let courseFileText = e.target.result
@@ -235,7 +234,7 @@ export default {
     },
     loadDegReqFile() {
       const file = this.degreeReqFile
-      if (file !== null) return
+      if (file == null) return
       const reader = new FileReader()
       reader.onload = (e) => {
         let reqJson = JSON.parse(e.target.result)
@@ -265,7 +264,7 @@ export default {
     },
     loadCourseOfferingFile() {
       const file = this.courseOfferingFile
-      if (file !== null) return
+      if (file == null) return
       const reader = new FileReader()
       let courseOfferingsArr = []
       reader.onload = (e) => {
@@ -312,7 +311,7 @@ export default {
     },
     loadStudentFile() {
       const file = this.studentFile
-      if (file !== null) return
+      if (file == null) return
       const reader = new FileReader()
       let studentsArr = []
       reader.onload = (e) => {
@@ -353,7 +352,7 @@ export default {
     },
     loadCoursePlanFile() {
       const file = this.coursePlanFile
-      if (file !== null) return
+      if (file == null) return
       const reader = new FileReader()
       let coursePlanArr = []
       reader.onload = (e) => {
@@ -388,7 +387,7 @@ export default {
     // loadGradesFile seperated to use this.gradesFile instead of this.coursePlanFile as a lock
     loadGradesFile() {
       const file = this.gradesFile
-      if (file !== null) return
+      if (file == null) return
       const reader = new FileReader()
       let gradesArr = []
       reader.onload = (e) => {
