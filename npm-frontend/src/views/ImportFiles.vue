@@ -218,6 +218,138 @@ export default {
        *
        */
       let courseFileJSON = courseFileText.split(/^[A-Z]{3}$/)
+
+      let courseDesc = {}
+      let currMajor = ''
+
+      let text = courseFileText.split('\n')
+      console.log(text)
+      let i = 0
+      while (i < text.length) {
+        // let line = text[i]
+        // console.log(text[i])
+
+        // i.e. AAS
+        if (text[i].match(/^[A-Z]{3}$/gm)) {
+          currMajor = text[i].trim()
+          courseDesc[currMajor] = {}
+
+          i++
+          if (i >= text.length) break
+
+          while (i < text.length && !text[i].match(/^[A-Z]{3}$/gm)) {
+            // i.e. AAS 500
+            if (
+              text[i].match(/^[A-Z]{3} [0-9]{3}:/gm) &&
+              text[i].includes(currMajor)
+            ) {
+              let courseTitle = text[i].split(':')
+              let courseNameAndNum = courseTitle[0].trim()
+              courseDesc[currMajor][courseNameAndNum] = {}
+
+              // description
+              let description = courseTitle[1]
+
+              i++
+              if (i >= text.length) break
+
+              while (
+                i < text.length &&
+                !(
+                  text[i].match(/^[A-Z]{3} [0-9]{3}:/gm) &&
+                  text[i].includes(currMajor)
+                )
+              ) {
+                // prerequisites
+                let prereqRE = /Prerequisite(s)?:/g
+                if (text[i].match(prereqRE)) {
+                  let prereqREsplit = text[i].split(prereqRE)
+                  // console.log(prereqREsplit)
+                  description += prereqREsplit[0]
+                  let prereqs = prereqREsplit[2] // [1] is undefined for some reason
+
+                  i++
+                  if (i >= text.length) break
+
+                  while (
+                    i < text.length &&
+                    !text[i].match(/[0-9]+ credit(s)?/)
+                  ) {
+                    if (
+                      text[i] == '' ||
+                      text[i] == '\r' ||
+                      text[i] == '\n' ||
+                      text[i] == '\r\n'
+                    )
+                      break
+                    prereqs += ' ' + text[i]
+
+                    i++
+                  }
+
+                  courseDesc[currMajor][courseNameAndNum].prereqs = prereqs
+                  if (
+                    text[i] == '' ||
+                    text[i] == '\r' ||
+                    text[i] == '\n' ||
+                    text[i] == '\r\n'
+                  )
+                    break
+                  if (i >= text.length) break
+                }
+
+                // credits
+                let creditsRE = /[0-9]+ credit(s)?/g
+                if (text[i].match(creditsRE)) {
+                  // let creditsSplit = text[i].split(creditsRE)
+                  // description += creditsSplit[0]
+                  let credits = text[i] // creditsSplit[2] // [1] is undefined for some reason
+
+                  i++
+                  if (i >= text.length) break
+
+                  while (i < text.length) {
+                    if (text[i].match(/^[A-Z]{3} [0-9]{3}:/gm)) break
+                    if (
+                      text[i] == '' ||
+                      text[i] == '\r' ||
+                      text[i] == '\n' ||
+                      text[i] == '\r\n'
+                    )
+                      break
+                    credits += ' ' + text[i]
+
+                    i++
+                  }
+
+                  courseDesc[currMajor][courseNameAndNum].credits = credits
+                  if (i >= text.length) break
+                  if (text[i].match(/^[A-Z]{3} [0-9]{3}:/gm)) break
+                  if (
+                    text[i] == '' ||
+                    text[i] == '\r' ||
+                    text[i] == '\n' ||
+                    text[i] == '\r\n'
+                  )
+                    break
+                }
+
+                description += ' ' + text[i]
+
+                i++
+              }
+              courseDesc[currMajor][courseNameAndNum].description = description
+            }
+
+            i++
+          }
+        }
+
+        i++
+      }
+
+      console.log(courseDesc)
+
       return courseFileJSON
     },
     loadCourseFile() {
@@ -226,7 +358,6 @@ export default {
       const reader = new FileReader()
       reader.onload = (e) => {
         let courseFileText = e.target.result
-        console.log(typeof courseFileText, courseFileText)
         console.log(this.courseFileToJson(courseFileText))
         this.courseFile = null
       }
