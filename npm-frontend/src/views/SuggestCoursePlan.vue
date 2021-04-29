@@ -458,7 +458,7 @@ export default {
     },
     getStudentCoursePlan() {
       return axios
-        .get(`${VUE_APP_BACKEND_API}/coursePlans/getCorsePlanBySbuID`, {
+        .get(`${VUE_APP_BACKEND_API}/coursePlans/getCoursePlanBySbuID`, {
           params: {
             id: this.studentID
           }
