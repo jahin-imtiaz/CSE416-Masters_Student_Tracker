@@ -39,10 +39,10 @@
                 content-cols-sm="8"
                 label="Year"
               >
-                <b-form-select
+                <b-form-input
+                  type="number"
                   v-model="currentYear"
-                  :options="optionsYear"
-                ></b-form-select>
+                ></b-form-input>
               </b-form-group>
             </b-col>
           </b-row>
@@ -319,19 +319,6 @@ export default {
         { value: 'Spring', text: 'Spring' },
         { value: 'SummerI', text: 'SummerI' },
         { value: 'SummerII', text: 'SummerII' }
-      ],
-      optionsYear: [
-        { value: null, text: 'Please select current Year' },
-        { value: 2018, text: '2018' },
-        { value: 2019, text: '2019' },
-        { value: 2020, text: '2020' },
-        { value: 2021, text: '2021' },
-        { value: 2022, text: '2022' },
-        { value: 2023, text: '2023' },
-        { value: 2024, text: '2024' },
-        { value: 2025, text: '2025' },
-        { value: 2026, text: '2026' },
-        { value: 2027, text: '2027' }
       ],
       maxCourse: '',
       selectedStrength: null,
@@ -792,7 +779,7 @@ export default {
             }
           }
 
-          if (lectureCount === 7 && project === true && project2 === true) {
+          if (lectureCount === 7 && project1 === true && project2 === true) {
             state.track = true
           }
         }
@@ -1036,7 +1023,7 @@ export default {
             ) &&
             this.passTimeConflict(sortedList[idx]) &&
             this.fullfillsDegreeRequirement(
-              degReqState,
+              degreeReqState,
               sortedList[idx],
               major,
               track,
