@@ -84,10 +84,11 @@ router.post('/add-many', async (req, res, next) => {
   }
 })
 
-router.get('/getCorsePlanBySbuID', async (req, res, next) => {
+router.get('/getCoursePlanBySbuID', async (req, res, next) => {
   try {
     let sbuID = req.query.id
     const coursePlan = await CoursePlan.find({ sbu_id: sbuID }, {}).exec()
+    console.log(sbuID, coursePlan)
     res.send(coursePlan)
   } catch (err) {
     logger.error(err)
