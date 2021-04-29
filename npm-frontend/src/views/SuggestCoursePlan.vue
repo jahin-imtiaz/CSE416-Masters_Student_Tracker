@@ -104,7 +104,7 @@
                     >
                       <b-card
                         v-for="tag in tags"
-                        :key="tag"
+                        :key="'tag' + tag"
                         :id="`my-custom-tags-tag_${tag.replace(/\s/g, '_')}_`"
                         tag="li"
                         class="mt-1 mr-1"
@@ -178,7 +178,7 @@
                     >
                       <b-card
                         v-for="tag in tags"
-                        :key="tag"
+                        :key="'tag2' + tag"
                         :id="`my-custom-tags-tag_${tag.replace(/\s/g, '_')}_`"
                         tag="li"
                         class="mt-1 mr-1"
@@ -264,10 +264,14 @@
 
       <b-row
         v-for="(column, index1) in suggestedPlanColumns"
-        :key="index1"
+        :key="'A' + index1"
         class="mt-3"
       >
-        <b-col v-for="(plan, index2) in column" :key="index2" class="mt-3">
+        <b-col
+          v-for="(plan, index2) in column"
+          :key="'B' + index2"
+          class="mt-3"
+        >
           <SuggestedPlan
             :plan="plan"
             :index="index1 * 2 + index2"
@@ -277,10 +281,14 @@
       </b-row>
       <b-row
         v-for="(column, index1) in applyFilterPlanColumns"
-        :key="index1"
+        :key="'C' + index1"
         class="mt-3"
       >
-        <b-col v-for="(plan, index2) in column" :key="index2" class="mt-3">
+        <b-col
+          v-for="(plan, index2) in column"
+          :key="'D' + index2"
+          class="mt-3"
+        >
           <SuggestedPlan
             :plan="plan"
             :index="index1 * 2 + index2"
