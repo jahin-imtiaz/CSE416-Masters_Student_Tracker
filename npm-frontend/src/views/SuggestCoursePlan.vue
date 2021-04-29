@@ -573,17 +573,264 @@ export default {
 
       return false
     },
-    // fullfillsDegreeRequirement(degReqState, courseName) {
-    //   // TODO
-    //   return true
-    // },
-    // updateDegreeRequirementState(degReqState, courseName) {
-    //   // TODO
-    // },
-    // isDegreeRequirementComplete(degReqState) {
-    //   // TODO
-    //   return true
-    // },
+
+    async fullfillsDegreeRequirement(
+      degReqState,
+      courseName,
+      major,
+      track,
+      studentCoursePlansNames
+    ) {
+      if (major === 'CSE') {
+        // check if any incomplete requirement can be filled
+        if (degReqState.breadth1 === false) {
+          let breadth1 = [
+            'CSE 512',
+            'CSE 526',
+            'CSE 540',
+            'CSE 541',
+            'CSE 547',
+            'CSE 548',
+            'CSE 549'
+          ]
+          if (breadth1.indexOf(courseName) >= 0) return true
+        }
+        if (degReqState.breadth2 === false) {
+          let breadth2 = [
+            'CSE 502',
+            'CSE 504',
+            'CSE 506',
+            'CSE 508',
+            'CSE 509',
+            'CSE 532',
+            'CSE 534',
+            'CSE 535'
+          ]
+          if (breadth2.indexOf(courseName) >= 0) return true
+        }
+        if (degReqState.breadth3 === false) {
+          let breadth3 = [
+            'CSE 505',
+            'CSE 519',
+            'CSE 527',
+            'CSE 528',
+            'CSE 537',
+            'CSE 538',
+            'CSE 564'
+          ]
+          if (breadth3.indexOf(courseName) >= 0) return true
+        }
+        if (degReqState.track === false) {
+          if (track === 'Special Project') {
+            if (
+              (courseName.split(' ')[0] === 'CSE' &&
+                courseName.split(' ')[1] === '522') ||
+              (courseName.split(' ')[0] === 'CSE' &&
+                courseName.split(' ')[1] !== '523' &&
+                courseName.split(' ')[1] !== '524' &&
+                courseName.split(' ')[1] !== '529')
+            ) {
+              return true
+            }
+          }
+          if (track === 'Advanced Project') {
+            if (
+              (courseName.split(' ')[0] === 'CSE' &&
+                courseName.split(' ')[1] === '523') ||
+              (courseName.split(' ')[0] === 'CSE' &&
+                courseName.split(' ')[1] === '524') ||
+              (courseName.split(' ')[0] === 'CSE' &&
+                courseName.split(' ')[1] !== '522' &&
+                courseName.split(' ')[1] !== '529')
+            ) {
+              return true
+            }
+          }
+          if (track === 'Thesis') {
+            if (
+              (courseName.split(' ')[0] === 'CSE' &&
+                courseName.split(' ')[1] === '599') ||
+              (courseName.split(' ')[0] === 'CSE' &&
+                courseName.split(' ')[1] !== '523' &&
+                courseName.split(' ')[1] !== '524' &&
+                courseName.split(' ')[1] !== '522')
+            ) {
+              return true
+            }
+          }
+        }
+        if (degReqState.credit !== true) {
+          let creditCount = 0
+          for (let plan of studentCoursePlansNames) {
+            let course = await this.getCourseByNameNumber(
+              plan.split(' ')[0],
+              plan.split(' ')[1]
+            )
+            creditCount += course.credits
+          }
+          if (creditCount === 31) return true
+        }
+
+        return false
+      }
+    },
+    async updateDegreeRequirementState(coursesSelected, major, track) {
+      return this.getDegreeRequirementState(major, track, coursesSelected)
+    },
+    isDegreeRequirementComplete(degReqState, major) {
+      if (major === 'CSE') {
+        return (
+          degReqState.breadth1 &&
+          degReqState.breadth2 &&
+          degReqState.breadth3 &&
+          degReqState.track &&
+          degReqState.credit
+        )
+      }
+    },
+    async getDegreeRequirementState(major, track, coursesSelected) {
+      let studentCoursePlans = await this.getStudentCoursePlan()
+      let studentCoursePlansNames = studentCoursePlans.map(
+        (coursePlan) => coursePlan.department + ' ' + coursePlan.course_num
+      )
+
+      studentCoursePlansNames.concat(coursesSelected)
+
+      let state = {}
+      if (major === 'CSE') {
+        state = {
+          breadth1: false,
+          breadth2: false,
+          breadth3: false,
+          track: false,
+          credit: false
+        }
+        // check breadth requirements
+        let breadth1 = [
+          'CSE 512',
+          'CSE 526',
+          'CSE 540',
+          'CSE 541',
+          'CSE 547',
+          'CSE 548',
+          'CSE 549'
+        ]
+        let breadth2 = [
+          'CSE 502',
+          'CSE 504',
+          'CSE 506',
+          'CSE 508',
+          'CSE 509',
+          'CSE 532',
+          'CSE 534',
+          'CSE 535'
+        ]
+        let breadth3 = [
+          'CSE 505',
+          'CSE 519',
+          'CSE 527',
+          'CSE 528',
+          'CSE 537',
+          'CSE 538',
+          'CSE 564'
+        ]
+        for (let course of breadth1) {
+          if (studentCoursePlansNames.indexOf(course) >= 0) {
+            state.breadth1 = true
+            break
+          }
+        }
+        for (let course of breadth2) {
+          if (studentCoursePlansNames.indexOf(course) >= 0) {
+            state.breadth1 = true
+            break
+          }
+        }
+        for (let course of breadth3) {
+          if (studentCoursePlansNames.indexOf(course) >= 0) {
+            state.breadth1 = true
+            break
+          }
+        }
+
+        // check track requirements
+        if (track === 'Special Project') {
+          let lectureCount = 0
+          let project = false
+          for (let course of studentCoursePlansNames) {
+            if (
+              course.split(' ')[0] === 'CSE' &&
+              course.split(' ')[1] === '522'
+            ) {
+              project = true
+            } else if (course.split(' ')[0] === 'CSE') {
+              lectureCount += 1
+            }
+          }
+
+          if (lectureCount === 8 && project === true) {
+            state.track = true
+          }
+        }
+        if (track === 'Advanced Project') {
+          let lectureCount = 0
+          let project1 = false
+          let project2 = false
+          for (let course of studentCoursePlansNames) {
+            if (
+              course.split(' ')[0] === 'CSE' &&
+              course.split(' ')[1] === '523'
+            ) {
+              project1 = true
+            } else if (
+              course.split(' ')[0] === 'CSE' &&
+              course.split(' ')[1] === '524'
+            ) {
+              project2 = true
+            } else if (course.split(' ')[0] === 'CSE') {
+              lectureCount += 1
+            }
+          }
+
+          if (lectureCount === 7 && project === true && project2 === true) {
+            state.track = true
+          }
+        }
+        if (track === 'Thesis') {
+          let lectureCount = 0
+          let project = false
+          for (let course of studentCoursePlansNames) {
+            if (
+              course.split(' ')[0] === 'CSE' &&
+              course.split(' ')[1] === '599'
+            ) {
+              project = true
+            } else if (course.split(' ')[0] === 'CSE') {
+              lectureCount += 1
+            }
+          }
+
+          if (lectureCount === 6 && project === true) {
+            state.track = true
+          }
+        }
+        // check credit requirements
+        let creditCount = 0
+        for (let plan of studentCoursePlansNames) {
+          let course = await this.getCourseByNameNumber(
+            plan.split(' ')[0],
+            plan.split(' ')[1]
+          )
+          creditCount += course.credits
+        }
+        if (creditCount === 31) state.credit = true
+        // return the state
+        return state
+      }
+    },
+    // passTimeConflict(sortedList[idx]){ // time conflict with already taken courses
+    //  // TODO
+    //},
     sortCourseBasedOnPreference(courseList, preferenceDict) {
       // let clonedList = _.cloneDeep(courseList);
       let choices = ['High-prereq', 'High', 'Medium', 'Low']
@@ -691,6 +938,7 @@ export default {
         let nodeBname = course.course_name + ' ' + course.course_num
         for (let prereq of course.prerequisites) {
           let nodeAname = prereq // taking course nodeAname will fulfill prerequisite of nodeBname.
+          // for a prerequisite, if its already taken, dont count increase edge count and dont add edge//////
           graph.get(nodeAname).neighbors.push(nodeBname) // adding edge a -> b
           graph.get(nodeBname).incomingEdgeCount += 1 // increment IncomingEdgeCount for node b
         }
@@ -723,7 +971,9 @@ export default {
       let allPlans = this.topoSort(
         graph,
         preferenceDict,
-        eligibleCoursesInDepartmentMap
+        eligibleCoursesInDepartmentMap,
+        student.reqVersion.department,
+        student.reqVersion.track
       )
       console.log(allPlans)
       //this.applyFilterPlans = allPlans
@@ -731,15 +981,23 @@ export default {
     // topoSort should return a list of plans, each plan will contain a list of Semester objects.
     // remember that always taking the high prefered course is not good, since we might end up taking all prereq courses and not take the actual course.
     // while choosing courses for each semester, remember to remove courses that doesnt meet time constraint. It can not be done ahead of sort, bcz semester info is unknown beforehand
-    topoSort(graph, preferenceDict, eligibleCoursesInDepartmentMap) {
+    topoSort(
+      graph,
+      preferenceDict,
+      eligibleCoursesInDepartmentMap,
+      major,
+      track
+    ) {
       // maxCoursePerSemester, PreferredStartTime, preferredEndTime
 
       let degreeReqState = {}
-      let semesterCreated = false
+      let semesterCreated = true
       let plan = []
       let semesterCount = 0
+      let coursesSelected = []
 
       while (semesterCreated) {
+        // calculate the current semester and year for this level
         let ret = this.calculatedSemesterAndYear(
           this.currentSem,
           this.currentYear,
@@ -748,8 +1006,9 @@ export default {
         let semester = ret.sem
         let year = ret.year
 
-        if (this.isDegreeRequirementComplete(degreeReqState)) break
-        // collect All courses that have incomindEdgeCount === 0 && not already taken
+        if (this.isDegreeRequirementComplete(degreeReqState, major)) break
+
+        // collect All courses that have incomingEdgeCount === 0 && not already taken
         let list = []
         for (let [courseName, node] of graph) {
           if (
@@ -762,6 +1021,7 @@ export default {
         if (list.length === 0) break
         // sort these courses based on their preference strength
         let sortedList = this.sortCourseBasedOnPreference(list, preferenceDict)
+
         // pick N classes if they are offered and have no time conflict and fulfills a degree requirement // Break out and add current semseter, if degree requirement is full.
         let i = 0
         let idx = 0
@@ -774,21 +1034,29 @@ export default {
               semester,
               year
             ) &&
-            this.passTimeConstraint(sortedList[idx]) &&
-            this.fullfillsDegreeRequirement(degreeReqState, sortedList[idx])
+            this.passTimeConflict(sortedList[idx]) &&
+            this.fullfillsDegreeRequirement(
+              degReqState,
+              sortedList[idx],
+              major,
+              track,
+              coursesSelected.concat([sortedList[idx]])
+            )
           ) {
             // take this class
+            coursesSelected.push(sortedList[idx])
             currentSememster.push(sortedList[idx])
             credits.push(
               eligibleCoursesInDepartmentMap[sortedList[idx]].course.credits
             )
             // update degre req state
             degreeReqState = this.updateDegreeRequirementState(
-              degreeReqState,
-              sortedList[idx]
+              coursesSelected,
+              major,
+              track
             )
             // break if degree req is complete
-            if (this.isDegreeRequirementComplete(degreeReqState)) break
+            if (this.isDegreeRequirementComplete(degreeReqState, major)) break
             // update graph isSelected
             eligibleCoursesInDepartmentMap[sortedList[idx]].isSelected = true
             // update incomingEdgeCount of neighbors
@@ -818,7 +1086,7 @@ export default {
       // if degree requirement is not complete, return no plan.
       // else return the plan
       let plans = []
-      if (this.isDegreeRequirementComplete(degreeReqState) === false) {
+      if (this.isDegreeRequirementComplete(degreeReqState, major) === false) {
         return plans
       } else {
         plans.push(plan)
