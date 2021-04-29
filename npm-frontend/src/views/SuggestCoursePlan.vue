@@ -317,7 +317,6 @@ export default {
   data() {
     return {
       //studentID: this.$route.params.studentID,
-      studentID: '987654321',
       currentSem: 'Spring',
       currentYear: 2021,
       optionsSemester: [
@@ -444,7 +443,7 @@ export default {
       return axios
         .get(`${VUE_APP_BACKEND_API}/students/getOneByID`, {
           params: {
-            id: this.studentID
+            id: this.$store.state.studentID
           }
         })
         .then((response) => response.data)
@@ -468,7 +467,7 @@ export default {
       return axios
         .get(`${VUE_APP_BACKEND_API}/coursePlans/getCoursePlanBySbuID`, {
           params: {
-            id: this.studentID
+            id: this.$store.state.studentID
           }
         })
         .then((response) => response.data)
