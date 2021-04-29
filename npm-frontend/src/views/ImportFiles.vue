@@ -217,78 +217,88 @@ export default {
        *
        *
        */
-			let courseDesc = {}
-			let currMajor = ''
-    
-			let text = courseFileText.split('\n')
-			console.log(text)
-			text.forEach((value, index) => {
-				if (value.match(/^[A-Z]{3}$/gm)) {
-					currMajor = value.trim()
-					courseDesc[currMajor] = {}
-					courseDesc[currMajor].department = text[index+1].trim()
-					courseDesc[currMajor].courses = []
-				}
-				else if (value.match(/^[A-Z]{3} {2}[0-9]{3}:/gm) && value.includes(currMajor)) {
-					let n = value.indexOf(":")
-					let course = {courseNum: value.substring(n-3,n), courseName: value.substring(n+2).trim(),
-					description: "", prereqs: [], credits: "3"}
-					let m = text[index+1].trim().indexOf("Prerequisite")
-					
-					if (m > 0) { // prereq in desc
-						course.description = text[index+1].substring(0,m).trim()
-						//course.prereqs = 
-						if (text[index+2].includes("credit")) {
-							let m = text[index+2].indexOf("credit")
-							// variable number of credits
-							if (text[index+2].match(/[0-9]-[0-9] credit/g)) {
-								course.credits = text[index+2].substring(m-4,m).trim()
-							}
-							// set number of credits
-							else {
-								course.credits = text[index+2].substring(m-2,m).trim()
-							}
-						}				
-					}
-					else { // prereq not in desc
-						course.description = text[index+1].trim()
-						// credits on 4th line of a course entry (course has prereq)
-						if (text[index+2].includes("Prerequisite")) {
-							//course.prereqs =
-							if (text[index+3].includes("credit")) {
-								let m = text[index+3].indexOf("credit")
-								// variable number of credits
-								if (text[index+3].match(/[0-9]-[0-9] credit/g)) {
-									course.credits = text[index+3].substring(m-4,m).trim()
-								}
-								// set number of credits
-								else {
-									course.credits = text[index+3].substring(m-2,m).trim()
-								}
-							}
-						}
-						// credits on 3rd line of course entry (course has no prereq)
-						else if (text[index+2].includes("credit")) {
-							let m = text[index+2].indexOf("credit")
-							// variable number of credits
-							if (text[index+2].match(/[0-9]-[0-9] credit/g)) {
-								course.credits = text[index+2].substring(m-4,m).trim()
-							}
-							// set number of credits
-							else {
-								course.credits = text[index+2].substring(m-2,m).trim()
-							}
-						}						
-					}
-					courseDesc[currMajor].courses.push(course)
-				}
-			});
-			console.log(courseDesc)
+      let courseDesc = {}
+      let currMajor = ''
+
+      let text = courseFileText.split('\n')
+      console.log(text)
+      text.forEach((value, index) => {
+        if (value.match(/^[A-Z]{3}$/gm)) {
+          currMajor = value.trim()
+          courseDesc[currMajor] = {}
+          courseDesc[currMajor].department = text[index + 1].trim()
+          courseDesc[currMajor].courses = []
+        } else if (
+          value.match(/^[A-Z]{3} {2}[0-9]{3}:/gm) &&
+          value.includes(currMajor)
+        ) {
+          let n = value.indexOf(':')
+          let course = {
+            courseNum: value.substring(n - 3, n),
+            courseName: value.substring(n + 2).trim(),
+            description: '',
+            prereqs: [],
+            credits: '3'
+          }
+          let m = text[index + 1].trim().indexOf('Prerequisite')
+
+          if (m > 0) {
+            // prereq in desc
+            course.description = text[index + 1].substring(0, m).trim()
+            //course.prereqs =
+            if (text[index + 2].includes('credit')) {
+              let m = text[index + 2].indexOf('credit')
+              // variable number of credits
+              if (text[index + 2].match(/[0-9]-[0-9] credit/g)) {
+                course.credits = text[index + 2].substring(m - 4, m).trim()
+              }
+              // set number of credits
+              else {
+                course.credits = text[index + 2].substring(m - 2, m).trim()
+              }
+            }
+          } else {
+            // prereq not in desc
+            course.description = text[index + 1].trim()
+            // credits on 4th line of a course entry (course has prereq)
+            if (text[index + 2].includes('Prerequisite')) {
+              //course.prereqs =
+              if (text[index + 3].includes('credit')) {
+                let m = text[index + 3].indexOf('credit')
+                // variable number of credits
+                if (text[index + 3].match(/[0-9]-[0-9] credit/g)) {
+                  course.credits = text[index + 3].substring(m - 4, m).trim()
+                }
+                // set number of credits
+                else {
+                  course.credits = text[index + 3].substring(m - 2, m).trim()
+                }
+              }
+            }
+            // credits on 3rd line of course entry (course has no prereq)
+            else if (text[index + 2].includes('credit')) {
+              let m = text[index + 2].indexOf('credit')
+              // variable number of credits
+              if (text[index + 2].match(/[0-9]-[0-9] credit/g)) {
+                course.credits = text[index + 2].substring(m - 4, m).trim()
+              }
+              // set number of credits
+              else {
+                course.credits = text[index + 2].substring(m - 2, m).trim()
+              }
+            }
+          }
+          courseDesc[currMajor].courses.push(course)
+        }
+      })
+      console.log(courseDesc)
+
+      return courseDesc
       //let courseFileJSON = courseFileText.split(/^[A-Z]{3}$/)
 
       // let courseDesc = {}
       // let currMajor = ''
-    
+
       // let text = courseFileText.split('\n')
       // console.log(text)
       // let i = 0
@@ -425,7 +435,18 @@ export default {
       reader.onload = (e) => {
         let courseFileText = e.target.result
         //console.log(this.courseFileToJson(courseFileText))
-        this.courseFileToJson(courseFileText)
+        let courseData = this.courseFileToJson(courseFileText)
+
+        console.log(courseData)
+        axios
+          .post(`${VUE_APP_BACKEND_API}/courses/add-many`, courseData)
+          .then(() => {
+            console.log(`Added ${courseData.length} courses`)
+          })
+          .catch((err) => {
+            console.log(err)
+          })
+
         this.courseFile = null
       }
       reader.readAsText(file)
