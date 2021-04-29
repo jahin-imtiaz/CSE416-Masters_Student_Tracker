@@ -822,9 +822,12 @@ export default {
         return state
       }
     },
-    // passTimeConflict(sortedList[idx]){ // time conflict with already taken courses
-    //  // TODO
-    //},
+    passTimeConflict(sortedList) {
+      // time conflict with already taken courses
+      // TODO
+      console.log('passTimeConflict()', sortedList)
+      return true
+    },
     sortCourseBasedOnPreference(courseList, preferenceDict) {
       // let clonedList = _.cloneDeep(courseList);
       let choices = ['High-prereq', 'High', 'Medium', 'Low']
@@ -984,7 +987,7 @@ export default {
     ) {
       // maxCoursePerSemester, PreferredStartTime, preferredEndTime
 
-      let degreeReqState = {}
+      let degreeReqState = this.getDegreeRequirementState(major, track, [])
       let semesterCreated = true
       let plan = []
       let semesterCount = 0
@@ -1014,14 +1017,16 @@ export default {
         }
         if (list.length === 0) break
         // sort these courses based on their preference strength
+        console.log(list)
         let sortedList = this.sortCourseBasedOnPreference(list, preferenceDict)
+        console.log(sortedList)
 
         // pick N classes if they are offered and have no time conflict and fulfills a degree requirement // Break out and add current semseter, if degree requirement is full.
         let i = 0
         let idx = 0
         let currentSememster = []
         let credits = []
-        while (i < this.maxCourse && idx < this.sortedList.length) {
+        while (i < this.maxCourse && idx < sortedList.length) {
           if (
             this.isClassOfferedAndTimeConstraintMeet(
               sortedList[idx],
@@ -1054,8 +1059,10 @@ export default {
             // update graph isSelected
             eligibleCoursesInDepartmentMap[sortedList[idx]].isSelected = true
             // update incomingEdgeCount of neighbors
-            for (let neighbor of graph[sortedList[idx]].neighbors) {
-              graph[neighbor].incomingEdgeCount -= 1
+            console.log(idx, sortedList[idx], ' SORTED LIST')
+            console.log(graph, graph.get(sortedList[idx]), ' GRAPH')
+            for (let neighbor of graph.get(sortedList[idx]).neighbors) {
+              graph.get(neighbor).incomingEdgeCount -= 1
             }
 
             i += 1
