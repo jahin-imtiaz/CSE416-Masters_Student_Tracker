@@ -120,6 +120,7 @@ router.get('/findAllOfferingOfCourse', async (req, res, next) => {
     )
       .populate('courseID')
       .exec()
+
     let courses = offeredCoursesInSemYear.filter(
       (courseOffering) =>
         courseOffering.courseID.course_name === name &&

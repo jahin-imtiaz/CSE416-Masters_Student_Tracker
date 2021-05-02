@@ -250,11 +250,21 @@
           <b-button-group vertical>
             <div>
               <b-button block :style="myStyle" size="sm" @click="smartSuggest">
+                <b-spinner
+                  small
+                  variant="danger"
+                  v-if="smartSuggestLoading"
+                ></b-spinner>
                 Smart suggestion
               </b-button>
             </div>
             <div class="mt-2">
               <b-button block :style="myStyle" size="sm" @click="applyFilter">
+                <b-spinner
+                  small
+                  variant="danger"
+                  v-if="filterSuggestLoading"
+                ></b-spinner>
                 Apply Filter
               </b-button>
             </div>
@@ -316,7 +326,7 @@ export default {
   },
   data() {
     return {
-      //studentID: this.$route.params.studentID,
+      studentID: this.$store.state.studentID,
       currentSem: 'Spring',
       currentYear: 2021,
       optionsSemester: [
@@ -340,82 +350,85 @@ export default {
       valueAvoidCourses: [],
       fromTime: '00:00:00',
       toTime: '23:59:00',
-      smartSuggestPlans: [
-        [
-          {
-            semester: '1',
-            courses: ['CSE 416', 'CSE 216', 'CSE 316'],
-            credits: [3, 3, 3]
-          },
-          {
-            semester: '2',
-            courses: ['CSE 214', 'CSE 114', 'CSE 101'],
-            credits: [3, 3, 3]
-          },
-          {
-            semester: '3',
-            courses: ['CSE 323', 'CSE 332', 'CSE 334'],
-            credits: [3, 3, 3]
-          }
-        ],
-        [
-          {
-            semester: '1',
-            courses: ['CSE 416', 'CSE 216', 'CSE 316'],
-            credits: [3, 3, 3]
-          },
-          {
-            semester: '2',
-            courses: ['CSE 214', 'CSE 114', 'CSE 101'],
-            credits: [3, 3, 3]
-          },
-          {
-            semester: '3',
-            courses: ['CSE 323', 'CSE 332', 'CSE 334'],
-            credits: [3, 3, 3]
-          }
-        ],
-        [
-          {
-            semester: '1',
-            courses: ['CSE 416', 'CSE 216', 'CSE 316'],
-            credits: [3, 3, 3]
-          },
-          {
-            semester: '2',
-            courses: ['CSE 214', 'CSE 114', 'CSE 101'],
-            credits: [3, 3, 3]
-          },
-          {
-            semester: '3',
-            courses: ['CSE 323', 'CSE 332', 'CSE 334'],
-            credits: [3, 3, 3]
-          }
-        ],
-        [
-          {
-            semester: '1',
-            courses: ['CSE 512', 'CSE 535', 'CSE 316'],
-            credits: [3, 3, 3]
-          },
-          {
-            semester: '2',
-            courses: ['CSE 545', 'CSE 114', 'CSE 101'],
-            credits: [3, 3, 3]
-          },
-          {
-            semester: '3',
-            courses: ['CSE 544', 'CSE 332', 'CSE 334'],
-            credits: [3, 3, 3]
-          }
-        ]
-      ],
+      smartSuggestPlans: [],
+      // smartSuggestPlans: [
+      //   [
+      //     {
+      //       semester: '1',
+      //       courses: ['CSE 416', 'CSE 216', 'CSE 316'],
+      //       credits: [3, 3, 3]
+      //     },
+      //     {
+      //       semester: '2',
+      //       courses: ['CSE 214', 'CSE 114', 'CSE 101'],
+      //       credits: [3, 3, 3]
+      //     },
+      //     {
+      //       semester: '3',
+      //       courses: ['CSE 323', 'CSE 332', 'CSE 334'],
+      //       credits: [3, 3, 3]
+      //     }
+      //   ],
+      //   [
+      //     {
+      //       semester: '1',
+      //       courses: ['CSE 416', 'CSE 216', 'CSE 316'],
+      //       credits: [3, 3, 3]
+      //     },
+      //     {
+      //       semester: '2',
+      //       courses: ['CSE 214', 'CSE 114', 'CSE 101'],
+      //       credits: [3, 3, 3]
+      //     },
+      //     {
+      //       semester: '3',
+      //       courses: ['CSE 323', 'CSE 332', 'CSE 334'],
+      //       credits: [3, 3, 3]
+      //     }
+      //   ],
+      //   [
+      //     {
+      //       semester: '1',
+      //       courses: ['CSE 416', 'CSE 216', 'CSE 316'],
+      //       credits: [3, 3, 3]
+      //     },
+      //     {
+      //       semester: '2',
+      //       courses: ['CSE 214', 'CSE 114', 'CSE 101'],
+      //       credits: [3, 3, 3]
+      //     },
+      //     {
+      //       semester: '3',
+      //       courses: ['CSE 323', 'CSE 332', 'CSE 334'],
+      //       credits: [3, 3, 3]
+      //     }
+      //   ],
+      //   [
+      //     {
+      //       semester: '1',
+      //       courses: ['CSE 512', 'CSE 535', 'CSE 316'],
+      //       credits: [3, 3, 3]
+      //     },
+      //     {
+      //       semester: '2',
+      //       courses: ['CSE 545', 'CSE 114', 'CSE 101'],
+      //       credits: [3, 3, 3]
+      //     },
+      //     {
+      //       semester: '3',
+      //       courses: ['CSE 544', 'CSE 332', 'CSE 334'],
+      //       credits: [3, 3, 3]
+      //     }
+      //   ]
+      // ],
       applyFilterPlans: [],
       myStyle: {
         backgroundColor: '#800000',
         color: 'white',
         textAlign: 'center'
-      }
+      },
+      smartSuggestLoading: false,
+      filterSuggestLoading: false
     }
   },
   methods: {
@@ -443,7 +456,7 @@ export default {
       return axios
         .get(`${VUE_APP_BACKEND_API}/students/getOneByID`, {
           params: {
-            id: this.$route.params.studentID
+            id: this.studentID
           }
         })
         .then((response) => response.data)
@@ -467,7 +480,7 @@ export default {
       return axios
         .get(`${VUE_APP_BACKEND_API}/coursePlans/getCoursePlanBySbuID`, {
           params: {
-            id: this.$route.params.studentID
+            id: this.studentID
           }
         })
         .then((response) => response.data)
@@ -489,16 +502,23 @@ export default {
         })
     },
     async smartSuggest() {
+      this.smartSuggestLoading = true
       // TODO
+      this.smartSuggestLoading = false
     },
     calculatedSemesterAndYear(currentSem, currentYear, semesterCount) {
-      let semesterNames = ['Fall', 'Winter', 'Spring', 'SummerI', 'SummerII']
+      let semesterNames = ['Spring', 'SummerI', 'SummerII', 'Fall', 'Winter']
       let retObj = {}
-      retObj['year'] = currentYear + semesterCount / semesterNames.length
+      retObj['year'] =
+        currentYear +
+        Math.floor(
+          (semesterNames.indexOf(currentSem) + semesterCount) /
+            semesterNames.length
+        )
       retObj['sem'] =
         semesterNames[
-          semesterNames.indexOf(currentSem) +
-            (semesterCount % semesterNames.length)
+          (semesterNames.indexOf(currentSem) + semesterCount) %
+            semesterNames.length
         ]
       return retObj
     },
@@ -517,55 +537,68 @@ export default {
         })
     },
     async isClassOfferedAndTimeConstraintMeet(courseName, semester, year) {
-      // TODO
-      let offeredCourseList = await this.getAllCourseOfferingForCourse(
+      console.log(
+        'isClassOffferedAndTimeConstraint',
         courseName,
         semester,
         year
       )
-      if (offeredCourseList.length === 0) return false
+      return true
+      // TODO
+      // console.log(
+      //   'isClassOffferedAndTimeConstraint',
+      //   courseName,
+      //   semester,
+      //   year
+      // )
+      // let offeredCourseList = await this.getAllCourseOfferingForCourse(
+      //   courseName,
+      //   semester,
+      //   year
+      // )
+      // if (offeredCourseList.length === 0) return false
 
-      let fromTimeHour = parseInt(this.fromTime.split(':')[0])
-      let fromTimeMinute =
-        parseInt(this.fromTime.split(':')[1]) + fromTimeHour * 60
+      // let fromTimeHour = parseInt(this.fromTime.split(':')[0])
+      // let fromTimeMinute =
+      //   parseInt(this.fromTime.split(':')[1]) + fromTimeHour * 60
 
-      let toTimeHour = parseInt(this.toTime.split(':')[0])
-      let toTimeMinute = parseInt(this.toTime.split(':')[1]) + toTimeHour * 60
+      // let toTimeHour = parseInt(this.toTime.split(':')[0])
+      // let toTimeMinute = parseInt(this.toTime.split(':')[1]) + toTimeHour * 60
 
-      for (let courseOffer of offeredCourseList) {
-        let courseStartHour = parseInt(courseOffer.start_time.split(':')[0])
-        let courseStartMinute = parseInt(
-          courseOffer.start_time.split(':')[1].slice(0, 2)
-        )
-        let courseStartAmPm = courseOffer.start_time.split(':')[1].slice(2)
-        if (courseStartAmPm === 'AM') {
-          if (courseStartHour === 12) courseStartHour = 0
-        } else {
-          courseStartHour += 12
-        }
-        courseStartMinute = courseStartMinute + courseStartHour * 60
+      // for (let courseOffer of offeredCourseList) {
+      //   let courseStartHour = parseInt(courseOffer.start_time.split(':')[0])
+      //   let courseStartMinute = parseInt(
+      //     courseOffer.start_time.split(':')[1].slice(0, 2)
+      //   )
+      //   let courseStartAmPm = courseOffer.start_time.split(':')[1].slice(2)
+      //   if (courseStartAmPm === 'AM') {
+      //     if (courseStartHour === 12) courseStartHour = 0
+      //   } else {
+      //     courseStartHour += 12
+      //   }
+      //   courseStartMinute = courseStartMinute + courseStartHour * 60
 
-        let courseEndHour = parseInt(courseOffer.end_time.split(':')[0])
-        let courseEndMinute = parseInt(
-          courseOffer.end_time.split(':')[1].slice(0, 2)
-        )
-        let courseEndAmPm = courseOffer.end_time.split(':')[1].slice(2)
-        if (courseEndAmPm === 'AM') {
-          if (courseEndHour === 12) courseEndHour = 0
-        } else {
-          courseEndHour += 12
-        }
-        courseEndMinute = courseEndMinute + courseEndHour * 60
+      //   let courseEndHour = parseInt(courseOffer.end_time.split(':')[0])
+      //   let courseEndMinute = parseInt(
+      //     courseOffer.end_time.split(':')[1].slice(0, 2)
+      //   )
+      //   let courseEndAmPm = courseOffer.end_time.split(':')[1].slice(2)
+      //   if (courseEndAmPm === 'AM') {
+      //     if (courseEndHour === 12) courseEndHour = 0
+      //   } else {
+      //     courseEndHour += 12
+      //   }
+      //   courseEndMinute = courseEndMinute + courseEndHour * 60
 
-        if (
-          fromTimeMinute <= courseStartMinute &&
-          courseEndMinute <= toTimeMinute
-        ) {
-          return true
-        } else return false
-      }
+      //   if (
+      //     fromTimeMinute <= courseStartMinute &&
+      //     courseEndMinute <= toTimeMinute
+      //   ) {
+      //     return true
+      //   } else return false
+      // }
 
-      return false
+      // return false
     },
 
     async fullfillsDegreeRequirement(
@@ -587,7 +620,7 @@ export default {
             'CSE 548',
             'CSE 549'
           ]
-          if (breadth1.indexOf(courseName) >= 0) return true
+          if (breadth1.includes(courseName)) return true
         }
         if (degReqState.breadth2 === false) {
           let breadth2 = [
@@ -600,7 +633,7 @@ export default {
             'CSE 534',
             'CSE 535'
           ]
-          if (breadth2.indexOf(courseName) >= 0) return true
+          if (breadth2.includes(courseName)) return true
         }
         if (degReqState.breadth3 === false) {
           let breadth3 = [
@@ -612,7 +645,7 @@ export default {
             'CSE 538',
             'CSE 564'
           ]
-          if (breadth3.indexOf(courseName) >= 0) return true
+          if (breadth3.includes(courseName)) return true
         }
         if (degReqState.track === false) {
           if (track === 'Special Project') {
@@ -669,7 +702,7 @@ export default {
       }
     },
     async updateDegreeRequirementState(coursesSelected, major, track) {
-      return this.getDegreeRequirementState(major, track, coursesSelected)
+      return await this.getDegreeRequirementState(major, track, coursesSelected)
     },
     isDegreeRequirementComplete(degReqState, major) {
       if (major === 'CSE') {
@@ -688,7 +721,7 @@ export default {
         (coursePlan) => coursePlan.department + ' ' + coursePlan.course_num
       )
 
-      studentCoursePlansNames.concat(coursesSelected)
+      studentCoursePlansNames = studentCoursePlansNames.concat(coursesSelected)
 
       let state = {}
       if (major === 'CSE') {
@@ -729,20 +762,20 @@ export default {
           'CSE 564'
         ]
         for (let course of breadth1) {
-          if (studentCoursePlansNames.indexOf(course) >= 0) {
+          if (studentCoursePlansNames.includes(course)) {
             state.breadth1 = true
             break
           }
         }
         for (let course of breadth2) {
-          if (studentCoursePlansNames.indexOf(course) >= 0) {
-            state.breadth1 = true
+          if (studentCoursePlansNames.includes(course)) {
+            state.breadth2 = true
             break
           }
         }
         for (let course of breadth3) {
-          if (studentCoursePlansNames.indexOf(course) >= 0) {
-            state.breadth1 = true
+          if (studentCoursePlansNames.includes(course)) {
+            state.breadth3 = true
             break
           }
         }
@@ -761,8 +794,7 @@ export default {
               lectureCount += 1
             }
           }
-
-          if (lectureCount === 8 && project === true) {
+          if (lectureCount >= 8 && project === true) {
             state.track = true
           }
         }
@@ -786,7 +818,7 @@ export default {
             }
           }
 
-          if (lectureCount === 7 && project1 === true && project2 === true) {
+          if (lectureCount >= 7 && project1 === true && project2 === true) {
             state.track = true
           }
         }
@@ -804,7 +836,7 @@ export default {
             }
           }
 
-          if (lectureCount === 6 && project === true) {
+          if (lectureCount >= 6 && project === true) {
             state.track = true
           }
         }
@@ -817,15 +849,15 @@ export default {
           )
           creditCount += course.credits
         }
-        if (creditCount === 31) state.credit = true
+        if (creditCount >= 31) state.credit = true
         // return the state
         return state
       }
     },
-    passTimeConflict(sortedList) {
+    passTimeConflict(courseName) {
       // time conflict with already taken courses
       // TODO
-      console.log('passTimeConflict()', sortedList)
+      console.log('passTimeConflict()', courseName)
       return true
     },
     sortCourseBasedOnPreference(courseList, preferenceDict) {
@@ -837,15 +869,20 @@ export default {
           if (preferenceDict[courseName] === choice) sortedList.push(courseName)
         }
       }
+
+      for (let courseName of courseList) {
+        if (!(courseName in preferenceDict)) sortedList.push(courseName)
+      }
       return sortedList
     },
-    // clobeeGraph() {
+    // cloneGraph() {
     //   // TODO
     // },
     // cloneEligibleCourseInDepartmentMap(){
     //   // TODO
     // },
     async applyFilter() {
+      this.filterSuggestLoading = true
       // use student id to get student info.
       let student = await this.getStudent()
       // get all courses from the students department. ->  using students Department, get all courses in that dept.
@@ -862,9 +899,9 @@ export default {
       )
       let eligibleCoursesInDepartment = coursesInDepartment.filter(
         (course) =>
-          modifiedCoursePlan.indexOf(
+          !modifiedCoursePlan.includes(
             course.course_name + ' ' + course.course_num
-          ) === -1
+          )
       )
 
       // for each preferred course, add all of its prerequisite courses in the main list with high preference. (Remember to do it recursively)
@@ -878,7 +915,7 @@ export default {
       var q = []
       for (let prefCourse of this.valuePreferedCourses) {
         let newCourse = null
-        if (eligibleCourseNames.indexOf(prefCourse) === -1) {
+        if (!eligibleCourseNames.includes(prefCourse)) {
           // if course not exist in the dept list, do a axios request to get actual course object from the database
           let name = prefCourse.split(' ')[0]
           let number = prefCourse.split(' ')[1]
@@ -905,10 +942,10 @@ export default {
           : this.preferedCourseDict[tmpCourseName]
 
         for (let prereqCourse of prefCourse.prerequisites) {
-          if (allPrefCourseNames.indexOf(prereqCourse) === -1) {
+          if (!allPrefCourseNames.includes(prereqCourse)) {
             // if not visited, visit this.
             let newCourse = null
-            if (eligibleCourseNames.indexOf(prereqCourse) === -1) {
+            if (!eligibleCourseNames.includes(prereqCourse)) {
               // if course not exist in the dept list, do a axios request to get actual course object from the database
               let name = prereqCourse.split(' ')[0]
               let number = prereqCourse.split(' ')[1]
@@ -964,21 +1001,20 @@ export default {
         object['isSelected'] = false
         eligibleCoursesInDepartmentMap[name] = object
       })
-      console.log(eligibleCoursesInDepartmentMap)
-      let allPlans = this.topoSort(
+      let allPlans = await this.topoSort(
         graph,
         preferenceDict,
         eligibleCoursesInDepartmentMap,
         student.reqVersion.department,
         student.reqVersion.track
       )
-      console.log(allPlans)
-      //this.applyFilterPlans = allPlans
+      this.filterSuggestLoading = false
+      this.applyFilterPlans = allPlans
     },
     // topoSort should return a list of plans, each plan will contain a list of Semester objects.
     // remember that always taking the high prefered course is not good, since we might end up taking all prereq courses and not take the actual course.
     // while choosing courses for each semester, remember to remove courses that doesnt meet time constraint. It can not be done ahead of sort, bcz semester info is unknown beforehand
-    topoSort(
+    async topoSort(
       graph,
       preferenceDict,
       eligibleCoursesInDepartmentMap,
@@ -987,7 +1023,11 @@ export default {
     ) {
       // maxCoursePerSemester, PreferredStartTime, preferredEndTime
 
-      let degreeReqState = this.getDegreeRequirementState(major, track, [])
+      let degreeReqState = await this.getDegreeRequirementState(
+        major,
+        track,
+        []
+      )
       let semesterCreated = true
       let plan = []
       let semesterCount = 0
@@ -1017,9 +1057,7 @@ export default {
         }
         if (list.length === 0) break
         // sort these courses based on their preference strength
-        console.log(list)
         let sortedList = this.sortCourseBasedOnPreference(list, preferenceDict)
-        console.log(sortedList)
 
         // pick N classes if they are offered and have no time conflict and fulfills a degree requirement // Break out and add current semseter, if degree requirement is full.
         let i = 0
@@ -1028,19 +1066,19 @@ export default {
         let credits = []
         while (i < this.maxCourse && idx < sortedList.length) {
           if (
-            this.isClassOfferedAndTimeConstraintMeet(
+            (await this.isClassOfferedAndTimeConstraintMeet(
               sortedList[idx],
               semester,
               year
-            ) &&
+            )) &&
             this.passTimeConflict(sortedList[idx]) &&
-            this.fullfillsDegreeRequirement(
+            (await this.fullfillsDegreeRequirement(
               degreeReqState,
               sortedList[idx],
               major,
               track,
               coursesSelected.concat([sortedList[idx]])
-            )
+            ))
           ) {
             // take this class
             coursesSelected.push(sortedList[idx])
@@ -1049,7 +1087,7 @@ export default {
               eligibleCoursesInDepartmentMap[sortedList[idx]].course.credits
             )
             // update degre req state
-            degreeReqState = this.updateDegreeRequirementState(
+            degreeReqState = await this.updateDegreeRequirementState(
               coursesSelected,
               major,
               track
@@ -1059,8 +1097,6 @@ export default {
             // update graph isSelected
             eligibleCoursesInDepartmentMap[sortedList[idx]].isSelected = true
             // update incomingEdgeCount of neighbors
-            console.log(idx, sortedList[idx], ' SORTED LIST')
-            console.log(graph, graph.get(sortedList[idx]), ' GRAPH')
             for (let neighbor of graph.get(sortedList[idx]).neighbors) {
               graph.get(neighbor).incomingEdgeCount -= 1
             }
