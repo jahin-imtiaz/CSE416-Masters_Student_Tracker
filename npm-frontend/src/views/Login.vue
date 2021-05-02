@@ -18,19 +18,6 @@
 
       <b-form-group
         id="input-group-2"
-        label="Your StudentID (for Students):"
-        label-for="input-2"
-      >
-        <b-form-input
-          id="input-2"
-          v-model="form.studentID"
-          placeholder="Enter studentID"
-          required
-        ></b-form-input>
-      </b-form-group>
-
-      <b-form-group
-        id="input-group-2"
         label="Your Password:"
         label-for="input-2"
       >
@@ -43,16 +30,6 @@
         ></b-form-input>
       </b-form-group>
 
-      <b-form-group id="input-group-4" v-slot="{ ariaDescribedby }">
-        <b-form-checkbox-group
-          v-model="form.checked"
-          id="checkboxes-4"
-          :aria-describedby="ariaDescribedby"
-        >
-          <b-form-checkbox value="GPD">Sign in as GPD</b-form-checkbox>
-        </b-form-checkbox-group>
-      </b-form-group>
-
       <b-button type="submit" variant="primary">Submit</b-button>
       <b-button type="reset" variant="danger">Reset</b-button>
     </b-form>
@@ -63,6 +40,8 @@
 </template>
 
 <script>
+import axios from 'axios'
+const { VUE_APP_BACKEND_API } = process.env
 export default {
   name: 'Login',
   props: {
@@ -72,33 +51,39 @@ export default {
     return {
       form: {
         email: '',
-        studentID: '',
-        password: '',
-        checked: []
+        password: ''
       },
       show: true
     }
   },
+  mounted: function () {
+    this.$store.commit('setStudentID', '')
+    this.$store.commit('setGPD', false)
+  },
   methods: {
     onSubmit(event) {
       event.preventDefault()
-      if (!this.form.checked.includes('GPD')) {
-        // student login
-        if (this.form.studentID) {
-          this.$store.commit('setStudentID', this.form.studentID)
-        } else {
-          alert('Dear Student, please enter a studentID')
-        }
-      }
-      alert(JSON.stringify(this.form))
+      axios
+        .post(`${VUE_APP_BACKEND_API}/login`, this.form)
+        .then((res) => {
+          console.log(res)
+          if (res.data.GPD) {
+            this.$store.commit('setGPD', res.data.GPD)
+            this.$store.commit('setStudentID', '')
+            this.$router.push('gpd-home')
+          } else if (res.data.StudentID) {
+            this.$store.commit('setGPD', false)
+            this.$store.commit('setStudentID', res.data.StudentID)
+            this.$router.push('student-home')
+          }
+        })
+        .catch((err) => console.log(err))
     },
     onReset(event) {
       event.preventDefault()
       // Reset our form values
       this.form.email = ''
-      this.form.studentID = ''
       this.form.password = ''
-      this.form.checked = []
       // Trick to reset/clear native browser form validation state
       this.show = false
       this.$nextTick(() => {

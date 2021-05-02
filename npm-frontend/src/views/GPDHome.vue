@@ -77,6 +77,13 @@ export default {
         .post(`${VUE_APP_BACKEND_API}/students/delete-all`)
         .then((res) => console.log(res))
         .catch((err) => console.log(err))
+      alert('Deleting all recorded students')
+    }
+  },
+  mounted: function () {
+    console.log('HELLO')
+    if (!this.$store.getters.isGPD) {
+      this.$router.push('student-home')
     }
   }
 }

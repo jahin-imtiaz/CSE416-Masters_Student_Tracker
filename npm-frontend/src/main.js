@@ -11,8 +11,17 @@ Vue.use(Vuex)
 
 const store = new Vuex.Store({
   state: {
-    studentID: '111111111',
+    studentID: '',
+    GPD: false,
     req: {}
+  },
+  getters: {
+    getStudentID: (state) => {
+      return state.studentID
+    },
+    isGPD: (state) => {
+      return state.GPD
+    }
   },
   mutations: {
     setReq(state, req) {
@@ -20,6 +29,9 @@ const store = new Vuex.Store({
     },
     setStudentID(state, id) {
       state.studentID = id
+    },
+    setGPD(state, GPD) {
+      state.GPD = GPD
     }
   }
 })

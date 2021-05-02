@@ -243,7 +243,7 @@ export default {
           this.graduated = res.data.graduated
           this.entryYear = res.data.entryYear
           this.entrySem = res.data.entrySem
-          this.reqVer = res.data.reqVer.join(' ')
+          this.reqVersion = res.data.reqVersion.join(' ')
           this.gradDate = res.data.graduationSem + ' ' + res.data.graduationYear
         })
         .catch((err) => {
