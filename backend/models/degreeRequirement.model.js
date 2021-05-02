@@ -7,7 +7,7 @@ Schema.Types.String.set('trim', true)
 const DegreeRequirementSchema = new Schema({
   department: { type: String, required: true },
   reqSem: { type: String, required: true },
-  reqYear: { type: Number, required: true },
+  reqYear: { type: String, required: true },
   requirements: Schema.Types.Mixed
 })
 

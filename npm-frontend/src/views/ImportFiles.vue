@@ -256,8 +256,10 @@ export default {
               .replace('and', ',')
             str.split(/[.,]| {1}or {1}/gi).forEach((element) => {
               element = element.trim()
-              if (element.match(/^[A-Z]{3} {0,1}5[0-9]{2}$/gm)) {
+              if (element.match(/^[A-Z]{3} {1}5[0-9]{2}$/gm)) {
                 course.prereqs.push(element)
+              } else if (element.match(/^[A-Z]{3}5[0-9]{2}$/gm)) {
+                course.prereqs.push(element.replace(/([A-Z])([0-9])/g, '$1 $2'))
               }
             })
             if (text[index + 2].includes('credit')) {
@@ -283,8 +285,12 @@ export default {
                 .replace('and', ',')
               str.split(/[.,]| {1}or {1}/gi).forEach((element) => {
                 element = element.trim()
-                if (element.match(/^[A-Z]{3} {0,1}5[0-9]{2}/gm)) {
-                  course.prereqs = element.match(/^[A-Z]{3} {0,1}5[0-9]{2}/gm)
+                if (element.match(/^[A-Z]{3} {1}5[0-9]{2}/gm)) {
+                  course.prereqs = element.match(/^[A-Z]{3} {1}5[0-9]{2}/gm)
+                } else if (element.match(/^[A-Z]{3}5[0-9]{2}$/gm)) {
+                  course.prereqs = element
+                    .match(/^[A-Z]{3}5[0-9]{2}$/gm)
+                    .map((value) => value.replace(/([A-Z])([0-9])/g, '$1 $2'))
                 }
               })
               if (text[index + 3].includes('credit')) {

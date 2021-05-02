@@ -1,7 +1,7 @@
 {
     "dept": "CSE",
     "req_ver_sem": "Spring",
-    "req_ver_year": 2021,
+    "req_ver_year": "2021",
     "min_credit": 31,
     "gpa_req": 3.0,
     "breadth_req": [

@@ -1,7 +1,7 @@
 {
     "dept": "AMS",
     "req_ver_sem": "Spring",
-    "req_ver_year": 2021,
+    "req_ver_year": "2021",
     "min_credit": 30,
     "cum_course_gpa": 3.0,
     "credit_gpa": {"credits": 18, "gpa": 3.0},
