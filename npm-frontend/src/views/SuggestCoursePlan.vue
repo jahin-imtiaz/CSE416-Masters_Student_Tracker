@@ -443,7 +443,7 @@ export default {
       return axios
         .get(`${VUE_APP_BACKEND_API}/students/getOneByID`, {
           params: {
-            id: this.$store.state.studentID
+            id: this.$route.params.studentID
           }
         })
         .then((response) => response.data)
@@ -467,7 +467,7 @@ export default {
       return axios
         .get(`${VUE_APP_BACKEND_API}/coursePlans/getCoursePlanBySbuID`, {
           params: {
-            id: this.$store.state.studentID
+            id: this.$route.params.studentID
           }
         })
         .then((response) => response.data)
