@@ -232,8 +232,8 @@ export default {
       axios
         .get(`${VUE_APP_BACKEND_API}/students`)
         .then((res) => {
-          console.log('RETRIEVE STUDENTS', res.data)
-          res.data.forEach((item) => {
+          //console.log('RETRIEVE STUDENTS', res.data)
+          res.data.forEach(async (item) => {
             this.Students.push({
               student_ID: item._id.sbu_id,
               name: item.firstName + ' ' + item.lastName,
@@ -249,10 +249,12 @@ export default {
                 item.reqVersion.department,
                 item.reqVersion.track
               ),
-              number_of_degree_requirements: this.getDegreeRequirements(
-                this.getStudentCoursePlan(item._id.sbu_id),
+              number_of_degree_requirements: await this.getDegreeRequirements(
+                item._id.sbu_id,
                 item.reqVersion.department,
-                item.reqVersion.track
+                item.reqVersion.track,
+                item.reqVersion.reqSem,
+                item.reqVersion.reqYear
               )
             })
           })
@@ -274,17 +276,29 @@ export default {
       }
     },
     getStudentCoursePlan(studentID) {
-      const courses = []
-      const promise = axios.get(`${VUE_APP_BACKEND_API}/courseplans`)
-      promise.then((response) => {
-        response.data.forEach((item) => {
-          if (item.sbu_id == studentID) {
-            courses.push(item.course_num)
+      return axios
+        .get(`${VUE_APP_BACKEND_API}/coursePlans/getCoursePlanBySbuID`, {
+          params: {
+            id: studentID
           }
         })
-      })
-      return courses
+        .then((response) => response.data)
+        .catch((err) => {
+          console.log(err)
+        })
     },
+    // getStudentCoursePlan(studentID) {
+    //   const courses = []
+    //   const promise = axios.get(`${VUE_APP_BACKEND_API}/courseplans`)
+    //   promise.then((response) => {
+    //     response.data.forEach((item) => {
+    //       if (item.sbu_id == studentID) {
+    //         courses.push(item.department + item.course_num)
+    //       }
+    //     })
+    //   })
+    //   return courses
+    // },
     getCoursePlanStatus(classes, department, track) {
       if (department == 'AMS') {
         return this.verifyAMS(classes, track)
@@ -344,28 +358,161 @@ export default {
           return 'Incomplete'
       }
     },
-    getDegreeRequirements(classes, department, track) {
+    getDegreeRequirements(id, department, track, sem, year) {
       if (department == 'AMS') {
-        return this.degreeAMS(classes, track)
+        return this.degreeAMS(id, track, sem, year)
       } else if (department == 'BMI') {
-        return this.degreeBMI(classes, track)
+        return this.degreeBMI(id, track, sem, year)
       } else if (department == 'CSE') {
-        return this.degreeCSE(classes, track)
+        return this.degreeCSE(id, track, sem, year)
       } else if (department == 'ESE') {
-        return this.degreeESE(classes, track)
+        return this.degreeESE(id, track, sem, year)
       }
     },
-    degreeAMS(classes, track) {
+    getRequirementsByDepartment(dept, sem, year) {
+      return axios
+        .get(`${VUE_APP_BACKEND_API}/requirements/getreq`, {
+          params: {
+            department: dept,
+            reqSem: sem,
+            reqYear: year
+          }
+        })
+        .then((response) => response.data)
+        .catch((err) => {
+          console.log(err)
+        })
+    },
+    calculateGrade(grade, credits) {
+      switch (grade) {
+        case 'A':
+          return 4.00 * credits
+        case 'A-':
+          return 3.67 * credits
+        case 'B+':
+          return 3.33 * credits
+        case 'B':
+          return 3.00 * credits
+        case 'B-':
+          return 2.67 * credits
+        case 'C+':
+          return 2.33 * credits
+        case 'C':
+          return 2.00 * credits
+        case 'C-':
+          return 1.67 * credits
+        case 'D+':
+          return 1.33 * credits
+        case 'D':
+          return 1.00 * credits
+        case 'D-':
+          return 0.67 * credits
+        case 'F':
+          return 0.00
+      }
+    },
+    async degreeAMS(id, track, sem, year) {
+      let studentCourses = await this.getStudentCoursePlan(id)
+      let reqAMS = await this.getRequirementsByDepartment('AMS', sem, year)
+      let creditReq = reqAMS.requirements.min_credit
+      let gpaReq = reqAMS.requirements.cum_course_gpa
+      let [satisfied,pending,unsatisfied,gpaCredits,currentCredits,currentGpa,totalReq] = [0,0,0,0,0,0,0]
+
       switch (track.toLowerCase()) {
-        case 'computational applied mathematics':
-          return '5 satisfied, 8 pending, 0 unsatisfied'
+        case 'computational applied mathematics': {
+          let coreCourses = reqAMS.requirements.track_req.tracks[0].courses
+          let mandatoryCourse = coreCourses.map(
+            (coursePlan) => coursePlan.department + ' ' + coursePlan.course_num
+          )
+          let electiveCourses = reqAMS.requirements.track_req.tracks[0].elective_courses
+          let electiveCourse = electiveCourses.map(
+            (coursePlan) => coursePlan.department + ' ' + coursePlan.course_num
+          )
+          let minElectives = reqAMS.requirements.track_req.tracks[0].number_of_elective_course
+          totalReq += (coreCourses.length + minElectives + 2)
+          studentCourses.forEach((value) => {        
+            // Completed class
+            if (value.grade != "") {
+              if ((mandatoryCourse.includes(value.department + " " + value.course_num) || electiveCourse.includes(value.department + " " + value.course_num))) {
+                satisfied++
+                let classCredits = 3
+                if (mandatoryCourse.includes(value.department + " " + value.course_num)) {
+                  coreCourses.forEach((course) => {
+                    if (course.department == value.department && course.course_num == value.course_num) {
+                      classCredits = course.credits
+                    }
+                  })
+                }
+                else if (electiveCourse.includes(value.department + " " + value.course_num)) {
+                  electiveCourses.forEach((course) => {
+                    if (course.department == value.department && course.course_num == value.course_num) {
+                      classCredits = course.credits
+                    }
+                  })
+                }
+                gpaCredits += classCredits
+                currentCredits += classCredits
+                currentGpa += this.calculateGrade(value.grade, classCredits)
+              }
+            }
+            // Pending class
+            else if ((mandatoryCourse.includes(value.department + " " + value.course_num) || electiveCourse.includes(value.department + " " + value.course_num)) && value.grade == "") {
+              pending++
+              let classCredits = 3
+              if (mandatoryCourse.includes(value.department + " " + value.course_num)) {
+                coreCourses.forEach((course) => {
+                  if (course.department == value.department && course.course_num == value.course_num) {
+                    classCredits = course.credits
+                  }
+                })
+              }
+              else if (electiveCourse.includes(value.department + " " + value.course_num)) {
+                electiveCourses.forEach((course) => {
+                  if (course.department == value.department && course.course_num == value.course_num) {
+                    classCredits = course.credits
+                  }
+                })
+              }
+              currentCredits += classCredits
+            }
+          })
+          // console.log("total gpa", currentGpa)
+          currentGpa /= gpaCredits
+          if (currentGpa >= gpaReq) {
+            satisfied++
+          }
+          if (currentCredits >= creditReq) {
+            satisfied++
+          }
+          // console.log("GPA Credits", gpaCredits)
+          // console.log("CurrentCredits", currentCredits)
+          // console.log("GPA", currentGpa)
+          // console.log("Total Req", totalReq)
+          unsatisfied = totalReq - satisfied - pending
+          return `${satisfied} satisfied, ${pending} pending, ${unsatisfied} unsatisfied`
+          // return `${satisfied} satisfied, ${pending} pending, ${unsatisfied} unsatisfied,
+          // ${gpaCredits} gpaCredits, ${currentCredits} currentCredits, ${currentGpa} currentGpa`
+        }
+
         case 'computational biology':
+          console.log(reqAMS.requirements.track_req.tracks[1].courses)
+          console.log(reqAMS.requirements.track_req.tracks[1].elective_courses)
+          console.log(reqAMS.requirements.track_req.tracks[1].number_of_elective_course)
           return '5 satisfied, 8 pending, 0 unsatisfied'
         case 'operations research':
+          console.log(reqAMS.requirements.track_req.tracks[2].courses)
+          console.log(reqAMS.requirements.track_req.tracks[2].elective_courses)
+          console.log(reqAMS.requirements.track_req.tracks[2].number_of_elective_course)
           return '5 satisfied, 8 pending, 0 unsatisfied'
         case 'statistics':
+          console.log(reqAMS.requirements.track_req.tracks[3].courses)
+          console.log(reqAMS.requirements.track_req.tracks[3].elective_courses)
+          console.log(reqAMS.requirements.track_req.tracks[3].number_of_elective_course)
           return '5 satisfied, 8 pending, 0 unsatisfied'
         case 'quantitative finance':
+          console.log(reqAMS.requirements.track_req.tracks[4].courses)
+          console.log(reqAMS.requirements.track_req.tracks[4].elective_courses)
+          console.log(reqAMS.requirements.track_req.tracks[4].number_of_elective_course)
           return '5 satisfied, 8 pending, 0 unsatisfied'
       }
     },

@@ -48,7 +48,7 @@ router.post('/add', async (req, res, next) => {
 
 router.get('/getreq', async (req, res, next) => {
   try {
-    const reqData = req.body
+    const reqData = req.query
     const newReq = await DegreeRequirement.findOne({
       department: reqData.department,
       reqSem: reqData.reqSem,
