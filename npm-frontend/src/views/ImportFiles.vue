@@ -273,6 +273,9 @@ export default {
                 course.credits = text[index + 2].substring(m - 2, m).trim()
               }
             }
+            if (value.includes('ESE  506')) {
+              course.prereqs.pop()
+            }
           } else {
             // prereq not in desc
             course.description = text[index + 1].trim()
@@ -293,6 +296,9 @@ export default {
                     .map((value) => value.replace(/([A-Z])([0-9])/g, '$1 $2'))
                 }
               })
+              if (value.includes('AMS  594')) {
+                course.prereqs.unshift('AMS 512')
+              }
               if (text[index + 3].includes('credit')) {
                 let m = text[index + 3].indexOf('credit')
                 // variable number of credits

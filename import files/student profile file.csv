@@ -1,5 +1,5 @@
 sbu_id,first_name,last_name,email,department,track,entry_semester,entry_year,requirement_version_semester,requirement_version_year,graduation_semester,graduation_year,password
 111111111,Mary,Jones,mary.jones@gmail.com,ESE,Non-Thesis,Fall,2018,Fall,2019,Fall,2018,test
 111222333,Linus,van Pelt,lvanpelt@stonybrook.edu,AMS,Computational Applied Mathematics,Fall,2020,Spring,2021,Fall,2021,security_blanket
-222333444,Charles,Brown,cbrown@stonybrook.edu,BMI,Imaging Informatics with thesis,Spring,2020,Spring,2021,Spring,2021,WheresMyDog
+222333444,Charles,Brown,cbrown@stonybrook.edu,AMS,Quantitative Finance,Spring,2020,Spring,2021,Spring,2021,WheresMyDog
 333444555,Peppermint,"Patty, Jr",ppatty@stonybrook.edu,CSE,Special Project,Spring,2021,Spring,2021,Spring,2022,baseball!!

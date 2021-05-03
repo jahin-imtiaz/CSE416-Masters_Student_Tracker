@@ -3,9 +3,6 @@
     <NavBar />
     <br />
     <br />
-    <h2>Browse/Search Student</h2>
-    <br />
-    <br />
     <b-container class="bv-example-row">
       <b-row>
         <b-col lg="6" class="my-1">
@@ -287,18 +284,6 @@ export default {
           console.log(err)
         })
     },
-    // getStudentCoursePlan(studentID) {
-    //   const courses = []
-    //   const promise = axios.get(`${VUE_APP_BACKEND_API}/courseplans`)
-    //   promise.then((response) => {
-    //     response.data.forEach((item) => {
-    //       if (item.sbu_id == studentID) {
-    //         courses.push(item.department + item.course_num)
-    //       }
-    //     })
-    //   })
-    //   return courses
-    // },
     getCoursePlanStatus(classes, department, track) {
       if (department == 'AMS') {
         return this.verifyAMS(classes, track)
@@ -411,12 +396,76 @@ export default {
           return 0.00
       }
     },
+    getDegreeCompletion(studentCourses, coreCourses, mandatoryCourse, electiveCourses, electiveCourse, gpaReq, creditReq, totalReq) {
+      let [satisfied,pending,unsatisfied,gpaCredits,currentCredits,currentGpa] = [0,0,0,0,0,0]
+      studentCourses.forEach((value) => {        
+        // Completed class
+        if (value.grade != "") {
+          if ((mandatoryCourse.includes(value.department + " " + value.course_num) || electiveCourse.includes(value.department + " " + value.course_num))) {
+            satisfied++
+            let classCredits = 3
+            if (mandatoryCourse.includes(value.department + " " + value.course_num)) {
+              coreCourses.forEach((course) => {
+                if (course.department == value.department && course.course_num == value.course_num) {
+                  classCredits = course.credits
+                }
+              })
+            }
+            else if (electiveCourse.includes(value.department + " " + value.course_num)) {
+              electiveCourses.forEach((course) => {
+                if (course.department == value.department && course.course_num == value.course_num) {
+                  classCredits = course.credits
+                }
+              })
+            }
+            gpaCredits += classCredits
+            currentCredits += classCredits
+            currentGpa += this.calculateGrade(value.grade, classCredits)
+          }
+        }
+        // Pending class
+        else if ((mandatoryCourse.includes(value.department + " " + value.course_num) || electiveCourse.includes(value.department + " " + value.course_num)) && value.grade == "") {
+          pending++
+          let classCredits = 3
+          if (mandatoryCourse.includes(value.department + " " + value.course_num)) {
+            coreCourses.forEach((course) => {
+              if (course.department == value.department && course.course_num == value.course_num) {
+                classCredits = course.credits
+              }
+            })
+          }
+          else if (electiveCourse.includes(value.department + " " + value.course_num)) {
+            electiveCourses.forEach((course) => {
+              if (course.department == value.department && course.course_num == value.course_num) {
+                classCredits = course.credits
+              }
+            })
+          }
+          currentCredits += classCredits
+        }
+      })
+      // console.log("total gpa", currentGpa)
+      currentGpa /= gpaCredits
+      if (currentGpa >= gpaReq) {
+        satisfied++
+      }
+      if (currentCredits >= creditReq) {
+        satisfied++
+      }
+      console.log("GPA Credits", gpaCredits)
+      console.log("CurrentCredits", currentCredits)
+      console.log("GPA", currentGpa)
+      console.log("Total Req", totalReq)
+      unsatisfied = totalReq - satisfied - pending
+      return `${satisfied} satisfied, ${pending} pending, ${unsatisfied} unsatisfied`
+      // return `${satisfied} satisfied, ${pending} pending, ${unsatisfied} unsatisfied,
+      // ${gpaCredits} gpaCredits, ${currentCredits} currentCredits, ${currentGpa} currentGpa`
+    },
     async degreeAMS(id, track, sem, year) {
       let studentCourses = await this.getStudentCoursePlan(id)
       let reqAMS = await this.getRequirementsByDepartment('AMS', sem, year)
       let creditReq = reqAMS.requirements.min_credit
       let gpaReq = reqAMS.requirements.cum_course_gpa
-      let [satisfied,pending,unsatisfied,gpaCredits,currentCredits,currentGpa,totalReq] = [0,0,0,0,0,0,0]
 
       switch (track.toLowerCase()) {
         case 'computational applied mathematics': {
@@ -429,91 +478,61 @@ export default {
             (coursePlan) => coursePlan.department + ' ' + coursePlan.course_num
           )
           let minElectives = reqAMS.requirements.track_req.tracks[0].number_of_elective_course
-          totalReq += (coreCourses.length + minElectives + 2)
-          studentCourses.forEach((value) => {        
-            // Completed class
-            if (value.grade != "") {
-              if ((mandatoryCourse.includes(value.department + " " + value.course_num) || electiveCourse.includes(value.department + " " + value.course_num))) {
-                satisfied++
-                let classCredits = 3
-                if (mandatoryCourse.includes(value.department + " " + value.course_num)) {
-                  coreCourses.forEach((course) => {
-                    if (course.department == value.department && course.course_num == value.course_num) {
-                      classCredits = course.credits
-                    }
-                  })
-                }
-                else if (electiveCourse.includes(value.department + " " + value.course_num)) {
-                  electiveCourses.forEach((course) => {
-                    if (course.department == value.department && course.course_num == value.course_num) {
-                      classCredits = course.credits
-                    }
-                  })
-                }
-                gpaCredits += classCredits
-                currentCredits += classCredits
-                currentGpa += this.calculateGrade(value.grade, classCredits)
-              }
-            }
-            // Pending class
-            else if ((mandatoryCourse.includes(value.department + " " + value.course_num) || electiveCourse.includes(value.department + " " + value.course_num)) && value.grade == "") {
-              pending++
-              let classCredits = 3
-              if (mandatoryCourse.includes(value.department + " " + value.course_num)) {
-                coreCourses.forEach((course) => {
-                  if (course.department == value.department && course.course_num == value.course_num) {
-                    classCredits = course.credits
-                  }
-                })
-              }
-              else if (electiveCourse.includes(value.department + " " + value.course_num)) {
-                electiveCourses.forEach((course) => {
-                  if (course.department == value.department && course.course_num == value.course_num) {
-                    classCredits = course.credits
-                  }
-                })
-              }
-              currentCredits += classCredits
-            }
-          })
-          // console.log("total gpa", currentGpa)
-          currentGpa /= gpaCredits
-          if (currentGpa >= gpaReq) {
-            satisfied++
-          }
-          if (currentCredits >= creditReq) {
-            satisfied++
-          }
-          // console.log("GPA Credits", gpaCredits)
-          // console.log("CurrentCredits", currentCredits)
-          // console.log("GPA", currentGpa)
-          // console.log("Total Req", totalReq)
-          unsatisfied = totalReq - satisfied - pending
-          return `${satisfied} satisfied, ${pending} pending, ${unsatisfied} unsatisfied`
-          // return `${satisfied} satisfied, ${pending} pending, ${unsatisfied} unsatisfied,
-          // ${gpaCredits} gpaCredits, ${currentCredits} currentCredits, ${currentGpa} currentGpa`
+          let totalReq = (coreCourses.length + minElectives + 2)
+          return this.getDegreeCompletion(studentCourses, coreCourses, mandatoryCourse, electiveCourses, electiveCourse, gpaReq, creditReq, totalReq)
         }
-
-        case 'computational biology':
-          console.log(reqAMS.requirements.track_req.tracks[1].courses)
-          console.log(reqAMS.requirements.track_req.tracks[1].elective_courses)
-          console.log(reqAMS.requirements.track_req.tracks[1].number_of_elective_course)
-          return '5 satisfied, 8 pending, 0 unsatisfied'
-        case 'operations research':
-          console.log(reqAMS.requirements.track_req.tracks[2].courses)
-          console.log(reqAMS.requirements.track_req.tracks[2].elective_courses)
-          console.log(reqAMS.requirements.track_req.tracks[2].number_of_elective_course)
-          return '5 satisfied, 8 pending, 0 unsatisfied'
-        case 'statistics':
-          console.log(reqAMS.requirements.track_req.tracks[3].courses)
-          console.log(reqAMS.requirements.track_req.tracks[3].elective_courses)
-          console.log(reqAMS.requirements.track_req.tracks[3].number_of_elective_course)
-          return '5 satisfied, 8 pending, 0 unsatisfied'
-        case 'quantitative finance':
-          console.log(reqAMS.requirements.track_req.tracks[4].courses)
-          console.log(reqAMS.requirements.track_req.tracks[4].elective_courses)
-          console.log(reqAMS.requirements.track_req.tracks[4].number_of_elective_course)
-          return '5 satisfied, 8 pending, 0 unsatisfied'
+        case 'computational biology': {
+          let coreCourses = reqAMS.requirements.track_req.tracks[1].courses
+          let mandatoryCourse = coreCourses.map(
+            (coursePlan) => coursePlan.department + ' ' + coursePlan.course_num
+          )
+          let electiveCourses = reqAMS.requirements.track_req.tracks[1].elective_courses
+          let electiveCourse = electiveCourses.map(
+            (coursePlan) => coursePlan.department + ' ' + coursePlan.course_num
+          )
+          let minElectives = reqAMS.requirements.track_req.tracks[1].number_of_elective_course
+          let totalReq = (coreCourses.length + minElectives + 2)
+          return this.getDegreeCompletion(studentCourses, coreCourses, mandatoryCourse, electiveCourses, electiveCourse, gpaReq, creditReq, totalReq)
+        }
+        case 'operations research': {
+          let coreCourses = reqAMS.requirements.track_req.tracks[2].courses
+          let mandatoryCourse = coreCourses.map(
+            (coursePlan) => coursePlan.department + ' ' + coursePlan.course_num
+          )
+          let electiveCourses = reqAMS.requirements.track_req.tracks[2].elective_courses
+          let electiveCourse = electiveCourses.map(
+            (coursePlan) => coursePlan.department + ' ' + coursePlan.course_num
+          )
+          let minElectives = reqAMS.requirements.track_req.tracks[2].number_of_elective_course
+          let totalReq = (coreCourses.length + minElectives + 2)
+          return this.getDegreeCompletion(studentCourses, coreCourses, mandatoryCourse, electiveCourses, electiveCourse, gpaReq, creditReq, totalReq)
+        }
+        case 'statistics': {
+          let coreCourses = reqAMS.requirements.track_req.tracks[3].courses
+          let mandatoryCourse = coreCourses.map(
+            (coursePlan) => coursePlan.department + ' ' + coursePlan.course_num
+          )
+          let electiveCourses = reqAMS.requirements.track_req.tracks[3].elective_courses
+          let electiveCourse = electiveCourses.map(
+            (coursePlan) => coursePlan.department + ' ' + coursePlan.course_num
+          )
+          let minElectives = reqAMS.requirements.track_req.tracks[3].number_of_elective_course
+          let totalReq = (coreCourses.length + minElectives + 2)
+          return this.getDegreeCompletion(studentCourses, coreCourses, mandatoryCourse, electiveCourses, electiveCourse, gpaReq, creditReq, totalReq)
+        }
+        case 'quantitative finance': {
+          let coreCourses = reqAMS.requirements.track_req.tracks[4].courses
+          let mandatoryCourse = coreCourses.map(
+            (coursePlan) => coursePlan.department + ' ' + coursePlan.course_num
+          )
+          let electiveCourses = reqAMS.requirements.track_req.tracks[4].elective_courses
+          let electiveCourse = electiveCourses.map(
+            (coursePlan) => coursePlan.department + ' ' + coursePlan.course_num
+          )
+          let minElectives = reqAMS.requirements.track_req.tracks[4].number_of_elective_course
+          let totalReq = (coreCourses.length + minElectives + 2)
+          return this.getDegreeCompletion(studentCourses, coreCourses, mandatoryCourse, electiveCourses, electiveCourse, gpaReq, creditReq, totalReq)
+        }
       }
     },
     degreeBMI(classes, track) {

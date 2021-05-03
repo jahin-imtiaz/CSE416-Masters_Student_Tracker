@@ -117,7 +117,8 @@
                     {"department": "AMS", "course_num": 516, "course_name": "Statistical Methods in Finance", "credits": 3},
                     {"department": "AMS", "course_num": 517, "course_name": "Quantitative Risk Management", "credits": 3},
                     {"department": "AMS", "course_num": 518, "course_name": "Advanced Stochastic Models, Risk Assessment & Portfolio Optimization", "credits": 3},
-                    {"department": "AMS", "course_num": 572, "course_name": "Exploratory Data Analysis", "credits": 3}
+                    {"department": "AMS", "course_num": 572, "course_name": "Exploratory Data Analysis", "credits": 3},
+                    {"department": "FIN", "course_num": 539, "course_name": "Investment Analysis", "credits": 3}
                 ],
                 "elective_courses": [
                     {"department": "AMS", "course_num": 515, "course_name": "Case Studies in Computational Finance", "credits": 3},

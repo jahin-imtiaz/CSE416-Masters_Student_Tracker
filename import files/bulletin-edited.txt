@@ -296,8 +296,8 @@ Actual applications of Quantitative Finance toproblems of risk assessment, produ
 
 AMS  516: Statistical Methods inFinance
 The course introduces statistical methods inquantitative finance. Financial applications andstatistical methodologies are intertwined inall lectures. The course will cover regressionanalysis and applications to the CapitalAsset Pricing Model and multifactor pricingmodels, principal components and multivariateanalysis, statistical methods for financial timeseries; value at risk, smoothing techniques andestimation of yield curves, and estimation andmodeling volatilities.
-Prerequisite: AMS 518 or permission of theinstructor
-Spring, 2 credits, Letter graded (A, A-, B+,etc.)
+Prerequisite: AMS 586 or permission of theinstructor
+Spring, 3 credits, Letter graded (A, A-, B+,etc.)
 
 AMS  517: Quantitative RiskManagement
 Quantitative Methods for risk managementproblems including market risk, creditrisk, operational risk and Basel II accord.Multivariable models; extreme value theory;structure and reduced-form models of default;and copula-based models.
@@ -545,7 +545,7 @@ Introduction to most commonly used interestrate models: Heath-Jarrow-Morton, Bra
 
 AMS  594: Mathematical Methods ofFinance and Investments II
 This course employs the techniques ofmathematical statistics and empirical finance,e.g., estimation theory, linear and nonlinearregression, time series analysis, modelingand simulation to examine critically variousmodels of prediction for asset-pricing, pricingof derivative products and term-structure ofinterest rates assuming stochastic volatility.Statistics necessary for analysis is incorporatedin the course.
-Prerequisite: AMS 592
+Prerequisites: AMS 512 and AMS 592
 Fall, 3 credits, Letter graded (A, A-, B+, etc.)
 
 AMS  595: Fundamentals of Computing
