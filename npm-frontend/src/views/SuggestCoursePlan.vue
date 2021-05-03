@@ -326,7 +326,7 @@ export default {
   },
   data() {
     return {
-      studentID: this.$store.state.studentID,
+      studentID: this.$route.params.studentID,
       currentSem: 'Spring',
       currentYear: 2021,
       optionsSemester: [

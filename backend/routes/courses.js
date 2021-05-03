@@ -56,7 +56,7 @@ router.post('/add-many', async (req, res, next) => {
       for (const [course, courseObj] of Object.entries(deptObj.courses)) {
         let courseData = {
           department: dept,
-          course_name: dept,
+          course_name: courseObj.courseName,
           course_num: courseObj.courseNum,
           credits: courseObj.credits,
           description: courseObj.description,
@@ -109,7 +109,7 @@ router.get('/getCourseByNameNumber', async (req, res, next) => {
     let name = req.query.name
     let number = req.query.number
     const course = await Course.findOne(
-      { course_name: name, course_num: number },
+      { department: name, course_num: number },
       {}
     ).exec()
     res.send(course)
