@@ -174,7 +174,7 @@ export default {
           for (let i = 0; i < response.data.length; i++) {
             let newCourse = {}
             newCourse.course =
-              response.data[i]['courseID']['course_name'] +
+              response.data[i]['courseID']['department'] +
               ' ' +
               response.data[i]['courseID']['course_num']
             newCourse.description = response.data[i]['courseID']['description']
