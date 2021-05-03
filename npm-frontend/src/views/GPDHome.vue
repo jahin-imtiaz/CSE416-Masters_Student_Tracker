@@ -81,7 +81,6 @@ export default {
     }
   },
   mounted: function () {
-    console.log('HELLO')
     if (!this.$store.getters.isGPD) {
       this.$router.push('student-home')
     }
