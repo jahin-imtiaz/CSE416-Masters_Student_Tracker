@@ -396,7 +396,7 @@ export default {
           return 0.00
       }
     },
-    getDegreeCompletion(studentCourses, coreCourses, mandatoryCourse, electiveCourses, electiveCourse, gpaReq, creditReq, totalReq) {
+    getAMSCompletion(studentCourses, coreCourses, mandatoryCourse, electiveCourses, electiveCourse, gpaReq, creditReq, totalReq) {
       let [satisfied,pending,unsatisfied,gpaCredits,currentCredits,currentGpa] = [0,0,0,0,0,0]
       studentCourses.forEach((value) => {        
         // Completed class
@@ -444,7 +444,6 @@ export default {
           currentCredits += classCredits
         }
       })
-      // console.log("total gpa", currentGpa)
       currentGpa /= gpaCredits
       if (currentGpa >= gpaReq) {
         satisfied++
@@ -452,14 +451,12 @@ export default {
       if (currentCredits >= creditReq) {
         satisfied++
       }
-      console.log("GPA Credits", gpaCredits)
-      console.log("CurrentCredits", currentCredits)
-      console.log("GPA", currentGpa)
-      console.log("Total Req", totalReq)
+      // console.log("GPA Credits", gpaCredits)
+      // console.log("CurrentCredits", currentCredits)
+      // console.log("GPA", currentGpa)
+      // console.log("Total Req", totalReq)
       unsatisfied = totalReq - satisfied - pending
       return `${satisfied} satisfied, ${pending} pending, ${unsatisfied} unsatisfied`
-      // return `${satisfied} satisfied, ${pending} pending, ${unsatisfied} unsatisfied,
-      // ${gpaCredits} gpaCredits, ${currentCredits} currentCredits, ${currentGpa} currentGpa`
     },
     async degreeAMS(id, track, sem, year) {
       let studentCourses = await this.getStudentCoursePlan(id)
@@ -479,7 +476,7 @@ export default {
           )
           let minElectives = reqAMS.requirements.track_req.tracks[0].number_of_elective_course
           let totalReq = (coreCourses.length + minElectives + 2)
-          return this.getDegreeCompletion(studentCourses, coreCourses, mandatoryCourse, electiveCourses, electiveCourse, gpaReq, creditReq, totalReq)
+          return this.getAMSCompletion(studentCourses, coreCourses, mandatoryCourse, electiveCourses, electiveCourse, gpaReq, creditReq, totalReq)
         }
         case 'computational biology': {
           let coreCourses = reqAMS.requirements.track_req.tracks[1].courses
@@ -492,7 +489,7 @@ export default {
           )
           let minElectives = reqAMS.requirements.track_req.tracks[1].number_of_elective_course
           let totalReq = (coreCourses.length + minElectives + 2)
-          return this.getDegreeCompletion(studentCourses, coreCourses, mandatoryCourse, electiveCourses, electiveCourse, gpaReq, creditReq, totalReq)
+          return this.getAMSCompletion(studentCourses, coreCourses, mandatoryCourse, electiveCourses, electiveCourse, gpaReq, creditReq, totalReq)
         }
         case 'operations research': {
           let coreCourses = reqAMS.requirements.track_req.tracks[2].courses
@@ -505,7 +502,7 @@ export default {
           )
           let minElectives = reqAMS.requirements.track_req.tracks[2].number_of_elective_course
           let totalReq = (coreCourses.length + minElectives + 2)
-          return this.getDegreeCompletion(studentCourses, coreCourses, mandatoryCourse, electiveCourses, electiveCourse, gpaReq, creditReq, totalReq)
+          return this.getAMSCompletion(studentCourses, coreCourses, mandatoryCourse, electiveCourses, electiveCourse, gpaReq, creditReq, totalReq)
         }
         case 'statistics': {
           let coreCourses = reqAMS.requirements.track_req.tracks[3].courses
@@ -518,7 +515,7 @@ export default {
           )
           let minElectives = reqAMS.requirements.track_req.tracks[3].number_of_elective_course
           let totalReq = (coreCourses.length + minElectives + 2)
-          return this.getDegreeCompletion(studentCourses, coreCourses, mandatoryCourse, electiveCourses, electiveCourse, gpaReq, creditReq, totalReq)
+          return this.getAMSCompletion(studentCourses, coreCourses, mandatoryCourse, electiveCourses, electiveCourse, gpaReq, creditReq, totalReq)
         }
         case 'quantitative finance': {
           let coreCourses = reqAMS.requirements.track_req.tracks[4].courses
@@ -531,24 +528,191 @@ export default {
           )
           let minElectives = reqAMS.requirements.track_req.tracks[4].number_of_elective_course
           let totalReq = (coreCourses.length + minElectives + 2)
-          return this.getDegreeCompletion(studentCourses, coreCourses, mandatoryCourse, electiveCourses, electiveCourse, gpaReq, creditReq, totalReq)
+          return this.getAMSCompletion(studentCourses, coreCourses, mandatoryCourse, electiveCourses, electiveCourse, gpaReq, creditReq, totalReq)
         }
       }
     },
-    degreeBMI(classes, track) {
+    getBMICompletion(studentCourses, bmiCoreCourses, bmiMandatoryCourse, bmiTrackCoreCourses, bmiTrackMandatoryCourses, bmiTrackApplicableElectives, bmiTrackElectiveCourses, gpaReq, creditReq, totalReq) {
+      let [satisfied,pending,unsatisfied,gpaCredits,currentCredits,currentGpa,projectThesisCredits] = [0,0,0,0,0,0,0]
+      studentCourses.forEach((value) => {    
+        let classCredits = 3    
+        // Completed class
+        if (value.grade != "") {
+          if ((value.department + " " + value.course_num) == 'BMI 592') {
+            classCredits = 1
+          }
+          else if ((value.department + " " + value.course_num) == 'BMI 598' || (value.department + " " + value.course_num) == 'BMI 599') {
+            projectThesisCredits += 3
+          }
+          else if ((bmiMandatoryCourse.includes(value.department + " " + value.course_num) || bmiTrackMandatoryCourses.includes(value.department + " " + value.course_num) || bmiTrackElectiveCourses.includes(value.department + " " + value.course_num))) {
+            if (bmiMandatoryCourse.includes(value.department + " " + value.course_num)) {
+              bmiCoreCourses.forEach((course) => {
+                if (course.department == value.department && course.course_num == value.course_num) {
+                  classCredits = course.credits
+                }
+              })
+            }
+            else if (bmiTrackMandatoryCourses.includes(value.department + " " + value.course_num)) {
+              bmiTrackCoreCourses.forEach((course) => {
+                if (course.department == value.department && course.course_num == value.course_num) {
+                  classCredits = course.credits
+                }
+              })
+            }
+            else if (bmiTrackElectiveCourses.includes(value.department + " " + value.course_num)) {
+              bmiTrackApplicableElectives.forEach((course) => {
+                if (course.department == value.department && course.course_num == value.course_num) {
+                  classCredits = course.credits
+                }
+              })
+            }
+            satisfied++
+          }
+          gpaCredits += classCredits
+          currentCredits += classCredits
+          currentGpa += this.calculateGrade(value.grade, classCredits)
+        }
+        // Pending class
+        else if ((bmiMandatoryCourse.includes(value.department + " " + value.course_num) || bmiTrackMandatoryCourses.includes(value.department + " " + value.course_num) || bmiTrackElectiveCourses.includes(value.department + " " + value.course_num)) && value.grade == "") {
+          if ((value.department + " " + value.course_num) == 'BMI 592') {
+            classCredits = 1
+          }
+          else if ((value.department + " " + value.course_num) == 'BMI 598' || (value.department + " " + value.course_num) == 'BMI 599') {
+            classCredits = 3
+          }
+          else if (bmiMandatoryCourse.includes(value.department + " " + value.course_num)) {
+            bmiCoreCourses.forEach((course) => {
+              if (course.department == value.department && course.course_num == value.course_num) {
+                classCredits = course.credits
+              }
+            })
+          }
+          else if (bmiTrackMandatoryCourses.includes(value.department + " " + value.course_num)) {
+            bmiTrackCoreCourses.forEach((course) => {
+              if (course.department == value.department && course.course_num == value.course_num) {
+                classCredits = course.credits
+              }
+            })
+          }
+          else if (bmiTrackElectiveCourses.includes(value.department + " " + value.course_num)) {
+            bmiTrackApplicableElectives.forEach((course) => {
+              if (course.department == value.department && course.course_num == value.course_num) {
+                classCredits = course.credits
+              }
+            })
+          }
+          currentCredits += classCredits
+          pending++
+        }
+      })
+      currentGpa /= gpaCredits
+      if (currentGpa >= gpaReq) {
+        satisfied++
+        
+      }
+      if (currentCredits >= creditReq) {
+        satisfied++
+        
+      }
+      if (projectThesisCredits >= 6) {
+        satisfied++
+      }
+      // console.log("GPA Credits", gpaCredits)
+      // console.log("CurrentCredits", currentCredits)
+      // console.log("GPA", currentGpa)
+      // console.log("Total Req", totalReq)
+      // console.log("ProjectThesisCredits",projectThesisCredits)
+      unsatisfied = totalReq - satisfied - pending
+      return `${satisfied} satisfied, ${pending} pending, ${unsatisfied} unsatisfied`
+    },
+    async degreeBMI(id, track, sem, year) {
+      let studentCourses = await this.getStudentCoursePlan(id)
+      let reqBMI = await this.getRequirementsByDepartment('BMI', sem, year)
+      let gpaReq = reqBMI.requirements.gpa_req
+      let bmiCoreCourses = reqBMI.requirements.course_req.courses
+      let bmiMandatoryCourse = bmiCoreCourses.map(
+        (coursePlan) => coursePlan.department + ' ' + coursePlan.course_num
+      )
+
       switch (track.toLowerCase()) {
-        case 'imaging informatics with thesis':
-          return '3 satisfied, 1 pending, 2 unsatisfied'
-        case 'clinical informatics with thesis':
-          return '3 satisfied, 1 pending, 2 unsatisfied'
-        case 'translational bioinformatics with thesis':
-          return '3 satisfied, 1 pending, 2 unsatisfied'
-        case 'imaging informatics with project':
-          return '3 satisfied, 1 pending, 2 unsatisfied'
-        case 'clinical informatics with project':
-          return '3 satisfied, 1 pending, 2 unsatisfied'
-        case 'translational bioinformatics with project':
-          return '3 satisfied, 1 pending, 2 unsatisfied'
+        case 'imaging informatics with thesis': {
+          let creditReq = reqBMI.requirements.course_req.track_req.tracks[0].min_credit
+          let bmiTrackCoreCourses = reqBMI.requirements.course_req.track_req.tracks[0].courses
+          let bmiTrackMandatoryCourses = bmiTrackCoreCourses.map(
+            (coursePlan) => coursePlan.department + ' ' + coursePlan.course_num
+          )
+          let bmiTrackApplicableElectives = reqBMI.requirements.course_req.track_req.tracks[0].applicable_electives
+          let bmiTrackElectiveCourses = bmiTrackApplicableElectives.map(
+            (coursePlan) => coursePlan.department + ' ' + coursePlan.course_num
+          )
+          let totalReq = (bmiCoreCourses.length + bmiTrackCoreCourses.length + 2)
+          return this.getBMICompletion(studentCourses, bmiCoreCourses, bmiMandatoryCourse, bmiTrackCoreCourses, bmiTrackMandatoryCourses, bmiTrackApplicableElectives, bmiTrackElectiveCourses, gpaReq, creditReq, totalReq)
+        }
+        case 'clinical informatics with thesis': {
+          let creditReq = reqBMI.requirements.course_req.track_req.tracks[1].min_credit
+          let bmiTrackCoreCourses = reqBMI.requirements.course_req.track_req.tracks[1].courses
+          let bmiTrackMandatoryCourses = bmiTrackCoreCourses.map(
+            (coursePlan) => coursePlan.department + ' ' + coursePlan.course_num
+          )
+          let bmiTrackApplicableElectives = reqBMI.requirements.course_req.track_req.tracks[1].applicable_electives
+          let bmiTrackElectiveCourses = bmiTrackApplicableElectives.map(
+            (coursePlan) => coursePlan.department + ' ' + coursePlan.course_num
+          )
+          let totalReq = (bmiCoreCourses.length + bmiTrackCoreCourses.length + 2)
+          return this.getBMICompletion(studentCourses, bmiCoreCourses, bmiMandatoryCourse, bmiTrackCoreCourses, bmiTrackMandatoryCourses, bmiTrackApplicableElectives, bmiTrackElectiveCourses, gpaReq, creditReq, totalReq)
+        }
+        case 'translational bioinformatics with thesis': {
+          let creditReq = reqBMI.requirements.course_req.track_req.tracks[2].min_credit
+          let bmiTrackCoreCourses = reqBMI.requirements.course_req.track_req.tracks[2].courses
+          let bmiTrackMandatoryCourses = bmiTrackCoreCourses.map(
+            (coursePlan) => coursePlan.department + ' ' + coursePlan.course_num
+          )
+          let bmiTrackApplicableElectives = reqBMI.requirements.course_req.track_req.tracks[2].applicable_electives
+          let bmiTrackElectiveCourses = bmiTrackApplicableElectives.map(
+            (coursePlan) => coursePlan.department + ' ' + coursePlan.course_num
+          )
+          let totalReq = (bmiCoreCourses.length + bmiTrackCoreCourses.length + 2)
+          return this.getBMICompletion(studentCourses, bmiCoreCourses, bmiMandatoryCourse, bmiTrackCoreCourses, bmiTrackMandatoryCourses, bmiTrackApplicableElectives, bmiTrackElectiveCourses, gpaReq, creditReq, totalReq)
+        }
+        case 'imaging informatics with project': {
+          let creditReq = reqBMI.requirements.course_req.track_req.tracks[3].min_credit
+          let bmiTrackCoreCourses = reqBMI.requirements.course_req.track_req.tracks[3].courses
+          let bmiTrackMandatoryCourses = bmiTrackCoreCourses.map(
+            (coursePlan) => coursePlan.department + ' ' + coursePlan.course_num
+          )
+          let bmiTrackApplicableElectives = reqBMI.requirements.course_req.track_req.tracks[3].applicable_electives
+          let bmiTrackElectiveCourses = bmiTrackApplicableElectives.map(
+            (coursePlan) => coursePlan.department + ' ' + coursePlan.course_num
+          )
+          let totalReq = (bmiCoreCourses.length + bmiTrackCoreCourses.length + 2)
+          return this.getBMICompletion(studentCourses, bmiCoreCourses, bmiMandatoryCourse, bmiTrackCoreCourses, bmiTrackMandatoryCourses, bmiTrackApplicableElectives, bmiTrackElectiveCourses, gpaReq, creditReq, totalReq)
+        }
+        case 'clinical informatics with project': {
+          let creditReq = reqBMI.requirements.course_req.track_req.tracks[4].min_credit
+          let bmiTrackCoreCourses = reqBMI.requirements.course_req.track_req.tracks[4].courses
+          let bmiTrackMandatoryCourses = bmiTrackCoreCourses.map(
+            (coursePlan) => coursePlan.department + ' ' + coursePlan.course_num
+          )
+          let bmiTrackApplicableElectives = reqBMI.requirements.course_req.track_req.tracks[4].applicable_electives
+          let bmiTrackElectiveCourses = bmiTrackApplicableElectives.map(
+            (coursePlan) => coursePlan.department + ' ' + coursePlan.course_num
+          )
+          let totalReq = (bmiCoreCourses.length + bmiTrackCoreCourses.length + 2)
+          return this.getBMICompletion(studentCourses, bmiCoreCourses, bmiMandatoryCourse, bmiTrackCoreCourses, bmiTrackMandatoryCourses, bmiTrackApplicableElectives, bmiTrackElectiveCourses, gpaReq, creditReq, totalReq)
+        }
+        case 'translational bioinformatics with project': {
+          let creditReq = reqBMI.requirements.course_req.track_req.tracks[5].min_credit
+          let bmiTrackCoreCourses = reqBMI.requirements.course_req.track_req.tracks[5].courses
+          let bmiTrackMandatoryCourses = bmiTrackCoreCourses.map(
+            (coursePlan) => coursePlan.department + ' ' + coursePlan.course_num
+          )
+          let bmiTrackApplicableElectives = reqBMI.requirements.course_req.track_req.tracks[5].applicable_electives
+          let bmiTrackElectiveCourses = bmiTrackApplicableElectives.map(
+            (coursePlan) => coursePlan.department + ' ' + coursePlan.course_num
+          )
+          let totalReq = (bmiCoreCourses.length + bmiTrackCoreCourses.length + 2)
+          return this.getBMICompletion(studentCourses, bmiCoreCourses, bmiMandatoryCourse, bmiTrackCoreCourses, bmiTrackMandatoryCourses, bmiTrackApplicableElectives, bmiTrackElectiveCourses, gpaReq, creditReq, totalReq)
+        }
       }
     },
     degreeCSE(classes, track) {
