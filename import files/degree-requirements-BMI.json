@@ -8,7 +8,7 @@
             {"department": "BMI", "course_num": 501, "course_name": "Introduction to Biomedical Informatics", "credits": 3},
             {"department": "BMI", "course_num": [502, 503], "course_name": ["Life Sciences for Biomedical Informatics", "Computer Science for Biomedical Informatics"], "credits": 3},
             {"department": "BMI", "course_num": 540, "course_name": "Statistical Methods in Biomedical Informatics", "credits": 3},
-            {"department": "BMI", "course_num": 592, "course_name": "Biomedical Informatics Masters Pre-Candidates Seminar", "semester": "Fall,Spring", "credits": 1}
+            {"department": "BMI", "course_num": 592, "course_name": "Biomedical Informatics Masters Pre-Candidates Seminar", "credits": 1}
         ],
         "track_req": {
             "tracks": [
@@ -28,7 +28,7 @@
                         {"department": "BMI", "course_num": 595, "course_name": "Special Topics in Biomedical Informatics", "credits": [0,3]},
                         {"department": "BMI", "course_num": 596, "course_name": "Special Problems in Biomedical Informatics", "credits": [1,6]}
                     ],
-                    "min_credit": 21
+                    "min_credit": 27
                 },
                 {
                     "track": "Clinical Informatics with thesis",
@@ -48,7 +48,7 @@
                         {"department": "BMI", "course_num": 595, "course_name": "Special Topics in Biomedical Informatics", "credits": [0,3]},
                         {"department": "BMI", "course_num": 596, "course_name": "Special Problems in Biomedical Informatics", "credits": [1,6]}
                     ],
-                    "min_credit": 21
+                    "min_credit": 27
                 },
                 {
                     "track": "Translational Bioinformatics with thesis",
@@ -66,7 +66,7 @@
                         {"department": "BMI", "course_num": 595, "course_name": "Special Topics in Biomedical Informatics", "credits": [0,3]},
                         {"department": "BMI", "course_num": 596, "course_name": "Special Problems in Biomedical Informatics", "credits": [1,6]}
                     ],
-                    "min_credit": 21
+                    "min_credit": 27
                 },
                 {
                     "track": "Imaging Informatics with project",

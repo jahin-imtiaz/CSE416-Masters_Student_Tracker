@@ -50,29 +50,40 @@ router.post('/add', async (req, res, next) => {
 router.post('/add-many', async (req, res, next) => {
   try {
     let coursePlans = req.body
+    // remove existing course plans for the student
 
+    let ids = coursePlans.map((o) => o.sbu_id)
+
+    let existingCoursePlans = await CoursePlan.deleteMany({
+      sbu_id: { $in: ids }
+    })
+    logger.info(
+      `Removed existing course plans ${JSON.stringify(existingCoursePlans)}`
+    )
+
+    // add new course plans
     let newCoursePlans = []
 
     for (let coursePlanData of coursePlans) {
-      const newCoursePlan = await CoursePlan.findOneAndUpdate(
-        {
-          sbu_id: coursePlanData.sbu_id,
-          course_num: coursePlanData.course_num,
-          department: coursePlanData.department
-        },
+      const newCoursePlan = await CoursePlan.create(
+        // {
+        //   sbu_id: coursePlanData.sbu_id,
+        //   course_num: coursePlanData.course_num,
+        //   department: coursePlanData.department
+        // },
         {
           ...coursePlanData
-        },
-        {
-          upsert: true,
-          new: true
         }
+        // {
+        //   upsert: true,
+        //   new: true
+        // }
       )
       // const newCoursePlan = new CoursePlan({
       //   ...coursePlanData
       // })
       // await newCoursePlan.save()
-      logger.info(`Upserted course plan ${JSON.stringify(newCoursePlan)}`)
+      logger.info(`Inserted course plan ${JSON.stringify(newCoursePlan)}`)
 
       newCoursePlans.push(newCoursePlan)
     }
