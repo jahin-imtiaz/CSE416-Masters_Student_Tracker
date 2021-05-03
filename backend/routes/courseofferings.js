@@ -78,6 +78,9 @@ router.post('/add-many', async (req, res, next) => {
       )
       logger.info(`Upserted course offerings ${JSON.stringify(newCourseOffer)}`)
       newCourseOfferings.push(newCourseOffer)
+
+      // TODO: invalid course offerings
+
       // get all student courseplans taking invalid courses in courseOfferings file
       // Invalid CoursePlans match dept, course_name, course_num, semester, and year
       const invalidCoursePlans = await CoursePlan.updateMany(
@@ -117,6 +120,7 @@ router.get('/findAllOfferingOfCourse', async (req, res, next) => {
     )
       .populate('courseID')
       .exec()
+
     let courses = offeredCoursesInSemYear.filter(
       (courseOffering) =>
         courseOffering.courseID.course_name === name &&

@@ -46,6 +46,53 @@ router.post('/add', async (req, res, next) => {
   }
 })
 
+router.post('/add-many', async (req, res, next) => {
+  try {
+    const depts = req.body
+
+    let count = 0
+
+    for (const [dept, deptObj] of Object.entries(depts)) {
+      for (const [course, courseObj] of Object.entries(deptObj.courses)) {
+        let courseData = {
+          department: dept,
+          course_name: dept,
+          course_num: courseObj.courseNum,
+          credits: courseObj.credits,
+          description: courseObj.description,
+          prerequisites: courseObj.prereqs
+        }
+
+        const newCourse = await Course.findOneAndUpdate(
+          {
+            department: courseData.department,
+            course_name: courseData.course_name,
+            course_num: courseData.course_num
+          },
+          {
+            ...courseData
+          },
+          {
+            upsert: true,
+            new: true
+          }
+        ).exec()
+
+        if (newCourse) count++
+      }
+    }
+
+    // const newCourse = new Course({
+    //   ...courseData
+    // })
+    // await newCourse.save()
+    logger.info(`Upserted ${count} courses`)
+  } catch (err) {
+    logger.error(err)
+    next(err)
+  }
+})
+
 router.get('/getCourseByDepartment', async (req, res, next) => {
   try {
     let department = req.query.department

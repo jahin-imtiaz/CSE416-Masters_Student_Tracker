@@ -70,7 +70,7 @@
               Selected file: {{ degreeReqFile ? degreeReqFile.name : '' }}
             </b-col>
             <b-col>
-              <b-button variant="secondary" @click="loadDegReFile">
+              <b-button variant="secondary" @click="loadDegReqFile">
                 add
               </b-button>
             </b-col>
@@ -217,24 +217,147 @@ export default {
        *
        *
        */
-      let courseFileJSON = courseFileText.split(/^[A-Z]{3}$/)
-      return courseFileJSON
+      let courseDesc = {}
+      let currMajor = ''
+
+      let text = courseFileText.split('\n')
+      //console.log(text)
+      text.forEach((value, index) => {
+        if (value.match(/^[A-Z]{3}$/gm)) {
+          currMajor = value.trim()
+          courseDesc[currMajor] = {}
+          courseDesc[currMajor].department = text[index + 1].trim()
+          courseDesc[currMajor].courses = []
+        } else if (
+          value.match(/^[A-Z]{3} {2}[0-9]{3}:/gm) &&
+          value.includes(currMajor)
+        ) {
+          let n = value.indexOf(':')
+          let course = {
+            courseNum: value.substring(n - 3, n),
+            courseName: value.substring(n + 2).trim(),
+            description: '',
+            prereqs: [],
+            credits: '3'
+          }
+          let m = text[index + 1].trim().indexOf('Prerequisite')
+
+          // Outlier
+          if (value.includes('BMI  540')) {
+            course.prereqs.push('BMI 501')
+          }
+          if (m > 0) {
+            // prereq in desc
+            course.description = text[index + 1].substring(0, m).trim()
+            let n = text[index + 1].lastIndexOf(':')
+            let str = text[index + 1]
+              .substring(n + 1)
+              .trim()
+              .replace('and', ',')
+            str.split(/[.,]| {1}or {1}/gi).forEach((element) => {
+              element = element.trim()
+              if (element.match(/^[A-Z]{3} {1}5[0-9]{2}$/gm)) {
+                course.prereqs.push(element)
+              } else if (element.match(/^[A-Z]{3}5[0-9]{2}$/gm)) {
+                course.prereqs.push(element.replace(/([A-Z])([0-9])/g, '$1 $2'))
+              }
+            })
+            if (text[index + 2].includes('credit')) {
+              let m = text[index + 2].indexOf('credit')
+              // variable number of credits
+              if (text[index + 2].match(/[0-9]-[0-9] credit/g)) {
+                course.credits = text[index + 2].substring(m - 4, m).trim()
+              }
+              // set number of credits
+              else {
+                course.credits = text[index + 2].substring(m - 2, m).trim()
+              }
+            }
+            if (value.includes('ESE  506')) {
+              course.prereqs.pop()
+            }
+          } else {
+            // prereq not in desc
+            course.description = text[index + 1].trim()
+            // credits on 4th line of a course entry (course has prereq)
+            if (text[index + 2].includes('Prerequisite')) {
+              let n = text[index + 2].indexOf(':')
+              let str = text[index + 2]
+                .substring(n + 1)
+                .trim()
+                .replace('and', ',')
+              str.split(/[.,]| {1}or {1}/gi).forEach((element) => {
+                element = element.trim()
+                if (element.match(/^[A-Z]{3} {1}5[0-9]{2}/gm)) {
+                  course.prereqs = element.match(/^[A-Z]{3} {1}5[0-9]{2}/gm)
+                } else if (element.match(/^[A-Z]{3}5[0-9]{2}$/gm)) {
+                  course.prereqs = element
+                    .match(/^[A-Z]{3}5[0-9]{2}$/gm)
+                    .map((value) => value.replace(/([A-Z])([0-9])/g, '$1 $2'))
+                }
+              })
+              if (value.includes('AMS  594')) {
+                course.prereqs.unshift('AMS 512')
+              }
+              if (text[index + 3].includes('credit')) {
+                let m = text[index + 3].indexOf('credit')
+                // variable number of credits
+                if (text[index + 3].match(/[0-9]-[0-9] credit/g)) {
+                  course.credits = text[index + 3].substring(m - 4, m).trim()
+                }
+                // set number of credits
+                else {
+                  course.credits = text[index + 3].substring(m - 2, m).trim()
+                }
+              }
+            }
+            // credits on 3rd line of course entry (course has no prereq)
+            else if (text[index + 2].includes('credit')) {
+              let m = text[index + 2].indexOf('credit')
+              // variable number of credits
+              if (text[index + 2].match(/[0-9]-[0-9] credit/g)) {
+                course.credits = text[index + 2].substring(m - 4, m).trim()
+              }
+              // set number of credits
+              else {
+                course.credits = text[index + 2].substring(m - 2, m).trim()
+              }
+            }
+          }
+          courseDesc[currMajor].courses.push(course)
+        }
+      })
+      //console.log(courseDesc)
+      return courseDesc
     },
     loadCourseFile() {
       const file = this.courseFile
+      if (file == null) return
       const reader = new FileReader()
-      reader.onload = e => {
+      reader.onload = (e) => {
         let courseFileText = e.target.result
-        console.log(typeof courseFileText, courseFileText)
-        console.log(this.courseFileToJson(courseFileText))
+        //console.log(this.courseFileToJson(courseFileText))
+        let courseData = this.courseFileToJson(courseFileText)
+
+        console.log(courseData)
+        axios
+          .post(`${VUE_APP_BACKEND_API}/courses/add-many`, courseData)
+          .then(() => {
+            console.log(`Added ${courseData.length} courses`)
+          })
+          .catch((err) => {
+            console.log(err)
+          })
+
         this.courseFile = null
       }
       reader.readAsText(file)
     },
-    loadDegReFile() {
+    loadDegReqFile() {
       const file = this.degreeReqFile
+      if (file == null) return
       const reader = new FileReader()
-      reader.onload = e => {
+      reader.onload = (e) => {
         let reqJson = JSON.parse(e.target.result)
         console.log(reqJson)
 
@@ -252,7 +375,7 @@ export default {
               `Added Requirement Version for ${reqJson.dept} for ${reqJson.req_ver_sem}${reqJson.req_ver_year}`
             )
           })
-          .catch(err => {
+          .catch((err) => {
             console.log(err)
           })
 
@@ -262,14 +385,16 @@ export default {
     },
     loadCourseOfferingFile() {
       const file = this.courseOfferingFile
+      if (file == null) return
       const reader = new FileReader()
       let courseOfferingsArr = []
-      reader.onload = e => {
+      reader.onload = (e) => {
         let text = e.target.result
         text = text.split('\n')
         console.log(text)
         for (let i = 1; i < text.length; i++) {
           let newCourseOffering = {}
+          // split csv text by commas (disregarding commas in quotes)
           let currCourse = text[i].split(/,(?=(?:(?:[^"]*"){2})*[^"]*$)/g) // .split("/[^\"],[^\"]/")
           newCourseOffering.department = currCourse[0]
           newCourseOffering.course_num = currCourse[1]
@@ -292,11 +417,13 @@ export default {
             `${VUE_APP_BACKEND_API}/courseofferings/add-many`,
             courseOfferingsArr
           )
-          .then(response => {
+          .then((response) => {
+            // get all invalid CoursePlan objects so that the student may be notified and updated
             this.invalidPlans = response.data.allInvalidCoursePlans
+            // TODO: notify student
             console.log(`UPSERTED OFFERINGS`)
           })
-          .catch(err => {
+          .catch((err) => {
             console.log(err)
           })
         this.courseOfferingFile = null
@@ -305,9 +432,10 @@ export default {
     },
     loadStudentFile() {
       const file = this.studentFile
+      if (file == null) return
       const reader = new FileReader()
       let studentsArr = []
-      reader.onload = e => {
+      reader.onload = (e) => {
         let text = e.target.result
         text = text.split('\n')
         for (let i = 1; i < text.length; i++) {
@@ -335,7 +463,7 @@ export default {
           .then(() => {
             console.log(`UPSERTED STUDENTS`)
           })
-          .catch(err => {
+          .catch((err) => {
             console.log(err)
           })
 
@@ -345,9 +473,10 @@ export default {
     },
     loadCoursePlanFile() {
       const file = this.coursePlanFile
+      if (file == null) return
       const reader = new FileReader()
       let coursePlanArr = []
-      reader.onload = e => {
+      reader.onload = (e) => {
         let text = e.target.result
         text = text.split('\n')
         for (let i = 1; i < text.length; i++) {
@@ -369,18 +498,20 @@ export default {
           .then(() => {
             console.log(`UPSERTED COURSE PLANS`)
           })
-          .catch(err => {
+          .catch((err) => {
             console.log(err)
           })
         this.coursePlanFile = null
       }
       reader.readAsText(file)
     },
+    // loadGradesFile seperated to use this.gradesFile instead of this.coursePlanFile as a lock
     loadGradesFile() {
       const file = this.gradesFile
+      if (file == null) return
       const reader = new FileReader()
       let gradesArr = []
-      reader.onload = e => {
+      reader.onload = (e) => {
         let text = e.target.result
         text = text.split('\n')
         for (let i = 1; i < text.length; i++) {
@@ -402,7 +533,7 @@ export default {
           .then(() => {
             console.log(`UPSERTED GRADES`)
           })
-          .catch(err => {
+          .catch((err) => {
             console.log(err)
           })
         this.gradesFile = null

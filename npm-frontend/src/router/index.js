@@ -1,6 +1,7 @@
 import Vue from 'vue'
 import VueRouter from 'vue-router'
-import Home from '../views/Home.vue'
+// import Home from '../views/Home.vue'
+import GPDHome from '../views/GPDHome.vue'
 
 Vue.use(VueRouter)
 
@@ -8,7 +9,7 @@ const routes = [
   {
     path: '/',
     name: 'Home',
-    component: Home
+    component: GPDHome
   },
   {
     path: '/about',
@@ -23,67 +24,75 @@ const routes = [
     path: '/gpd-home',
     name: 'GPD Home',
     component: () =>
-      import(/* webpackChunkName: "about" */ '../views/GPDHome.vue')
+      import(/* webpackChunkName: "gpdhome" */ '../views/GPDHome.vue')
   },
   {
     path: '/student-home',
     name: 'Student Home',
     component: () =>
-      import(/* webpackChunkName: "about" */ '../views/StudentHome.vue')
+      import(/* webpackChunkName: "studenthome" */ '../views/StudentHome.vue')
   },
   {
     path: '/add-student',
     name: 'Add Student',
     component: () =>
-      import(/* webpackChunkName: "about" */ '../views/AddStudent.vue')
+      import(/* webpackChunkName: "addstudent" */ '../views/AddStudent.vue')
   },
   {
     path: '/add-course',
     name: 'Add Course',
     component: () =>
-      import(/* webpackChunkName: "about" */ '../views/AddCourse.vue')
+      import(/* webpackChunkName: "addcourse" */ '../views/AddCourse.vue')
   },
   {
     path: '/browse-search-student',
     name: 'Browse/Search Student',
     component: () =>
-      import(/* webpackChunkName: "about" */ '../views/BrowseSearchStudent.vue')
+      import(
+        /* webpackChunkName: "browsesearch" */ '../views/BrowseSearchStudent.vue'
+      )
   },
   {
     path: '/enrollment-trend',
     name: 'Enrollment Trend',
     component: () =>
-      import(/* webpackChunkName: "about" */ '../views/EnrollmentTrend.vue')
+      import(
+        /* webpackChunkName: "enrollmenttrend" */ '../views/EnrollmentTrend.vue'
+      )
   },
   {
     path: '/view-edit-gpd/:studentID',
     name: 'View/Edit (GPD)',
     component: () =>
-      import(/* webpackChunkName: "about" */ '../views/ViewEditGPD.vue')
+      import(/* webpackChunkName: "view-edit-gpd" */ '../views/ViewEditGPD.vue')
   },
   {
     path: '/view-edit-student/:studentID',
     name: 'View/Edit (Student)',
     component: () =>
-      import(/* webpackChunkName: "about" */ '../views/ViewEditStudent.vue')
+      import(
+        /* webpackChunkName: "view-edit-student" */ '../views/ViewEditStudent.vue'
+      )
   },
   {
     path: '/import-files',
     name: 'Import Files',
     component: () =>
-      import(/* webpackChunkName: "about" */ '../views/ImportFiles.vue')
+      import(/* webpackChunkName: "import-files" */ '../views/ImportFiles.vue')
   },
   {
     path: '/suggest-course-plan/:studentID',
     name: 'Suggest Course Plan',
     component: () =>
-      import(/* webpackChunkName: "about" */ '../views/SuggestCoursePlan.vue')
+      import(
+        /* webpackChunkName: "suggest-course-plan" */ '../views/SuggestCoursePlan.vue'
+      )
   },
   {
     path: '/login',
     name: 'Login',
     component: () =>
-      import(/* webpackChunkName: "about" */ '../views/Login.vue')
+      import(/* webpackChunkName: "login" */ '../views/Login.vue')
   }
 ]
 

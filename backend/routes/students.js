@@ -105,6 +105,8 @@ router.get('/getOneByID', async (req, res, next) => {
       { '_id.sbu_id': studentId },
       {}
     ).exec()
+
+    console.log(studentId, student)
     res.send(student)
   } catch (err) {
     logger.error(err)

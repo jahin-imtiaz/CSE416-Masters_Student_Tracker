@@ -1,6 +1,6 @@
 <template>
   <div id="app">
-    <div id="nav">
+    <!-- <div id="nav">
       <router-link to="/">Home</router-link>
       |
       <router-link to="/about">About</router-link>
@@ -11,7 +11,7 @@
       |
       <router-link to="/import-files">Import File</router-link>
       |
-      <router-link :to="'/suggest-course-plan/0' + this.$store.state.studentID">
+      <router-link :to="'/suggest-course-plan/' + this.$store.state.studentID">
         Suggest Course Plan
       </router-link>
       |
@@ -19,11 +19,13 @@
       |
       <router-link to="/add-course">Add Course</router-link>
       |
-      <router-link :to="'/view-edit-student/0' + this.$store.state.studentID">
+      <router-link :to="'/view-edit-student/' + this.$store.state.studentID">
         View/Edit (Student)
       </router-link>
       |
-      <router-link to="/view-edit-gpd/0">View/Edit (GPD)</router-link>
+      <router-link :to="'/view-edit-gpd/' + this.$store.state.studentID">
+        View/Edit (GPD)
+      </router-link>
       |
       <router-link to="/browse-search-student">
         Browse/Search Student
@@ -32,7 +34,7 @@
       <router-link to="/enrollment-trend">Enrollment Trend</router-link>
       |
       <router-link to="/login">Login</router-link>
-    </div>
+    </div> -->
     <router-view />
   </div>
 </template>
