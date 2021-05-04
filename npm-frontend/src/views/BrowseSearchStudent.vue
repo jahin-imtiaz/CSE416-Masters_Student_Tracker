@@ -608,11 +608,9 @@ export default {
       currentGpa /= gpaCredits
       if (currentGpa >= gpaReq) {
         satisfied++
-        
       }
       if (currentCredits >= creditReq) {
         satisfied++
-        
       }
       if (projectThesisCredits >= 6) {
         satisfied++
@@ -715,14 +713,182 @@ export default {
         }
       }
     },
-    degreeCSE(classes, track) {
+    getCSECompletion(studentCourses, cseTheory, cseTheoryCourses, cseSystems, cseSystemsCourses, cseInformation, cseInformationCourses, gpaReq, creditReq, totalReq, mandatoryLectures) {
+      let [satisfied,pending,unsatisfied,gpaCredits,lectureClasses,currentCredits,currentGpa,thesisCredits,advancedCompleted,projectCompleted,theoryCompleted,systemsCompleted,informationCompleted] = [0,0,0,0,0,0,0,0,0,"Incomplete",false,false,false]
+      studentCourses.forEach((value) => {    
+        let classCredits = 3    
+        // Completed class
+        if (value.grade != "") {
+          if ((value.department + " " + value.course_num) == 'CSE 599') {
+            thesisCredits += 3
+          }
+          else if ((value.department + " " + value.course_num) == 'CSE 522') {
+            projectCompleted = "Completed"
+          }
+          else if ((value.department + " " + value.course_num) == 'CSE 523' || (value.department + " " + value.course_num) == 'CSE 524') {
+            advancedCompleted++
+          }
+          else if ((cseTheoryCourses.includes(value.department + " " + value.course_num))) {
+            cseTheory.forEach((course) => {
+              if (course.department == value.department && course.course_num == value.course_num) {
+                classCredits = course.credits
+                if (!theoryCompleted) {
+                  theoryCompleted = true
+                  satisfied++
+                }
+                if (lectureClasses < mandatoryLectures) {
+                  satisfied++
+                }
+                lectureClasses++
+              }
+            })
+          }
+          else if ((cseSystemsCourses.includes(value.department + " " + value.course_num))) {
+            cseSystems.forEach((course) => {
+              if (course.department == value.department && course.course_num == value.course_num) {
+                classCredits = course.credits
+                if (!systemsCompleted) {
+                  systemsCompleted = true
+                  satisfied++
+                }
+                if (lectureClasses < mandatoryLectures) {
+                  satisfied++
+                }
+                lectureClasses++
+              }
+            })
+          }
+          else if ((cseInformationCourses.includes(value.department + " " + value.course_num))) {
+            cseInformation.forEach((course) => {
+              if (course.department == value.department && course.course_num == value.course_num) {
+                classCredits = course.credits
+                if (!informationCompleted) {
+                  informationCompleted = true
+                  satisfied++
+                }
+                if (lectureClasses < mandatoryLectures) {
+                  satisfied++
+                }
+                lectureClasses++
+              }
+            })
+          }
+          gpaCredits += classCredits
+          currentCredits += classCredits
+          currentGpa += this.calculateGrade(value.grade, classCredits)
+        }
+        // Pending class
+        else if (value.grade == "") {
+          if ((value.department + " " + value.course_num) == 'CSE 599') {
+            classCredits = 3
+          }
+          else if ((value.department + " " + value.course_num) == 'CSE 522') {
+            projectCompleted = "Pending"
+          }
+          else if ((value.department + " " + value.course_num) == 'CSE 523' || (value.department + " " + value.course_num) == 'CSE 524') {
+            classCredits = 3
+          }
+          else if ((cseTheoryCourses.includes(value.department + " " + value.course_num))) {
+            cseTheory.forEach((course) => {
+              if (course.department == value.department && course.course_num == value.course_num) {
+                classCredits = course.credits
+                if (!theoryCompleted) {
+                  pending++
+                }
+                if (lectureClasses < mandatoryLectures) {
+                  pending++
+                }
+                lectureClasses++
+              }
+            })
+          }
+          else if ((cseSystemsCourses.includes(value.department + " " + value.course_num))) {
+            cseSystems.forEach((course) => {
+              if (course.department == value.department && course.course_num == value.course_num) {
+                classCredits = course.credits
+                if (!systemsCompleted) {
+                  pending++
+                }
+                if (lectureClasses < mandatoryLectures) {
+                  pending++
+                }
+                lectureClasses++
+              }
+            })
+          }
+          else if ((cseInformationCourses.includes(value.department + " " + value.course_num))) {
+            cseInformation.forEach((course) => {
+              if (course.department == value.department && course.course_num == value.course_num) {
+                classCredits = course.credits
+                if (!informationCompleted) {
+                  pending++
+                }
+                if (lectureClasses < mandatoryLectures) {
+                  pending++
+                }
+                lectureClasses++
+              }
+            })
+          }
+          currentCredits += classCredits
+        }
+      })
+      currentGpa /= gpaCredits
+      if (currentGpa >= gpaReq) {
+        satisfied++
+      }
+      if (currentCredits >= creditReq) {
+        satisfied++
+      }
+      if (thesisCredits >= 6) {
+        satisfied++
+      }
+      else if (projectCompleted == "Complete") {
+        satisfied++
+      }
+      else if (projectCompleted == "Pending") {
+        pending++
+      }
+      else if (advancedCompleted == 2) {
+        satisfied++
+      }
+      else if (advancedCompleted == 1) {
+        pending++
+      }
+      console.log("GPA Credits", gpaCredits)
+      console.log("CurrentCredits", currentCredits)
+      console.log("GPA", currentGpa)
+      console.log("Total Req", totalReq)
+      console.log("ProjectThesisCredits",thesisCredits)
+      console.log("lectureClasses",lectureClasses)
+      unsatisfied = totalReq - satisfied - pending
+      return `${satisfied} satisfied, ${pending} pending, ${unsatisfied} unsatisfied`
+    },
+    async degreeCSE(id, track, sem, year) {
+      let studentCourses = await this.getStudentCoursePlan(id)
+      let reqCSE = await this.getRequirementsByDepartment('CSE', sem, year)
+      let gpaReq = reqCSE.requirements.gpa_req
+      let creditReq = reqCSE.requirements.min_credit
+      let cseTheory = reqCSE.requirements.breadth_req[0].courses
+      let cseTheoryCourses = cseTheory.map(
+        (coursePlan) => coursePlan.department + ' ' + coursePlan.course_num
+      )
+      let cseSystems = reqCSE.requirements.breadth_req[1].courses
+      let cseSystemsCourses = cseSystems.map(
+        (coursePlan) => coursePlan.department + ' ' + coursePlan.course_num
+      )
+      let cseInformation = reqCSE.requirements.breadth_req[2].courses
+      let cseInformationCourses = cseInformation.map(
+        (coursePlan) => coursePlan.department + ' ' + coursePlan.course_num
+      )
+
       switch (track.toLowerCase()) {
         case 'special project':
-          return '3 satisfied, 1 pending, 2 unsatisfied'
+          return this.getCSECompletion(studentCourses, cseTheory, cseTheoryCourses, cseSystems, cseSystemsCourses, cseInformation, cseInformationCourses, gpaReq, creditReq, 14, 8)
         case 'advanced project':
-          return '3 satisfied, 1 pending, 2 unsatisfied'
+          return this.getCSECompletion(studentCourses, cseTheory, cseTheoryCourses, cseSystems, cseSystemsCourses, cseInformation, cseInformationCourses, gpaReq, creditReq, 13, 7)
         case 'thesis':
-          return '3 satisfied, 1 pending, 2 unsatisfied'
+          return this.getCSECompletion(studentCourses, cseTheory, cseTheoryCourses, cseSystems, cseSystemsCourses, cseInformation, cseInformationCourses, gpaReq, creditReq, 12, 6)
       }
     },
     degreeESE(classes, track) {
