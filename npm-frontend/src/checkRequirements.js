@@ -306,6 +306,436 @@ export default class Requirements {
     return tableState
   }
 
+  async checkAMS(reqObj, plans, track) {
+    let state = reqObj
+    let tableState = []
+
+    if (state.min_credit) {
+      let curr_credits = await this.getCurrentCredits(plans)
+      let status = state.min_credit <= curr_credits
+      let tableReq = {
+        name: 'Min. Credits',
+        progress: curr_credits + '/' + state.min_credit + ' credits',
+        satisfied: status
+      }
+      tableState.push(tableReq)
+    }
+
+    if (state.cum_course_gpa) {
+      let curr_gpa = await this.getGPA(plans)
+      let status = state.cum_course_gpa <= curr_gpa
+      let tableReq = {
+        name: 'GPA',
+        progress:
+          'Min. GPA: ' + state.cum_course_gpa + ' | Curr. GPA: ' + curr_gpa,
+        satisfied: status
+      }
+      tableState.push(tableReq)
+    }
+
+    let studentCoursePlansNames = plans.map(
+      (coursePlan) => coursePlan.department + ' ' + coursePlan.course_num
+    )
+    // .concat(coursesSelected)
+
+    if (track && state.track_req) {
+      let tableReq = {
+        name: 'Track - ' + track,
+        progress: '',
+        satisfied: false
+      }
+
+      // check track requirements
+      if (track === 'Computational Applied Mathematics') {
+        let coreCourses = [
+          'AMS 501',
+          'AMS 503',
+          'AMS 510',
+          'AMS 526',
+          'AMS 527',
+          'AMS 528',
+          'AMS 595'
+        ]
+        let electiveCourses = [
+          'AMS 502',
+          'AMS 530',
+          'AMS 542',
+          'AMS 562',
+          'AMS 565',
+          'AMS 566',
+          'AMS 603'
+        ]
+        let coreCount = 0
+        let electiveCount = 0
+        for (let course of studentCoursePlansNames) {
+          let c = course.split(' ')[0] + ' ' + course.split(' ')[1]
+          if (coreCourses.includes(c)) {
+            coreCount += 1
+          } else if (electiveCourses.includes(c)) {
+            electiveCount += 1
+          }
+        }
+        tableReq.progress =
+          coreCount + '/7 core, ' + electiveCount + '/4 elective'
+        if (coreCount >= 7 && electiveCount >= 4) {
+          tableReq.satisfied = true
+        }
+      } else if (track === 'Computational Biology') {
+        let coreCourses = [
+          'AMS 507',
+          'AMS 510',
+          'MCB 520',
+          'CHE 541',
+          'AMS 531',
+          'AMS 532',
+          'AMS 533',
+          'AMS 535',
+          'AMS 537',
+          'AMS 539',
+          'AMS 549'
+        ]
+        let electiveCourses = [
+          'AMS 530',
+          'AMS 534',
+          'AMS 536',
+          'CHE 528',
+          'CHE 523',
+          'AMS 548',
+          'PHY 558'
+        ]
+        let coreCount = 0
+        let electiveCount = 0
+        for (let course of studentCoursePlansNames) {
+          let c = course.split(' ')[0] + ' ' + course.split(' ')[1]
+          if (coreCourses.includes(c)) {
+            coreCount += 1
+          } else if (electiveCourses.includes(c)) {
+            electiveCount += 1
+          }
+        }
+        tableReq.progress =
+          coreCount + '/11 core, ' + electiveCount + '/3 elective'
+        if (coreCount >= 11 && electiveCount >= 3) {
+          tableReq.satisfied = true
+        }
+      } else if (track === 'Operations Research') {
+        let coreCourses = [
+          'AMS 510',
+          'AMS 507',
+          'AMS 540',
+          'AMS 550',
+          'AMS 553',
+          'AMS 570',
+          'AMS 586',
+          'AMS 595'
+        ]
+        let electiveCourses = [
+          'AMS 542',
+          'AMS 544',
+          'AMS 545',
+          'AMS 546',
+          'AMS 547',
+          'AMS 552',
+          'AMS 554',
+          'AMS 555',
+          'AMS 556',
+          'AMS 570',
+          'AMS 571',
+          'AMS 572',
+          'AMS 573',
+          'AMS 575',
+          'AMS 577',
+          'AMS 578',
+          'AMS 580',
+          'AMS 582',
+          'AMS 583',
+          'AMS 585',
+          'AMS 586',
+          'AMS 511',
+          'AMS 512',
+          'AMS 513',
+          'AMS 514',
+          'AMS 515',
+          'AMS 516',
+          'AMS 517',
+          'AMS 518',
+          'AMS 519',
+          'AMS 520',
+          'AMS 522',
+          'AMS 523'
+        ]
+        let coreCount = 0
+        let electiveCount = 0
+        for (let course of studentCoursePlansNames) {
+          let c = course.split(' ')[0] + ' ' + course.split(' ')[1]
+          if (coreCourses.includes(c)) {
+            coreCount += 1
+          } else if (electiveCourses.includes(c)) {
+            electiveCount += 1
+          }
+        }
+        tableReq.progress =
+          coreCount + '/7 core, ' + electiveCount + '/4 elective'
+        if (coreCount >= 7 && electiveCount >= 4) {
+          tableReq.satisfied = true
+        }
+      } else if (track === 'Statistics') {
+        let coreCourses = [
+          'AMS 510',
+          'AMS 507',
+          'AMS 570',
+          'AMS 572',
+          'AMS 573',
+          'AMS 578',
+          'AMS 582',
+          'AMS 597'
+        ]
+        let electiveCourses = [
+          'AMS 595',
+          'AMS 580',
+          'AMS 586',
+          'AMS 588',
+          'AMS 598',
+          'AMS 550',
+          'AMS 560'
+        ]
+        let coreCount = 0
+        let electiveCount = 0
+        for (let course of studentCoursePlansNames) {
+          let c = course.split(' ')[0] + ' ' + course.split(' ')[1]
+          if (coreCourses.includes(c)) {
+            coreCount += 1
+          } else if (electiveCourses.includes(c)) {
+            electiveCount += 1
+          }
+        }
+        tableReq.progress =
+          coreCount + '/8 core, ' + electiveCount + '/2 elective'
+        if (coreCount >= 8 && electiveCount >= 2) {
+          tableReq.satisfied = true
+        }
+      } else if (track === 'Quantitative Finance') {
+        let coreCourses = [
+          'AMS 510',
+          'AMS 507',
+          'AMS 511',
+          'AMS 512',
+          'AMS 513',
+          'AMS 514',
+          'AMS 516',
+          'AMS 517',
+          'AMS 518',
+          'AMS 572',
+          'FIN 539'
+        ]
+        let electiveCourses = [
+          'AMS 515',
+          'AMS 522',
+          'AMS 523',
+          'AMS 526',
+          'AMS 527',
+          'AMS 528',
+          'AMS 530',
+          'AMS 540',
+          'AMS 542',
+          'AMS 550',
+          'AMS 553',
+          'AMS 560',
+          'AMS 561',
+          'AMS 562',
+          'AMS 569',
+          'AMS 570',
+          'AMS 578',
+          'AMS 580',
+          'AMS 588',
+          'AMS 595',
+          'AMS 603'
+        ]
+        let coreCount = 0
+        let electiveCount = 0
+        for (let course of studentCoursePlansNames) {
+          let c = course.split(' ')[0] + ' ' + course.split(' ')[1]
+          if (coreCourses.includes(c)) {
+            coreCount += 1
+          } else if (electiveCourses.includes(c)) {
+            electiveCount += 1
+          }
+        }
+        tableReq.progress =
+          coreCount + '/11 core, ' + electiveCount + '/1 elective'
+        if (coreCount >= 11 && electiveCount >= 1) {
+          tableReq.satisfied = true
+        }
+      }
+    }
+
+    // return the state
+    return tableState
+  }
+
+  async checkBMI(reqObj, plans, track) {
+    let state = reqObj
+    let tableState = []
+
+    if (state.gpa_req) {
+      let curr_gpa = await this.getGPA(plans)
+      let status = state.gpa_req <= curr_gpa
+      let tableReq = {
+        name: 'GPA',
+        progress: 'Min. GPA: ' + state.gpa_req + ' | Curr. GPA: ' + curr_gpa,
+        satisfied: status
+      }
+      tableState.push(tableReq)
+    }
+    // .concat(coursesSelected)
+
+    if (track) {
+      // check track requirements
+      if (track === 'Imaging Informatics with thesis') {
+        let tableReq = {
+          name: 'Track - ' + track,
+          progress: '',
+          satisfied: false
+        }
+        let curr_credits = await this.getCurrentCredits(plans)
+        let status = 27 <= curr_credits
+        let tableCreditReq = {
+          name: 'Min. Credits',
+          progress: curr_credits + '/' + 27 + ' credits',
+          satisfied: status
+        }
+
+        tableReq.satisfied = 27 <= curr_credits
+        tableState.push(tableCreditReq)
+        tableState.push(tableReq)
+      } else if (track === 'Clinical Informatics with thesis') {
+        let tableReq = {
+          name: 'Track - ' + track,
+          progress: '',
+          satisfied: false
+        }
+        let curr_credits = await this.getCurrentCredits(plans)
+        let status = 27 <= curr_credits
+        let tableCreditReq = {
+          name: 'Min. Credits',
+          progress: curr_credits + '/' + 27 + ' credits',
+          satisfied: status
+        }
+
+        tableReq.satisfied = 27 <= curr_credits
+        tableState.push(tableCreditReq)
+        tableState.push(tableReq)
+      }
+    } else if (track === 'Translational Bioinformatics with thesis') {
+      let tableReq = {
+        name: 'Track - ' + track,
+        progress: '',
+        satisfied: false
+      }
+      let curr_credits = await this.getCurrentCredits(plans)
+      let status = 27 <= curr_credits
+      let tableCreditReq = {
+        name: 'Min. Credits',
+        progress: curr_credits + '/' + 27 + ' credits',
+        satisfied: status
+      }
+
+      tableReq.satisfied = 27 <= curr_credits
+      tableState.push(tableCreditReq)
+      tableState.push(tableReq)
+    } else if (track === 'Imaging Informatics with project') {
+      let tableReq = {
+        name: 'Track - ' + track,
+        progress: '',
+        satisfied: false
+      }
+      let curr_credits = await this.getCurrentCredits(plans)
+      let status = 30 <= curr_credits
+      let tableCreditReq = {
+        name: 'Min. Credits',
+        progress: curr_credits + '/' + 30 + ' credits',
+        satisfied: status
+      }
+
+      tableReq.satisfied = 30 <= curr_credits
+      tableState.push(tableCreditReq)
+      tableState.push(tableReq)
+    } else if (track === 'Clinical Informatics with project') {
+      let tableReq = {
+        name: 'Track - ' + track,
+        progress: '',
+        satisfied: false
+      }
+      let curr_credits = await this.getCurrentCredits(plans)
+      let status = 30 <= curr_credits
+      let tableCreditReq = {
+        name: 'Min. Credits',
+        progress: curr_credits + '/' + 30 + ' credits',
+        satisfied: status
+      }
+
+      tableReq.satisfied = 30 <= curr_credits
+      tableState.push(tableCreditReq)
+      tableState.push(tableReq)
+    } else if (track === 'Translational Bioinformatics with project') {
+      let tableReq = {
+        name: 'Track - ' + track,
+        progress: '',
+        satisfied: false
+      }
+      let curr_credits = await this.getCurrentCredits(plans)
+      let status = 30 <= curr_credits
+      let tableCreditReq = {
+        name: 'Min. Credits',
+        progress: curr_credits + '/' + 30 + ' credits',
+        satisfied: status
+      }
+
+      tableReq.satisfied = 30 <= curr_credits
+      tableState.push(tableCreditReq)
+      tableState.push(tableReq)
+    }
+
+    // return the state
+    return tableState
+  }
+
+  async checkESE(reqObj, plans, track) {
+    let tableState = []
+
+    let curr_gpa = await this.getGPA(plans)
+    let status = 3.0 <= curr_gpa
+    let tableReq2 = {
+      name: 'GPA',
+      progress: 'Min. GPA: ' + 3.0 + ' | Curr. GPA: ' + curr_gpa,
+      satisfied: status
+    }
+    tableState.push(tableReq2)
+
+    let curr_credits = await this.getCurrentCredits(plans)
+    let status2 = 30 <= curr_credits
+    let tableReq = {
+      name: 'Min. Credits',
+      progress: curr_credits + '/' + 30 + ' credits',
+      satisfied: status2
+    }
+    tableState.push(tableReq)
+
+    if (track) {
+      let tableReq = {
+        name: 'Track - ' + track,
+        progress: '',
+        satisfied: false
+      }
+
+      // check track requirements
+      tableState.push(tableReq)
+    }
+
+    // return the state
+    return tableState
+  }
+
   async getDegreeRequirementState(studentID) {
     let student = await this.getStudent(studentID)
     let studentCoursePlans = await this.getStudentCoursePlans(studentID)
