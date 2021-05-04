@@ -172,7 +172,13 @@
         <b-col cols="8">
           These course plans are Invalid:
           <b-table striped hover :items="invalidPlans"></b-table>
-          <b-button block :style="myStyle" size="sm" @click="notifyByEmail">
+          <b-button
+            block
+            :style="myStyle"
+            size="sm"
+            type="Submit"
+            @click="notifyByEmail"
+          >
             Notify Students
           </b-button>
         </b-col>
@@ -554,7 +560,7 @@ export default {
       }
       reader.readAsText(file)
     },
-    async notifyByEmail() {
+    async notifyByEmail(e) {
       let studentsToNotify = this.allStudentIDWithInvalidPlan
       let studentObjects = await this.getStudents(studentsToNotify)
 
