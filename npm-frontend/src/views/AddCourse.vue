@@ -116,7 +116,6 @@ export default {
           `${VUE_APP_BACKEND_API}/courseofferings/findAllOfferingOfCourses`)
         .then((response) => {
           console.log(response.data)
-<<<<<<< HEAD
           console.log(this.form.filter);
           console.log(this.form.semester);
           console.log(this.form.search);
@@ -179,15 +178,6 @@ export default {
                 newCourse.year = filtered[i]["year"];
                 vm.courses.push(newCourse)
               }
-=======
-          for (let i = 0; i < response.data.length; i++) {
-            let newCourse = {}
-            newCourse.course =
-              response.data[i]['courseID']['department'] +
-              ' ' +
-              response.data[i]['courseID']['course_num']
-            newCourse.description = response.data[i]['courseID']['description']
->>>>>>> 8a1f89004457c89b0b86f711d17632f0ff1bfdfb
 
           }
           else if(this.form.search != "" && this.form.filter == "Course Number"){
