@@ -2,8 +2,7 @@
   <div class="add-course">
     <NavBar />
     <br />
-    <br />
-    Add Course
+    <br />Add Course
     <br />
     <br />
     <b-form @submit="onSubmit">
@@ -17,11 +16,7 @@
               label="Search: "
               label-for="search"
             >
-              <b-form-input
-                id="search"
-                v-model="form.search"
-                placeholder="Search..."
-              />
+              <b-form-input id="search" v-model="form.search" placeholder="Search..." />
             </b-form-group>
           </b-col>
           <b-col>
@@ -32,47 +27,11 @@
               label-cols-sm="4"
               content-cols-sm="8"
             >
-              <b-form-select
-                id="filter"
-                v-model="form.filter"
-                :options="filters"
-              ></b-form-select>
+              <b-form-select id="filter" v-model="form.filter" :options="filters"></b-form-select>
             </b-form-group>
           </b-col>
           <b-col>
             <b-button :style="myStyle" type="submit">Find</b-button>
-          </b-col>
-        </b-row>
-        <b-row>
-          <b-col>
-            <b-form-group
-              id="input-group-3"
-              label-cols-sm="4"
-              content-cols-sm="8"
-              label="Select Semester:"
-              label-for="input-3"
-            >
-              <b-form-select
-                id="input-3"
-                v-model="form.semester"
-                :options="semesters"
-              ></b-form-select>
-            </b-form-group>
-          </b-col>
-          <b-col>
-            <b-form-group
-              id="input-group-3"
-              label-cols-sm="4"
-              content-cols-sm="8"
-              label="Select Year:"
-              label-for="input-3"
-            >
-              <b-form-select
-                id="input-3"
-                v-model="form.year"
-                :options="years"
-              ></b-form-select>
-            </b-form-group>
           </b-col>
         </b-row>
       </b-container>
@@ -105,11 +64,9 @@
     </div>
     <div>
       <b>Selected Courses:</b>
-      {{ selected }}
+      <p v-for="item in selected" v-bind:key="item">{{ item.course }}</p>
       <div>
-        <b-button :style="myStyle" size="sm" @click="addCourses">
-          Add Courses
-        </b-button>
+        <b-button :style="myStyle" size="sm" @click="addCourses">Add Courses</b-button>
       </div>
     </div>
   </div>
@@ -135,19 +92,15 @@ export default {
         color: 'white',
         textAlign: 'center'
       },
-      semesters: ['Spring', 'Fall'],
-      years: ['2018', '2019', '2020', '2021'],
       courses: [],
       selected: [],
       fields: ['course', 'description'],
       selectMode: 'multi',
       form: {
         search: '',
-        filter: null,
-        year: '',
-        semester: ''
+        filter: ''
       },
-      filters: [{ text: 'All Fields' }, 'Department', 'Course Number'],
+      filters: ['All Fields', 'Department', 'Course Number'],
       tableItems: this.courses
     }
   },
@@ -159,27 +112,98 @@ export default {
       event.preventDefault()
       let vm = this
       axios
-        .get(
-          `${VUE_APP_BACKEND_API}/courseofferings/findAllOfferingOfCourse/`,
-          {
-            params: {
-              name: this.form.search,
-              semester: this.form.semester,
-              year: this.form.year
-            }
-          }
-        )
+        .get(`${VUE_APP_BACKEND_API}/courseofferings/findAllOfferingOfCourses`)
         .then((response) => {
           console.log(response.data)
-          for (let i = 0; i < response.data.length; i++) {
-            let newCourse = {}
-            newCourse.course =
-              response.data[i]['courseID']['department'] +
-              ' ' +
-              response.data[i]['courseID']['course_num']
-            newCourse.description = response.data[i]['courseID']['description']
+          console.log(this.form.filter);
+          console.log(this.form.semester);
+          console.log(this.form.search);
+          if(this.form.search == "" && this.form.filter == 'All Fields'){
+            vm.courses = [];
+            for (let i = 0; i < response.data.length; i++) {
+              let newCourse = {}
+              newCourse.course =
+                response.data[i]['courseID']['department'] + " " + 
+                response.data[i]['courseID']['course_num'] + " " + 
+                response.data[i]['courseID']['course_name'];
+                
+              newCourse.description = response.data[i]['courseID']['description'] + "\n Semester: " + response.data[i]["semester"] + "   Year: " + response.data[i]["year"]
+              newCourse.semester = response.data[i]["semester"];
+              newCourse.year = response.data[i]["year"];
+              vm.courses.push(newCourse)
+            }
+          }
+          else if(this.form.search != "" && this.form.filter == "All Fields"){
+            //console.log("inside a filter");
+            vm.courses = [];
+              let filtered = response.data.filter( (course) => {
+                //console.log(course["courseID"]["department"].includes("CSE"));
+                return course["courseID"]["course_name"].includes(this.form.search) ||
+                course["courseID"]["course_num"].includes(this.form.search) ||
+                course["courseID"]["department"].includes(this.form.search) ||
+                course["courseID"]["description"].includes(this.form.search) ||
+                course["days"].includes(this.form.search)
+              })
+              console.log(filtered);
+              for(let i = 0; i < filtered.length; i++){
+                let newCourse = {}
+                newCourse.course =
+                filtered[i]['courseID']['department'] + ' ' +
+                filtered[i]['courseID']['course_num'] + ' ' + 
+                filtered[i]['courseID']['course_name'];
+                
+                newCourse.description = filtered[i]['courseID']['description'] + "\n Semester: " + filtered[i]["semester"] + "   Year: " + filtered[i]["year"]
+                newCourse.semester = filtered[i]["semester"];
+                newCourse.year = filtered[i]["year"];
+                vm.courses.push(newCourse)
+              }
+            
+          }
+          else if(this.form.search != "" && this.form.filter == "Department"){
+            vm.courses = [];
+              let filtered = response.data.filter( (course) => {
+                return course["courseID"]["department"].includes(this.form.search)
+              })
+              console.log(filtered);
+              for(let i = 0; i < filtered.length; i++){
+                let newCourse = {}
+                newCourse.course =
+                filtered[i]['courseID']['department'] + ' ' +
+                filtered[i]['courseID']['course_num'] + ' ' + 
+                filtered[i]['courseID']['course_name'];
+                
+                newCourse.description = filtered[i]['courseID']['description'] + "\n Semester: " + filtered[i]["semester"] + "   Year: " + filtered[i]["year"]
+                newCourse.semester = filtered[i]["semester"];
+                newCourse.year = filtered[i]["year"];
+                vm.courses.push(newCourse)
+              }
 
-            vm.courses.push(newCourse)
+          }
+          if (this.form.search != '' && this.form.filter == 'Course Number') {
+            vm.courses = []
+            let filtered = response.data.filter((course) => {
+              return course['courseID']['course_num'].includes(this.form.search)
+            })
+            console.log(filtered)
+            for (let i = 0; i < filtered.length; i++) {
+              let newCourse = {}
+              newCourse.course =
+                filtered[i]['courseID']['department'] +
+                ' ' +
+                filtered[i]['courseID']['course_num'] +
+                ' ' +
+                filtered[i]['courseID']['course_name']
+
+              newCourse.description =
+                filtered[i]['courseID']['description'] +
+                '\n Semester: ' +
+                filtered[i]['semester'] +
+                '   Year: ' +
+                filtered[i]['year']
+              newCourse.semester = filtered[i]['semester']
+              newCourse.year = filtered[i]['year']
+              vm.courses.push(newCourse)
+            }
           }
         })
         .catch((error) => {
@@ -191,18 +215,22 @@ export default {
       for (let i = 0; i < this.selected.length; i++) {
         let department = this.selected[i].course.split(' ')[0]
         let courseNum = this.selected[i].course.split(' ')[1]
+        let semester = this.selected[i].semester
+        let year = this.selected[i].year
         console.log(department)
         console.log(courseNum)
         let newCoursePlan = {
-          sbu_id: this.$store.state.studentID,
+          sbu_id: this.$route.params.studentID,
           course_num: courseNum,
-          department: department
+          department: department,
+          semester: semester,
+          year: year
         }
         coursesToAdd.push(newCoursePlan)
       }
 
       axios
-        .post(`${VUE_APP_BACKEND_API}/courseplans/add-many`, coursesToAdd)
+        .post(`${VUE_APP_BACKEND_API}/courseplans/add-many-no-remove`, coursesToAdd)
         .then(function (response) {
           console.log(response)
         })

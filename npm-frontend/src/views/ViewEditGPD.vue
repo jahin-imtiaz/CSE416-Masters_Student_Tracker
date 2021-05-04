@@ -110,7 +110,7 @@
               </router-link>
             </div>
             <div class="mt-2">
-              <router-link :to="'/add-course'">
+              <router-link :to="'/add-course/' + this.studentID">
                 <b-button block :style="myStyle" size="sm" @click="addCourse">
                   Add Course
                 </b-button>
@@ -168,8 +168,11 @@
 
 <script>
 import NavBar from '@/components/NavBar.vue'
+import CheckRequirements from '../checkRequirements.js'
 import axios from 'axios'
 const { VUE_APP_BACKEND_API } = process.env
+
+const checkReqs = new CheckRequirements()
 
 export default {
   name: 'ViewEditGPD',
@@ -185,30 +188,11 @@ export default {
       reqVersion: '',
       gradDate: '',
       coursePlans: [
-        { course_name: 'CSE 512', credits: 3, grade: 'A', status: 'satisfied' },
-        { course_name: 'CSE 504', credits: 3, grade: 'A', status: 'satisfied' }
+        { course: 'CSE 512', credits: 3, grade: 'A', status: 'satisfied' },
+        { course: 'CSE 504', credits: 3, grade: 'A', status: 'satisfied' }
       ],
-      requirements: [
-        { requirements: 'Breadth - Theory', status: 'satisfied' },
-        { requirements: 'Breadth - Systems', status: 'satisfied' },
-        {
-          requirements: 'Breadth - Information and Intelligent Systems',
-          status: 'unsatisfied'
-        },
-        {
-          requirements: 'Track - Special Project',
-          status: 'pending'
-        },
-        {
-          requirements: 'GPA - 3.0',
-          status: 'satisfied'
-        },
-        {
-          requirements: 'Credits - 31.0',
-          status: 'unsatisfied'
-        }
-      ],
-      comment: 'Student is on track Special Project',
+      requirements: [],
+      comment: '',
       myStyle: {
         backgroundColor: '#800000',
         color: 'white',
@@ -219,7 +203,47 @@ export default {
   methods: {
     suggestCoursePlan() {},
     addCourse() {},
-    saveChanges() {},
+    saveChanges() {
+      let data = {
+        _id: { sbu_id: this.studentID },
+        firstName: this.firstName,
+        lastName: this.lastName,
+        email: this.email,
+        comment: this.comment,
+        // For students with 2+ majors, add below to a Degree table
+        entryYear: this.entryYear,
+        entrySem: this.entrySem,
+        reqVersion: {
+          department: this.department,
+          track: this.track,
+          reqSem: this.reqVersion.split(' ')[0],
+          reqYear: this.reqVersion.split(' ')[1]
+        },
+        // reqID: { type: Schema.Types.ObjectId, ref: "DegreeRequirement" },
+        graduationSem: this.gradDate.split(' ')[0],
+        graduationYear: this.gradDate.split(' ')[1]
+      }
+
+      axios
+        .post(`${VUE_APP_BACKEND_API}/students/add`, data)
+        .then((res) => {
+          console.log('UPSERTED STUDENT', res.data)
+          alert('Saved changes')
+          this.name = res.data.firstName + ' ' + res.data.lastName
+          this.email = res.data.email
+          this.department = res.data.reqVersion.department || 'CSE'
+          this.track = res.data.reqVersion.track || 'Special Project'
+          this.entryYear = res.data.entryYear
+          this.comment = res.data.comment
+          this.entrySem = res.data.entrySem
+          this.reqVersion =
+            res.data.reqVersion.reqSem + ' ' + res.data.reqVersion.reqYear
+          this.gradDate = res.data.graduationSem + ' ' + res.data.graduationYear
+        })
+        .catch((err) => {
+          console.log('RETRIEVE STUDENT FAILED', err)
+        })
+    },
     getStudent() {
       axios
         .get(`${VUE_APP_BACKEND_API}/students/getOneByID`, {
@@ -235,6 +259,7 @@ export default {
           this.track = res.data.reqVersion.track || 'Special Project'
           this.entryYear = res.data.entryYear
           this.entrySem = res.data.entrySem
+          this.comment = res.data.comment
           this.reqVersion =
             res.data.reqVersion.reqSem + ' ' + res.data.reqVersion.reqYear
           this.gradDate = res.data.graduationSem + ' ' + res.data.graduationYear
@@ -242,6 +267,29 @@ export default {
         .catch((err) => {
           console.log('RETRIEVE STUDENT FAILED', err)
         })
+
+      // load course plans
+      checkReqs
+        .getStudentCoursePlans(this.studentID)
+        .then((plans) => {
+          this.coursePlans = plans.map((plan) => {
+            return {
+              course: plan.department + ' ' + plan.course_num,
+              grade: plan.grade,
+              suggested: plan.isSuggested
+            }
+          })
+        })
+        .catch((err) => console.log(err))
+
+      // load requirements
+      checkReqs
+        .getDegreeRequirementState(this.studentID)
+        .then((reqs) => {
+          console.log(reqs)
+          this.requirements = reqs
+        })
+        .catch((err) => console.log(err))
     }
   },
   mounted() {

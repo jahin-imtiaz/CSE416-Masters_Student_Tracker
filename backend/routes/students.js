@@ -114,4 +114,21 @@ router.get('/getOneByID', async (req, res, next) => {
   }
 })
 
+router.get('/getManyByID', async (req, res, next) => {
+  try {
+    let studentIds = req.query.studentIds
+
+    const students = await Student.find(
+      { '_id.sbu_id': { $in: studentIds } },
+      {}
+    ).exec()
+
+    console.log(studentId, student)
+    res.send(students)
+  } catch (err) {
+    logger.error(err)
+    next(err)
+  }
+})
+
 export default router

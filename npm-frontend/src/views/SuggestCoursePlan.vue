@@ -20,29 +20,13 @@
               </b-form-group>
             </b-col>
             <b-col cols="3">
-              <b-form-group
-                id="semesterID"
-                label-cols-sm="4"
-                content-cols-sm="8"
-                label="Semester"
-              >
-                <b-form-select
-                  v-model="currentSem"
-                  :options="optionsSemester"
-                ></b-form-select>
+              <b-form-group id="semesterID" label-cols-sm="4" content-cols-sm="8" label="Semester">
+                <b-form-select v-model="currentSem" :options="optionsSemester"></b-form-select>
               </b-form-group>
             </b-col>
             <b-col cols="3">
-              <b-form-group
-                id="yearID"
-                label-cols-sm="4"
-                content-cols-sm="8"
-                label="Year"
-              >
-                <b-form-input
-                  type="number"
-                  v-model="currentYear"
-                ></b-form-input>
+              <b-form-group id="yearID" label-cols-sm="4" content-cols-sm="8" label="Year">
+                <b-form-input type="number" v-model="currentYear"></b-form-input>
               </b-form-group>
             </b-col>
           </b-row>
@@ -80,17 +64,12 @@
                       />
                       <b-input-group-append>
                         <b-input-group>
-                          <b-form-select
-                            v-model="selectedStrength"
-                            :options="optionsStrength"
-                          ></b-form-select>
+                          <b-form-select v-model="selectedStrength" :options="optionsStrength"></b-form-select>
                           <b-input-group-append>
                             <b-button
                               @click="addTagWrapperCourse(addTag, inputAttrs)"
                               :style="myStyle"
-                            >
-                              Add
-                            </b-button>
+                            >Add</b-button>
                           </b-input-group-append>
                         </b-input-group>
                       </b-input-group-append>
@@ -119,9 +98,7 @@
                             /\s/g,
                             '_'
                           )}_`"
-                        >
-                          remove
-                        </b-button>
+                        >remove</b-button>
                       </b-card>
                     </ul>
                   </template>
@@ -161,12 +138,7 @@
                         class="form-control"
                       />
                       <b-input-group-append>
-                        <b-button
-                          @click="addTagWrapperAvoid(addTag)"
-                          :style="myStyle"
-                        >
-                          Add
-                        </b-button>
+                        <b-button @click="addTagWrapperAvoid(addTag)" :style="myStyle">Add</b-button>
                       </b-input-group-append>
                     </b-input-group>
                     <ul
@@ -193,9 +165,7 @@
                             /\s/g,
                             '_'
                           )}_`"
-                        >
-                          remove
-                        </b-button>
+                        >remove</b-button>
                       </b-card>
                     </ul>
                   </template>
@@ -213,12 +183,7 @@
               >
                 <b-row>
                   <b-col>
-                    <b-form-group
-                      id="timeID"
-                      label-cols-sm="3"
-                      content-cols-sm="9"
-                      label="From"
-                    >
+                    <b-form-group id="timeID" label-cols-sm="3" content-cols-sm="9" label="From">
                       <b-form-timepicker
                         id="from_time"
                         v-model="fromTime"
@@ -228,17 +193,8 @@
                     </b-form-group>
                   </b-col>
                   <b-col>
-                    <b-form-group
-                      id="timeID"
-                      label-cols-sm="3"
-                      content-cols-sm="9"
-                      label="To"
-                    >
-                      <b-form-timepicker
-                        id="toTime"
-                        v-model="toTime"
-                        locale="en"
-                      ></b-form-timepicker>
+                    <b-form-group id="timeID" label-cols-sm="3" content-cols-sm="9" label="To">
+                      <b-form-timepicker id="toTime" v-model="toTime" locale="en"></b-form-timepicker>
                     </b-form-group>
                   </b-col>
                 </b-row>
@@ -250,60 +206,26 @@
           <b-button-group vertical>
             <div>
               <b-button block :style="myStyle" size="sm" @click="smartSuggest">
-                <b-spinner
-                  small
-                  variant="danger"
-                  v-if="smartSuggestLoading"
-                ></b-spinner>
-                Smart suggestion
+                <b-spinner small variant="danger" v-if="smartSuggestLoading"></b-spinner>Smart suggestion
               </b-button>
             </div>
             <div class="mt-2">
               <b-button block :style="myStyle" size="sm" @click="applyFilter">
-                <b-spinner
-                  small
-                  variant="danger"
-                  v-if="filterSuggestLoading"
-                ></b-spinner>
-                Apply Filter
+                <b-spinner small variant="danger" v-if="filterSuggestLoading"></b-spinner>Apply Filter
               </b-button>
             </div>
           </b-button-group>
         </b-col>
       </b-row>
 
-      <b-row
-        v-for="(column, index1) in suggestedPlanColumns"
-        :key="'A' + index1"
-        class="mt-3"
-      >
-        <b-col
-          v-for="(plan, index2) in column"
-          :key="'B' + index2"
-          class="mt-3"
-        >
-          <SuggestedPlan
-            :plan="plan"
-            :index="index1 * 2 + index2"
-            :selectedPlan="selectedPlan"
-          />
+      <b-row v-for="(column, index1) in suggestedPlanColumns" :key="'A' + index1" class="mt-3">
+        <b-col v-for="(plan, index2) in column" :key="'B' + index2" class="mt-3">
+          <SuggestedPlan :plan="plan" :index="index1 * 2 + index2" :selectedPlan="selectedPlan" />
         </b-col>
       </b-row>
-      <b-row
-        v-for="(column, index1) in applyFilterPlanColumns"
-        :key="'C' + index1"
-        class="mt-3"
-      >
-        <b-col
-          v-for="(plan, index2) in column"
-          :key="'D' + index2"
-          class="mt-3"
-        >
-          <SuggestedPlan
-            :plan="plan"
-            :index="index1 * 2 + index2"
-            :selectedPlan="selectedPlan"
-          />
+      <b-row v-for="(column, index1) in applyFilterPlanColumns" :key="'C' + index1" class="mt-3">
+        <b-col v-for="(plan, index2) in column" :key="'D' + index2" class="mt-3">
+          <SuggestedPlan :plan="plan" :index="index1 * 2 + index2" :selectedPlan="selectedPlan" />
         </b-col>
       </b-row>
     </b-container>
