@@ -134,4 +134,20 @@ router.get('/findAllOfferingOfCourse', async (req, res, next) => {
   }
 })
 
+router.get('/findAllOfferingOfCourses', async (req, res, next) => {
+  try {
+
+    let offeredCoursesInSemYear = await CourseOffering.find()
+      .populate('courseID')
+      .exec()
+
+    let courses = offeredCoursesInSemYear;
+
+    res.send(courses)
+  } catch (err) {
+    logger.error(err)
+    next(err)
+  }
+})
+
 export default router
