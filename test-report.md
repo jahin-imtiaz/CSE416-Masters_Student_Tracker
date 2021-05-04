@@ -164,3 +164,20 @@
 4. Student table is filtered by name, graduation semester, course plan validity, and/or course plan completeness
 
 **Outcome**: Successfully filtered table based on specified filter(s)
+
+<br/>
+
+**Test case**: GPD accepts a suggested course for a student
+
+**Brief description**: GPD can manually accept a suggested course by adding the course manually
+
+**Precondition**: The course has to be offered
+
+**Flow of Events**: 
+1. Click on Browse/Search Student button on GPD home screen
+2. Click on View/Edit button for a student
+3. Click on View/Edit add course button
+4. Select fields and click on find button
+5. Select the course you want to add and click Add button
+
+**Outcome**: Successfully added the course in the students courseplan
