@@ -12,6 +12,7 @@ const StudentSchema = new Schema({
   lastName: { type: String, required: true },
   email: { type: String, required: true },
   password: { type: String, required: true, lowercase: false },
+  comment: { type: String },
   // For students with 2+ majors, add below to a Degree table
   entryYear: { type: String, required: true },
   entrySem: { type: String, required: true },
