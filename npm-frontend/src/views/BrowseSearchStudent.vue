@@ -843,6 +843,9 @@ export default {
       if (thesisCredits >= 6) {
         satisfied++
       }
+      else if (thesisCredits >= 3) {
+        pending++
+      }
       else if (projectCompleted == "Complete") {
         satisfied++
       }
@@ -855,12 +858,12 @@ export default {
       else if (advancedCompleted == 1) {
         pending++
       }
-      console.log("GPA Credits", gpaCredits)
-      console.log("CurrentCredits", currentCredits)
-      console.log("GPA", currentGpa)
-      console.log("Total Req", totalReq)
-      console.log("ProjectThesisCredits",thesisCredits)
-      console.log("lectureClasses",lectureClasses)
+      // console.log("GPA Credits", gpaCredits)
+      // console.log("CurrentCredits", currentCredits)
+      // console.log("GPA", currentGpa)
+      // console.log("Total Req", totalReq)
+      // console.log("ProjectThesisCredits",thesisCredits)
+      // console.log("lectureClasses",lectureClasses)
       unsatisfied = totalReq - satisfied - pending
       return `${satisfied} satisfied, ${pending} pending, ${unsatisfied} unsatisfied`
     },
@@ -891,12 +894,205 @@ export default {
           return this.getCSECompletion(studentCourses, cseTheory, cseTheoryCourses, cseSystems, cseSystemsCourses, cseInformation, cseInformationCourses, gpaReq, creditReq, 12, 6)
       }
     },
-    degreeESE(classes, track) {
+    getESECompletion(studentCourses, eseHardware, eseHardwareCourses, eseNetworking, eseNetworkingCourses, eseCad, eseCadCourses, eseTheory, eseTheoryCourses, gpaReq, creditReq, totalReq, mandatoryLectures) {
+      let [satisfied,pending,unsatisfied,gpaCredits,currentCredits,currentGpa,thesisCredits,hardwareCompleted,networkingCompleted,cadCompleted,theoryCompleted,lectureBasedCourses] = [0,0,0,0,0,0,0,false,false,false,0,0]
+      studentCourses.forEach((value) => {    
+        let classCredits = 3    
+        // Completed class
+        if (value.grade != "") {
+          if ((value.department + " " + value.course_num) == 'ESE 599') {
+            thesisCredits += 3
+          }
+          else if ((value.department + " " + value.course_num) == 'ESE 597') {
+            classCredits = 1
+            satisfied++
+          }
+          else if ((eseHardwareCourses.includes(value.department + " " + value.course_num))) {
+            eseHardware.forEach((course) => {
+              if (course.department == value.department && course.course_num == value.course_num) {
+                classCredits = course.credits
+                if (!hardwareCompleted) {
+                  hardwareCompleted = true
+                  satisfied++
+                }
+                if (hardwareCompleted && networkingCompleted && cadCompleted && theoryCompleted == 2 && lectureBasedCourses < mandatoryLectures) {
+                  lectureBasedCourses++
+                  satisfied++
+                }
+              }
+            })
+          }
+          else if ((eseNetworkingCourses.includes(value.department + " " + value.course_num))) {
+            eseNetworking.forEach((course) => {
+              if (course.department == value.department && course.course_num == value.course_num) {
+                classCredits = course.credits
+                if (!networkingCompleted) {
+                  networkingCompleted = true
+                  satisfied++
+                }
+                if (hardwareCompleted && networkingCompleted && cadCompleted && theoryCompleted == 2 && lectureBasedCourses < mandatoryLectures) {
+                  lectureBasedCourses++
+                  satisfied++
+                }
+              }
+            })
+          }
+          else if ((eseCadCourses.includes(value.department + " " + value.course_num))) {
+            eseCad.forEach((course) => {
+              if (course.department == value.department && course.course_num == value.course_num) {
+                classCredits = course.credits
+                if (!cadCompleted) {
+                  cadCompleted = true
+                  satisfied++
+                }
+                if (hardwareCompleted && networkingCompleted && cadCompleted && theoryCompleted == 2 && lectureBasedCourses < mandatoryLectures) {
+                  lectureBasedCourses++
+                  satisfied++
+                }
+              }
+            })
+          }
+          else if ((eseTheoryCourses.includes(value.department + " " + value.course_num))) {
+            eseTheory.forEach((course) => {
+              if (course.department == value.department && course.course_num == value.course_num) {
+                classCredits = course.credits
+                if (theoryCompleted < 2) {
+                  theoryCompleted++
+                }
+                if (hardwareCompleted && networkingCompleted && cadCompleted && theoryCompleted == 2 && lectureBasedCourses < mandatoryLectures) {
+                  lectureBasedCourses++
+                  satisfied++
+                }
+              }
+            })
+          }
+          gpaCredits += classCredits
+          currentCredits += classCredits
+          currentGpa += this.calculateGrade(value.grade, classCredits)
+        }
+        // Pending class
+        else if (value.grade == "") {
+          if ((value.department + " " + value.course_num) == 'ESE 599') {
+            classCredits = 3
+          }
+          else if ((value.department + " " + value.course_num) == 'ESE 597') {
+            classCredits = 1
+            pending++
+          }
+          else if ((eseHardwareCourses.includes(value.department + " " + value.course_num))) {
+            eseHardware.forEach((course) => {
+              if (course.department == value.department && course.course_num == value.course_num) {
+                classCredits = course.credits
+                if (!hardwareCompleted) {
+                  pending++
+                }
+                if (hardwareCompleted && networkingCompleted && cadCompleted && theoryCompleted == 2 && lectureBasedCourses < mandatoryLectures) {
+                  lectureBasedCourses++
+                  pending++
+                }
+              }
+            })
+          }
+          else if ((eseNetworkingCourses.includes(value.department + " " + value.course_num))) {
+            eseNetworking.forEach((course) => {
+              if (course.department == value.department && course.course_num == value.course_num) {
+                classCredits = course.credits
+                if (!networkingCompleted) {
+                  pending++
+                }
+                if (hardwareCompleted && networkingCompleted && cadCompleted && theoryCompleted == 2 && lectureBasedCourses < mandatoryLectures) {
+                  lectureBasedCourses++
+                  pending++
+                }
+              }
+            })
+          }
+          else if ((eseCadCourses.includes(value.department + " " + value.course_num))) {
+            eseCad.forEach((course) => {
+              if (course.department == value.department && course.course_num == value.course_num) {
+                classCredits = course.credits
+                if (!cadCompleted) {
+                  pending++
+                }
+                if (hardwareCompleted && networkingCompleted && cadCompleted && theoryCompleted == 2 && lectureBasedCourses < mandatoryLectures) {
+                  lectureBasedCourses++
+                  pending++
+                }
+              }
+            })
+          }
+          else if ((eseTheoryCourses.includes(value.department + " " + value.course_num))) {
+            eseTheory.forEach((course) => {
+              if (course.department == value.department && course.course_num == value.course_num) {
+                classCredits = course.credits
+                if (theoryCompleted < 2) {
+                  pending++
+                }
+                if (hardwareCompleted && networkingCompleted && cadCompleted && theoryCompleted == 2 && lectureBasedCourses < mandatoryLectures) {
+                  lectureBasedCourses++
+                  pending++
+                }
+              }
+            })
+          }
+          currentCredits += classCredits
+        }
+      })
+      currentGpa /= gpaCredits
+      if (theoryCompleted == 2) {
+        satisfied++
+      }
+      else if (theoryCompleted == 1) {
+        pending++
+      }
+      if (currentGpa >= gpaReq) {
+        satisfied++
+      }
+      if (currentCredits >= creditReq) {
+        satisfied++
+      }
+      if (thesisCredits >= 6) {
+        satisfied++
+      }
+      else if (thesisCredits >= 3) {
+        pending++
+      }
+
+      console.log("GPA Credits", gpaCredits)
+      console.log("CurrentCredits", currentCredits)
+      console.log("GPA", currentGpa)
+      console.log("Total Req", totalReq)
+      console.log("ProjectThesisCredits",thesisCredits)
+      console.log("lectureClasses",lectureBasedCourses)
+      unsatisfied = totalReq - satisfied - pending
+      return `${satisfied} satisfied, ${pending} pending, ${unsatisfied} unsatisfied`
+    },
+    async degreeESE(id, track, sem, year) {
+      let studentCourses = await this.getStudentCoursePlan(id)
+      let reqESE = await this.getRequirementsByDepartment('ESE', sem, year)
+      let gpaReq = 3
+      let creditReq = 30
+      let eseHardware = reqESE.requirements.track_req.tracks[0].req_course[0].courses
+      let eseHardwareCourses = eseHardware.map(
+        (coursePlan) => coursePlan.department + ' ' + coursePlan.course_num
+      )
+      let eseNetworking = reqESE.requirements.track_req.tracks[0].req_course[1].courses
+      let eseNetworkingCourses = eseNetworking.map(
+        (coursePlan) => coursePlan.department + ' ' + coursePlan.course_num
+      )
+      let eseCad = reqESE.requirements.track_req.tracks[0].req_course[2].courses
+      let eseCadCourses = eseCad.map(
+        (coursePlan) => coursePlan.department + ' ' + coursePlan.course_num
+      )
+      let eseTheory = reqESE.requirements.track_req.tracks[0].req_course[3].courses
+      let eseTheoryCourses = eseTheory.map(
+        (coursePlan) => coursePlan.department + ' ' + coursePlan.course_num
+      )
       switch (track.toLowerCase()) {
         case 'non-thesis':
-          return '3 satisfied, 1 pending, 2 unsatisfied'
+          return this.getESECompletion(studentCourses, eseHardware, eseHardwareCourses, eseNetworking, eseNetworkingCourses, eseCad, eseCadCourses, eseTheory, eseTheoryCourses, gpaReq, creditReq, 10, 3)
         case 'thesis':
-          return '3 satisfied, 1 pending, 2 unsatisfied'
+          return this.getESECompletion(studentCourses, eseHardware, eseHardwareCourses, eseNetworking, eseNetworkingCourses, eseCad, eseCadCourses, eseTheory, eseTheoryCourses, gpaReq, creditReq, 9, 1)
       }
     }
   },
