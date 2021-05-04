@@ -2,7 +2,8 @@
   <div class="add-course">
     <NavBar />
     <br />
-    <br />Add Course
+    <br />
+    Add Course
     <br />
     <br />
     <b-form @submit="onSubmit">
@@ -16,7 +17,11 @@
               label="Search: "
               label-for="search"
             >
-              <b-form-input id="search" v-model="form.search" placeholder="Search..." />
+              <b-form-input
+                id="search"
+                v-model="form.search"
+                placeholder="Search..."
+              />
             </b-form-group>
           </b-col>
           <b-col>
@@ -27,7 +32,11 @@
               label-cols-sm="4"
               content-cols-sm="8"
             >
-              <b-form-select id="filter" v-model="form.filter" :options="filters"></b-form-select>
+              <b-form-select
+                id="filter"
+                v-model="form.filter"
+                :options="filters"
+              ></b-form-select>
             </b-form-group>
           </b-col>
           <b-col>
@@ -66,7 +75,9 @@
       <b>Selected Courses:</b>
       <p v-for="item in selected" v-bind:key="item">{{ item.course }}</p>
       <div>
-        <b-button :style="myStyle" size="sm" @click="addCourses">Add Courses</b-button>
+        <b-button :style="myStyle" size="sm" @click="addCourses">
+          Add Courses
+        </b-button>
       </div>
     </div>
   </div>
@@ -115,69 +126,94 @@ export default {
         .get(`${VUE_APP_BACKEND_API}/courseofferings/findAllOfferingOfCourses`)
         .then((response) => {
           console.log(response.data)
-          console.log(this.form.filter);
-          console.log(this.form.semester);
-          console.log(this.form.search);
-          if(this.form.search == "" && this.form.filter == 'All Fields'){
-            vm.courses = [];
+          console.log(this.form.filter)
+          console.log(this.form.semester)
+          console.log(this.form.search)
+          if (this.form.search == '' && this.form.filter == 'All Fields') {
+            vm.courses = []
             for (let i = 0; i < response.data.length; i++) {
               let newCourse = {}
               newCourse.course =
-                response.data[i]['courseID']['department'] + " " + 
-                response.data[i]['courseID']['course_num'] + " " + 
-                response.data[i]['courseID']['course_name'];
-                
-              newCourse.description = response.data[i]['courseID']['description'] + "\n Semester: " + response.data[i]["semester"] + "   Year: " + response.data[i]["year"]
-              newCourse.semester = response.data[i]["semester"];
-              newCourse.year = response.data[i]["year"];
+                response.data[i]['courseID']['department'] +
+                ' ' +
+                response.data[i]['courseID']['course_num'] +
+                ' ' +
+                response.data[i]['courseID']['course_name']
+
+              newCourse.description =
+                response.data[i]['courseID']['description'] +
+                '\n Semester: ' +
+                response.data[i]['semester'] +
+                '   Year: ' +
+                response.data[i]['year']
+              newCourse.semester = response.data[i]['semester']
+              newCourse.year = response.data[i]['year']
               vm.courses.push(newCourse)
             }
-          }
-          else if(this.form.search != "" && this.form.filter == "All Fields"){
+          } else if (
+            this.form.search != '' &&
+            this.form.filter == 'All Fields'
+          ) {
             //console.log("inside a filter");
-            vm.courses = [];
-              let filtered = response.data.filter( (course) => {
-                //console.log(course["courseID"]["department"].includes("CSE"));
-                return course["courseID"]["course_name"].includes(this.form.search) ||
-                course["courseID"]["course_num"].includes(this.form.search) ||
-                course["courseID"]["department"].includes(this.form.search) ||
-                course["courseID"]["description"].includes(this.form.search) ||
-                course["days"].includes(this.form.search)
-              })
-              console.log(filtered);
-              for(let i = 0; i < filtered.length; i++){
-                let newCourse = {}
-                newCourse.course =
-                filtered[i]['courseID']['department'] + ' ' +
-                filtered[i]['courseID']['course_num'] + ' ' + 
-                filtered[i]['courseID']['course_name'];
-                
-                newCourse.description = filtered[i]['courseID']['description'] + "\n Semester: " + filtered[i]["semester"] + "   Year: " + filtered[i]["year"]
-                newCourse.semester = filtered[i]["semester"];
-                newCourse.year = filtered[i]["year"];
-                vm.courses.push(newCourse)
-              }
-            
-          }
-          else if(this.form.search != "" && this.form.filter == "Department"){
-            vm.courses = [];
-              let filtered = response.data.filter( (course) => {
-                return course["courseID"]["department"].includes(this.form.search)
-              })
-              console.log(filtered);
-              for(let i = 0; i < filtered.length; i++){
-                let newCourse = {}
-                newCourse.course =
-                filtered[i]['courseID']['department'] + ' ' +
-                filtered[i]['courseID']['course_num'] + ' ' + 
-                filtered[i]['courseID']['course_name'];
-                
-                newCourse.description = filtered[i]['courseID']['description'] + "\n Semester: " + filtered[i]["semester"] + "   Year: " + filtered[i]["year"]
-                newCourse.semester = filtered[i]["semester"];
-                newCourse.year = filtered[i]["year"];
-                vm.courses.push(newCourse)
-              }
+            vm.courses = []
+            let filtered = response.data.filter((course) => {
+              //console.log(course["courseID"]["department"].includes("CSE"));
+              return (
+                course['courseID']['course_name'].includes(this.form.search) ||
+                course['courseID']['course_num'].includes(this.form.search) ||
+                course['courseID']['department'].includes(this.form.search) ||
+                course['courseID']['description'].includes(this.form.search) ||
+                course['days'].includes(this.form.search)
+              )
+            })
+            console.log(filtered)
+            for (let i = 0; i < filtered.length; i++) {
+              let newCourse = {}
+              newCourse.course =
+                filtered[i]['courseID']['department'] +
+                ' ' +
+                filtered[i]['courseID']['course_num'] +
+                ' ' +
+                filtered[i]['courseID']['course_name']
 
+              newCourse.description =
+                filtered[i]['courseID']['description'] +
+                '\n Semester: ' +
+                filtered[i]['semester'] +
+                '   Year: ' +
+                filtered[i]['year']
+              newCourse.semester = filtered[i]['semester']
+              newCourse.year = filtered[i]['year']
+              vm.courses.push(newCourse)
+            }
+          } else if (
+            this.form.search != '' &&
+            this.form.filter == 'Department'
+          ) {
+            vm.courses = []
+            let filtered = response.data.filter((course) => {
+              return course['courseID']['department'].includes(this.form.search)
+            })
+            console.log(filtered)
+            for (let i = 0; i < filtered.length; i++) {
+              let newCourse = {}
+              newCourse.course =
+                filtered[i]['courseID']['department'] +
+                ' ' +
+                filtered[i]['courseID']['course_num'] +
+                ' ' +
+                filtered[i]['courseID']['course_name']
+
+              newCourse.description =
+                filtered[i]['courseID']['description'] +
+                '\n Semester: ' +
+                filtered[i]['semester'] +
+                '   Year: ' +
+                filtered[i]['year']
+              newCourse.semester = filtered[i]['semester']
+              newCourse.year = filtered[i]['year']
+              vm.courses.push(newCourse)
+            }
           }
           if (this.form.search != '' && this.form.filter == 'Course Number') {
             vm.courses = []
@@ -230,13 +266,18 @@ export default {
       }
 
       axios
-        .post(`${VUE_APP_BACKEND_API}/courseplans/add-many-no-remove`, coursesToAdd)
+        .post(
+          `${VUE_APP_BACKEND_API}/courseplans/add-many-no-remove`,
+          coursesToAdd
+        )
         .then(function (response) {
           console.log(response)
         })
         .catch((error) => {
           console.log(error)
         })
+
+      this.$router.push('gpd-home')
     }
   }
 }
