@@ -578,17 +578,20 @@ export default {
         }
       }
     },
-    getStudents(studentIDs) {
-      return axios
-        .get(`${VUE_APP_BACKEND_API}/students/getManyByID`, {
-          params: {
-            studentIds: studentIDs
+    async getStudents(studentIDs) {
+      try {
+        const response = await axios.get(
+          `${VUE_APP_BACKEND_API}/students/getManyByID`,
+          {
+            params: {
+              studentIds: studentIDs
+            }
           }
-        })
-        .then((response) => response.data)
-        .catch((err) => {
-          console.log(err)
-        })
+        )
+        return response.data
+      } catch (err) {
+        console.log(err)
+      }
     }
   }
 }
