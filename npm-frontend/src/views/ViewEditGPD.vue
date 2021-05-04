@@ -110,7 +110,7 @@
               </router-link>
             </div>
             <div class="mt-2">
-              <router-link :to="'/add-course' + this.studentID">
+              <router-link :to="'/add-course/' + this.studentID">
                 <b-button block :style="myStyle" size="sm" @click="addCourse">
                   Add Course
                 </b-button>
@@ -168,8 +168,11 @@
 
 <script>
 import NavBar from '@/components/NavBar.vue'
+import CheckRequirements from '../checkRequirements.js'
 import axios from 'axios'
 const { VUE_APP_BACKEND_API } = process.env
+
+const checkReqs = new CheckRequirements()
 
 export default {
   name: 'ViewEditGPD',
@@ -242,6 +245,12 @@ export default {
         .catch((err) => {
           console.log('RETRIEVE STUDENT FAILED', err)
         })
+
+      // load requirements
+      checkReqs.getDegreeRequirementState(this.studentID).then((reqs) => {
+        console.log(reqs)
+        this.requirements = reqs
+      })
     }
   },
   mounted() {
