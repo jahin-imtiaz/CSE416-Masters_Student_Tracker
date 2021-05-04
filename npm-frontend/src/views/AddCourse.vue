@@ -194,7 +194,7 @@ export default {
         console.log(department)
         console.log(courseNum)
         let newCoursePlan = {
-          sbu_id: this.$store.state.studentID,
+          sbu_id: this.$route.params.studentID,
           course_num: courseNum,
           department: department
         }

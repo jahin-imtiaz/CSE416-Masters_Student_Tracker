@@ -110,7 +110,7 @@
               </router-link>
             </div>
             <div class="mt-2">
-              <router-link :to="'/add-course'">
+              <router-link :to="'/add-course' + this.studentID">
                 <b-button block :style="myStyle" size="sm" @click="addCourse">
                   Add Course
                 </b-button>
