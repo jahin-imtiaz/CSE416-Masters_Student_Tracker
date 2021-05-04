@@ -176,7 +176,7 @@
             block
             :style="myStyle"
             size="sm"
-            type="Submit"
+            type="submit"
             @click="notifyByEmail"
           >
             Notify Students
