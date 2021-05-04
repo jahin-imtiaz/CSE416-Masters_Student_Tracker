@@ -95,6 +95,42 @@ router.post('/add-many', async (req, res, next) => {
   }
 })
 
+router.post('/add-many-no-remove', async (req, res, next) => {
+  try {
+    let coursePlans = req.body
+    // remove existing course plans for the student
+
+    // add new course plans
+    let newCoursePlans = []
+
+    for (let coursePlanData of coursePlans) {
+      const newCoursePlan = await CoursePlan.findOneAndUpdate(
+        {
+          sbu_id: coursePlanData.sbu_id,
+          course_num: coursePlanData.course_num,
+          department: coursePlanData.department
+        },
+        {
+          ...coursePlanData
+        },
+        {
+          upsert: true,
+          new: true
+        }
+      )
+
+      logger.info(`Inserted course plan ${JSON.stringify(newCoursePlan)}`)
+
+      newCoursePlans.push(newCoursePlan)
+    }
+
+    res.send(newCoursePlans)
+  } catch (err) {
+    logger.error(err)
+    next(err)
+  }
+})
+
 router.get('/getCoursePlanBySbuID', async (req, res, next) => {
   try {
     let sbuID = req.query.id

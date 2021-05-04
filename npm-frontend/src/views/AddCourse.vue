@@ -230,7 +230,7 @@ export default {
       }
 
       axios
-        .post(`${VUE_APP_BACKEND_API}/courseplans/add-many`, coursesToAdd)
+        .post(`${VUE_APP_BACKEND_API}/courseplans/add-many-no-remove`, coursesToAdd)
         .then(function (response) {
           console.log(response)
         })
