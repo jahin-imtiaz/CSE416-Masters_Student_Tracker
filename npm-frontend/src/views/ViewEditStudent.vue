@@ -61,15 +61,6 @@
         </b-col>
         <b-col>
           <b-form-group
-            id="graduatedID"
-            label-cols-sm="4"
-            content-cols-sm="8"
-            label="Graduated"
-            label-for="graduated"
-          >
-            <b-form-input id="graduated" v-model="graduated"></b-form-input>
-          </b-form-group>
-          <b-form-group
             id="entryYearID"
             label-cols-sm="4"
             content-cols-sm="8"
@@ -124,7 +115,7 @@
               </router-link>
             </div>
             <div class="mt-2">
-              <router-link :to="'/add-course'">
+              <router-link :to="'/add-course' + this.studentID">
                 <b-button block :style="myStyle" size="sm" @click="addCourse">
                   Add Course
                 </b-button>
@@ -186,7 +177,6 @@ export default {
       email: '',
       department: '',
       track: '',
-      graduated: '',
       entryYear: '',
       entrySem: '',
       reqVer: '',
@@ -238,12 +228,12 @@ export default {
           console.log('RETRIEVE STUDENT', res.data)
           this.name = res.data.firstName + ' ' + res.data.lastName
           this.email = res.data.email
-          this.department = res.data.department || 'CSE'
-          this.track = res.data.track || 'Special Project'
-          this.graduated = res.data.graduated
+          this.department = res.data.reqVersion.department || 'CSE'
+          this.track = res.data.reqVersion.track || 'Special Project'
           this.entryYear = res.data.entryYear
           this.entrySem = res.data.entrySem
-          this.reqVersion = res.data.reqVersion.join(' ')
+          this.reqVersion =
+            res.data.reqVersion.reqSem + ' ' + res.data.reqVersion.reqYear
           this.gradDate = res.data.graduationSem + ' ' + res.data.graduationYear
         })
         .catch((err) => {
