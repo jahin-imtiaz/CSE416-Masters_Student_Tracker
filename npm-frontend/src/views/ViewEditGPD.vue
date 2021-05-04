@@ -248,6 +248,7 @@ export default {
 
       // load requirements
       checkReqs.getDegreeRequirementState(this.studentID).then((reqs) => {
+        console.log(reqs)
         this.requirements = reqs
       })
     }
