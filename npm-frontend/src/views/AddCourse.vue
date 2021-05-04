@@ -123,8 +123,7 @@ export default {
       event.preventDefault()
       let vm = this
       axios
-        .get(
-          `${VUE_APP_BACKEND_API}/courseofferings/findAllOfferingOfCourses`)
+        .get(`${VUE_APP_BACKEND_API}/courseofferings/findAllOfferingOfCourses`)
         .then((response) => {
           console.log(response.data)
           for (let i = 0; i < response.data.length; i++) {
@@ -134,26 +133,32 @@ export default {
               ' ' +
               response.data[i]['courseID']['course_num']
             newCourse.description = response.data[i]['courseID']['description']
-
           }
-          else if(this.form.search != "" && this.form.filter == "Course Number"){
-            vm.courses = [];
-              let filtered = response.data.filter( (course) => {
-                return course["courseID"]["course_num"].includes(this.form.search)
-              })
-              console.log(filtered);
-              for(let i = 0; i < filtered.length; i++){
-                let newCourse = {}
-                newCourse.course =
-                filtered[i]['courseID']['department'] + ' ' +
-                filtered[i]['courseID']['course_num'] + ' ' +
-                filtered[i]['courseID']['course_name'];
+          if (this.form.search != '' && this.form.filter == 'Course Number') {
+            vm.courses = []
+            let filtered = response.data.filter((course) => {
+              return course['courseID']['course_num'].includes(this.form.search)
+            })
+            console.log(filtered)
+            for (let i = 0; i < filtered.length; i++) {
+              let newCourse = {}
+              newCourse.course =
+                filtered[i]['courseID']['department'] +
+                ' ' +
+                filtered[i]['courseID']['course_num'] +
+                ' ' +
+                filtered[i]['courseID']['course_name']
 
-                newCourse.description = filtered[i]['courseID']['description'] + "\n Semester: " + filtered[i]["semester"] + "   Year: " + filtered[i]["year"]
-                newCourse.semester = filtered[i]["semester"];
-                newCourse.year = filtered[i]["year"];
-                vm.courses.push(newCourse)
-              }
+              newCourse.description =
+                filtered[i]['courseID']['description'] +
+                '\n Semester: ' +
+                filtered[i]['semester'] +
+                '   Year: ' +
+                filtered[i]['year']
+              newCourse.semester = filtered[i]['semester']
+              newCourse.year = filtered[i]['year']
+              vm.courses.push(newCourse)
+            }
           }
         })
         .catch((error) => {
@@ -165,8 +170,8 @@ export default {
       for (let i = 0; i < this.selected.length; i++) {
         let department = this.selected[i].course.split(' ')[0]
         let courseNum = this.selected[i].course.split(' ')[1]
-        let semester = this.selected[i].semester;
-        let year = this.selected[i].year;
+        let semester = this.selected[i].semester
+        let year = this.selected[i].year
         console.log(department)
         console.log(courseNum)
         let newCoursePlan = {
