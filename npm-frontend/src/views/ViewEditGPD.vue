@@ -168,8 +168,11 @@
 
 <script>
 import NavBar from '@/components/NavBar.vue'
+import CheckRequirements from '../checkRequirements.js'
 import axios from 'axios'
 const { VUE_APP_BACKEND_API } = process.env
+
+const checkReqs = new CheckRequirements()
 
 export default {
   name: 'ViewEditGPD',
@@ -242,6 +245,11 @@ export default {
         .catch((err) => {
           console.log('RETRIEVE STUDENT FAILED', err)
         })
+
+      // load requirements
+      checkReqs.getDegreeRequirementState(this.studentID).then((reqs) => {
+        this.requirements = reqs
+      })
     }
   },
   mounted() {
