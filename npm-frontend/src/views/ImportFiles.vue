@@ -101,10 +101,6 @@
             </b-row>
           </b-col>
         </b-row>
-        <b-row v-if="invalidPlans && invalidPlans.length > 0">
-          These course plans are Invalid:
-          <b-table striped hover :items="invalidPlans"></b-table>
-        </b-row>
       </b-container>
 
       <b-row class="mt-3">
@@ -172,11 +168,21 @@
           </b-row>
         </b-col>
       </b-row>
+      <b-row v-if="invalidPlans && invalidPlans.length > 0">
+        <b-col cols="8">
+          These course plans are Invalid:
+          <b-table striped hover :items="invalidPlans"></b-table>
+          <b-button block :style="myStyle" size="sm" @click="notifyByEmail">
+            Notify Students
+          </b-button>
+        </b-col>
+      </b-row>
     </b-container>
   </div>
 </template>
 
 <script>
+import emailjs from 'emailjs-com'
 import NavBar from '@/components/NavBar.vue'
 import '../env'
 import axios from 'axios'
@@ -202,7 +208,13 @@ export default {
       semester: null,
       year: null,
       department: null,
-      invalidPlans: null
+      invalidPlans: null,
+      studentsWithInvalidPlans: null,
+      myStyle: {
+        backgroundColor: '#800000',
+        color: 'white',
+        textAlign: 'center'
+      }
     }
   },
   methods: {
@@ -420,6 +432,8 @@ export default {
           .then((response) => {
             // get all invalid CoursePlan objects so that the student may be notified and updated
             this.invalidPlans = response.data.allInvalidCoursePlans
+            this.studentsWithInvalidPlans =
+              response.data.allStudentIDWithInvalidPlan
             // TODO: notify student
             console.log(`UPSERTED OFFERINGS`)
           })
@@ -539,6 +553,42 @@ export default {
         this.gradesFile = null
       }
       reader.readAsText(file)
+    },
+    async notifyByEmail() {
+      let studentsToNotify = this.allStudentIDWithInvalidPlan
+      let studentObjects = await this.getStudents(studentsToNotify)
+
+      this.invalidPlans = null
+      this.allStudentIDWithInvalidPlan = null
+
+      for (let student of studentObjects) {
+        try {
+          emailjs.sendForm(
+            'service_ni0hpok',
+            'template_fxavcho',
+            e.target,
+            'user_OqXjsxM8u5mrHbPiO0mXd',
+            {
+              name: student.firstName + ' ' + student.lastName,
+              to_email: student.email
+            }
+          )
+        } catch (error) {
+          console.log({ error })
+        }
+      }
+    },
+    getStudents(studentIDs) {
+      return axios
+        .get(`${VUE_APP_BACKEND_API}/students/getManyByID`, {
+          params: {
+            studentIds: studentIDs
+          }
+        })
+        .then((response) => response.data)
+        .catch((err) => {
+          console.log(err)
+        })
     }
   }
 }
